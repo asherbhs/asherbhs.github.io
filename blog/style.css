@@ -1,0 +1,25 @@
+body {
+    background-color: #000010;
+    padding: 100px;
+
+    color: #EEEEEE;
+    font-family: Cambria, sans-serif;
+    font-size: 24px;
+    font-weight: normal;
+}
+
+h1, h2 {
+    /* text-decoration: underline; */
+    border-bottom: 1px solid gray;
+    padding-bottom: 10px;
+}
+
+h1 {
+    font-size: 48px;
+    font-weight: normal;
+}
+
+h2 {
+    font-size: 32px;
+    font-weight: normal;
+}

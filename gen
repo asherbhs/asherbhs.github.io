@@ -1,0 +1,11 @@
+dir=$(dirname $1)
+base=$(basename $1)
+name=${base%.*}
+
+pandoc \
+    -f markdown \
+    -t html \
+    --template blog/template.html \
+    -M title=$name \
+    -o $dir/$name.html \
+    $1
