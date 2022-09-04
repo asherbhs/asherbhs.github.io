@@ -3,7 +3,7 @@ base=$(basename $1)
 name=${base%.*}
 
 pandoc \
-    -f markdown \
+    -f markdown+raw_html-implicit_figures \
     -t html \
     --template blog/template.html \
     -M title=$name \

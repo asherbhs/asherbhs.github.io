@@ -2,8 +2,8 @@ body {
     background-color: #000010;
     padding: 100px;
 
-    color: #EEEEEE;
-    font-family: Cambria, sans-serif;
+    color: white;
+    font-family: Cambria, serif;
     font-size: 24px;
     font-weight: normal;
 }
@@ -22,4 +22,10 @@ h1 {
 h2 {
     font-size: 32px;
     font-weight: normal;
+}
+
+img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
