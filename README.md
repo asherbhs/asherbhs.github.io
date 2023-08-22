@@ -1,4 +1,2 @@
 # asherbhs.github.io
-Portfolio website for Asher Harvey-Smith
-
-## Cursor Spirit
+what r u acc doin on this page you buffoon
