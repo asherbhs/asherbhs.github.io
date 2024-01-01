@@ -1,0 +1,579 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Enumerative Combinatorics &#8212; Some Mathematics in Dyalog APL</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
+  <script src="../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'combinatorics/enumerative';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Combinations and Bijective Proofs" href="combinations-and-bijective-proofs.html" />
+    <link rel="prev" title="Some Mathematics in Dyalog APL" href="../intro.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Some Mathematics in Dyalog APL - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Some Mathematics in Dyalog APL - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Some Mathematics in Dyalog APL
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Combinatorics</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">Enumerative Combinatorics</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="combinations-and-bijective-proofs.html">Combinations and Bijective Proofs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="counting-functions.html">Counting Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inclusion-exclusion.html">Inclusion-Exclusion and Counting Partitions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stars-bars.html">Stars and Bars</a></li>
+
+
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="twelvefold.html">The Twelvefold Way</a></li>
+<li class="toctree-l1"><a class="reference internal" href="catalan.html">The Catalan Numbers</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Graph Theory</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../graph-theory/graph-theory.html">Graph Theory</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fcombinatorics/enumerative.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/combinatorics/enumerative.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Enumerative Combinatorics</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-count">How to Count</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="enumerative-combinatorics">
+<h1>Enumerative Combinatorics<a class="headerlink" href="#enumerative-combinatorics" title="Permalink to this heading">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nf">⎕IO</span><span class="kd">←</span><span class="m">1</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="how-to-count">
+<h2>How to Count<a class="headerlink" href="#how-to-count" title="Permalink to this heading">#</a></h2>
+<p>Enumerative Combinatorics is, in essence, the study of counting. Of course, we all (hopefully) know how to count, but in this chapter we’ll be using much more insightful techniques than you were taught as a child.</p>
+<p>Let’s start with a simple example. Say we have a group of people - Alice, Bob, and Charlie - and we ask them to pick their favourite from a group of colours - red, green, blue, and yellow. How many different ways can our hypothetical gang pick these colours? Well, Alice has <span class="math notranslate nohighlight">\(4\)</span> choices, as do Bob and Charlie, so there are a total of <code class="docutils literal notranslate"><span class="pre">4×4×4</span> <span class="pre">←→</span> <span class="pre">4*3</span> <span class="pre">←→</span> <span class="pre">64</span></code> possibilities. This holds in general. Say we have <code class="docutils literal notranslate"><span class="pre">k</span></code> people and <code class="docutils literal notranslate"><span class="pre">n</span></code> colours, there are <code class="docutils literal notranslate"><span class="pre">n*k</span></code> ways for them to pick their favourite colours.</p>
+<p>Consider another problem: we have a bookshelf nicely filled with <span class="math notranslate nohighlight">\(5\)</span> books. How many ways are there to arrange our shelf? If we took all our books off the shelf and put them back on, one by one, we would have <span class="math notranslate nohighlight">\(5\)</span> books to put the first place, then <span class="math notranslate nohighlight">\(4\)</span> books to put the second, and so on. This means there are <code class="docutils literal notranslate"><span class="pre">5×4×3×2×1</span> <span class="pre">←→</span> <span class="pre">120</span></code> ways to rearrange the books. Such a rearrangement of items is called a <em>permutation</em>, so we can say that there are <span class="math notranslate nohighlight">\(120\)</span> different permutations of <span class="math notranslate nohighlight">\(5\)</span> books. For example, if our set of books is <code class="docutils literal notranslate"><span class="pre">'The</span> <span class="pre">Little</span> <span class="pre">Prince'</span> <span class="pre">'Elements'</span> <span class="pre">'Cosmos'</span> <span class="pre">'A</span> <span class="pre">Programming</span> <span class="pre">Language'</span> <span class="pre">'The</span> <span class="pre">Hobbit'</span></code>, a permutation of the books might be <code class="docutils literal notranslate"><span class="pre">'A</span> <span class="pre">Programming</span> <span class="pre">Language'</span> <span class="pre">'Cosmos'</span> <span class="pre">'Elements'</span> <span class="pre">'The</span> <span class="pre">Hobbit'</span> <span class="pre">'The</span> <span class="pre">Little</span> <span class="pre">Prince'</span></code>.</p>
+<p>Our calculation to count the permutations nicely generalises - if we have <span class="math notranslate nohighlight">\(k\)</span> books, then there are <code class="docutils literal notranslate"><span class="pre">k×(k-1)×(k-2)×...×2×1</span> <span class="pre">←→</span> <span class="pre">×/⍳k</span></code> permutations of them. In combinatorics, this quantity is used all the time, so it gets its own name: the <em>factorial</em>. APL has factorial built in as monadic <code class="docutils literal notranslate"><span class="pre">!</span></code>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="m">5</span><span class="o">×</span><span class="m">4</span><span class="o">×</span><span class="m">3</span><span class="o">×</span><span class="m">2</span><span class="o">×</span><span class="m">1</span>
+<span class="o">×</span><span class="na">/</span><span class="o">⍳</span><span class="m">5</span>
+<span class="o">!</span><span class="m">5</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">120
+</pre></div><div class="output text_html"><pre class="language-APL">120
+</pre></div><div class="output text_html"><pre class="language-APL">120
+</pre></div></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">!0</span></code> is defined as <span class="math notranslate nohighlight">\(1\)</span>, since that’s the result of an empty product. We can also imagine the case of rearranging a bookshelf with no books on it. There’s exactly one way to do this: doing nothing at all.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="o">×</span><span class="na">/</span><span class="o">⍳</span><span class="m">0</span>
+<span class="o">!</span><span class="m">0</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">1
+</pre></div><div class="output text_html"><pre class="language-APL">1
+</pre></div></div>
+</div>
+<p>In traditional mathematical notation, the factorial is written postfix:</p>
+<div class="math notranslate nohighlight">
+\[k!=k\times(k-1)\times(k-2)\times\cdots\times 2\times 1\]</div>
+<p>Now let’s consider a slightly more restricted scenario. We still want to put <span class="math notranslate nohighlight">\(5\)</span> books onto our bookshelf, but now we’re selecting from a larger collection of <span class="math notranslate nohighlight">\(8\)</span> books. So, starting with an empty bookshelf, we have <span class="math notranslate nohighlight">\(8\)</span> books which could go in the first place, <span class="math notranslate nohighlight">\(7\)</span> books for the second, and so on until we have <span class="math notranslate nohighlight">\(4\)</span> books remaining for the final place. This means there are <code class="docutils literal notranslate"><span class="pre">8×7×6×5×4</span> <span class="pre">←→</span> <span class="pre">6720</span></code> arrangments of <span class="math notranslate nohighlight">\(5\)</span> books our of our collection of <span class="math notranslate nohighlight">\(8\)</span> - a lot of choice! To calculate this, we want to take the whole product <code class="docutils literal notranslate"><span class="pre">8×7×6×5×4×3×2×1</span> <span class="pre">←→</span> <span class="pre">!8</span></code> and chop off the trailing <code class="docutils literal notranslate"><span class="pre">3×2×1</span> <span class="pre">←→</span> <span class="pre">!3</span></code>, which we can do by dividing them: <code class="docutils literal notranslate"><span class="pre">8×7×6×5×4</span> <span class="pre">←→</span> <span class="pre">(!8)÷!3</span> <span class="pre">←→</span> <span class="pre">(!8)×!8-5</span></code>. Since an arrangement of all our books is a permutation, an arrangement of only some of them is a <em>partial permutation</em> or <em><span class="math notranslate nohighlight">\(k\)</span>-permutation</em> (for arrangements of <span class="math notranslate nohighlight">\(k\)</span> books). For example, given out set of books <code class="docutils literal notranslate"><span class="pre">'The</span> <span class="pre">Little</span> <span class="pre">Prince'</span> <span class="pre">'Elements'</span> <span class="pre">'Cosmos'</span> <span class="pre">'A</span> <span class="pre">Programming</span> <span class="pre">Language'</span> <span class="pre">'The</span> <span class="pre">Hobbit'</span></code>, a <span class="math notranslate nohighlight">\(2\)</span>-permutation might be <code class="docutils literal notranslate"><span class="pre">'A</span> <span class="pre">Programming</span> <span class="pre">Language'</span> <span class="pre">'The</span> <span class="pre">Little</span> <span class="pre">Prince'</span></code>. Once again, our counting calculation generalises, so we know there are <code class="docutils literal notranslate"><span class="pre">(!n)÷!n-k</span></code> <em><span class="math notranslate nohighlight">\(k\)</span>-permutations</em> of <span class="math notranslate nohighlight">\(n\)</span> items.</p>
+<p>These are the kinds of problems we’re concerned with in enumerative combinatorics. Over the remainder of this chapter, we’ll be returning to these problems as well as many more. Once we’ve covered enough ground, we’re going to see a unified framework for looking at all sorts of counting problems called ‘The Twelvefold Way’. At this point, we’ll also look not just at counting all the possibilities for a problem, but also algorithms for generating them all.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<ul class="simple">
+<li><p>Enumerative combinatorics is the study of counting finite structures.</p></li>
+<li><p>The factorial: <code class="docutils literal notranslate"><span class="pre">!k</span> <span class="pre">←→</span> <span class="pre">×/⍳k</span> <span class="pre">←→</span> <span class="pre">k×(k-1)×(k-2)×...×2×1</span></code>, <span class="math notranslate nohighlight">\(k!\)</span>.</p></li>
+<li><p>A <em>permutation</em> is a rearrangement of a set.</p></li>
+<li><p>There are <code class="docutils literal notranslate"><span class="pre">!n</span></code> permutations of an <span class="math notranslate nohighlight">\(n\)</span> element set.</p></li>
+<li><p>A <em><span class="math notranslate nohighlight">\(k\)</span>-permutation</em> is an arrangement of exactly <span class="math notranslate nohighlight">\(k\)</span> elements of a set.</p></li>
+<li><p>There are <code class="docutils literal notranslate"><span class="pre">(!n)÷!n-k</span></code> <span class="math notranslate nohighlight">\(k\)</span>-permutations of an <span class="math notranslate nohighlight">\(n\)</span> element set.</p></li>
+</ul>
+</div>
+</section>
+<div class="toctree-wrapper compound">
+</div>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "dyalog_apl"
+        },
+        kernelOptions: {
+            name: "dyalog_apl",
+            path: "./combinatorics"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'dyalog_apl'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../intro.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Some Mathematics in Dyalog APL</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="combinations-and-bijective-proofs.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Combinations and Bijective Proofs</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-count">How to Count</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Asher Harvey-Smith
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
