@@ -63,10 +63,12 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'combinatorics/stars-bars';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="The Twelvefold Way" href="twelvefold.html" />
+    <link rel="next" title="Integer Partitions" href="integer-partitions.html" />
     <link rel="prev" title="Inclusion-Exclusion and Counting Partitions" href="inclusion-exclusion.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -176,8 +178,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="counting-functions.html">Counting Functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="inclusion-exclusion.html">Inclusion-Exclusion and Counting Partitions</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Stars and Bars</a></li>
-
-
+<li class="toctree-l2"><a class="reference internal" href="integer-partitions.html">Integer Partitions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="twelvefold.html">The Twelvefold Way</a></li>
@@ -358,9 +359,7 @@ document.write(`
   </button>
 `);
 </script>
-<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="fa-solid fa-list"></span>
-</label>
+
 </div></div>
       
     </div>
@@ -376,17 +375,6 @@ document.write(`
     <div id="print-main-content">
         <div id="jb-print-toc">
             
-            <div>
-                <h2> Contents </h2>
-            </div>
-            <nav aria-label="Page">
-                <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Stars and Bars</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#integer-partitions">Integer Partitions</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#twelvefold-teaser">Twelvefold Teaser</a></li>
-</ul>
-
-            </nav>
         </div>
     </div>
 </div>
@@ -405,49 +393,26 @@ document.write(`
 </div>
 </div>
 </div>
+<p>We’ve considered several variants of our balls and boxes analogy, and now it’s time to consider another. Suppose we have <span class="math notranslate nohighlight">\(n\)</span> labelled boxes, and <span class="math notranslate nohighlight">\(k\)</span> unlabelled balls, how many different ways are there to place these balls into the boxes? There are a few other ways to interpret this problem.</p>
 <ul class="simple">
-<li><p>diagramssss</p></li>
-<li><p>unlabelled balls into labelled boxes</p>
-<ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">'*|**||*|'</span> <span class="pre">←→</span> <span class="pre">'*|**||*|'[7</span> <span class="pre">2</span> <span class="pre">4</span> <span class="pre">1</span> <span class="pre">5</span> <span class="pre">6</span> <span class="pre">3</span> <span class="pre">8]</span></code></p></li>
+<li><p>How many ways are there to distribute <span class="math notranslate nohighlight">\(k\)</span> identical cookies among <span class="math notranslate nohighlight">\(n\)</span> people?</p></li>
+<li><p>How many ways can we roll <span class="math notranslate nohighlight">\(k\)</span> dice with <span class="math notranslate nohighlight">\(n\)</span> faces?</p></li>
+<li><p>How many degree-<span class="math notranslate nohighlight">\(k\)</span> monomials are there in <span class="math notranslate nohighlight">\(n\)</span> variables?</p></li>
 </ul>
-</li>
-<li><p>ways to generate</p>
-<ul>
-<li><p>combinations of bars from string</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">k!k+n-1</span> <span class="pre">←→</span> <span class="pre">(n-1)!k+n-1</span></code> ways</p></li>
-</ul>
-</li>
-<li><p>surjective stars and bars</p>
-<ul>
-<li><p>first pick k-n, then add n to each one</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">(k-n)!k-1</span> <span class="pre">←→</span> <span class="pre">(n-1)!k-1</span></code> ways</p></li>
-</ul>
-</li>
-</ul>
-</section>
-<section class="tex2jax_ignore mathjax_ignore" id="integer-partitions">
-<h1>Integer Partitions<a class="headerlink" href="#integer-partitions" title="Permalink to this heading">#</a></h1>
-<ul class="simple">
-<li><p>unlabelled balls, unlabelled boxes, any or at least 1 per box</p></li>
-<li><p>no closed form, but we can still generate</p></li>
-<li><p>young diagram</p></li>
-<li><p>conjugate partitions - equivalent counts theorem</p></li>
-<li><p>self conjugate partitions</p>
-<ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">7</span> <span class="pre">6</span> <span class="pre">4</span> <span class="pre">4</span> <span class="pre">4</span> <span class="pre">2</span> <span class="pre">2</span> <span class="pre">1</span></code></p></li>
-</ul>
-</li>
-<li><p>self conjugate partitions ←→ distinct odd partitions</p></li>
-<li><p>proof using hook numbers in young tableaux</p></li>
-</ul>
-</section>
-<section class="tex2jax_ignore mathjax_ignore" id="twelvefold-teaser">
-<h1>Twelvefold Teaser<a class="headerlink" href="#twelvefold-teaser" title="Permalink to this heading">#</a></h1>
-<ul class="simple">
-<li><p>some combinations of labelling and numbering we haven’t tried</p></li>
-<li><p>this is the topic of the next section</p></li>
-</ul>
+<p>To answer these questions we’re going to use a very specific representation. It will be helpful to represent some number of balls in a box as a string of stars and bars. For example, we could represent three balls in a box as:</p>
+<div class="math notranslate nohighlight">
+\[\mid\star\star\star\mid\]</div>
+<p>Then, we can represent many boxes by juxtaposing these strings, for example:</p>
+<div class="math notranslate nohighlight">
+\[\mid\star\star\star\mid\mid\star\star\mid\mid\star\star\star\star\mid\]</div>
+<p>But there’s some redundancy in this representation. There will always be a bar at both ends of the string, and in the middle of the string the bars always come in pairs at the boundary of two boxes. We can remove these superfluous bars to simplify our representation:</p>
+<div class="math notranslate nohighlight">
+\[\star\star\star\mid\star\star\mid\star\star\star\star\]</div>
+<p>Note that, in this representation, the boxes are distinguished by their position in the string, while the balls are indistinguishable, as they are all represented by identical stars. With the exception of the first box, each box has a bar indicating where the previous box ends, and this box starts, so there are <span class="math notranslate nohighlight">\(n-1\)</span> bars. This form will be helpful for understanding the unlabelled balls into labelled boxes problem, as it lets us rephrase our problem very concretely: how many ways are there to arrange a string of <span class="math notranslate nohighlight">\(k\)</span> stars and <span class="math notranslate nohighlight">\(n-1\)</span> bars?</p>
+<p>To answer this, let’s just consider the bars on their own. There are <code class="docutils literal notranslate"><span class="pre">k+n-1</span></code> total positions in the string, and we want to place <code class="docutils literal notranslate"><span class="pre">n-1</span></code> bars in place, and fill all the remaining spaces with stars. This gives us a very nice count for this problem:</p>
+<p><code class="docutils literal notranslate"><span class="pre">(n-1)!k+n-1</span></code></p>
+<p>Similarly, there are <code class="docutils literal notranslate"><span class="pre">k!k+n-1</span></code> ways to place down the stars first, and fill the rest of the spaces with bars. These must be the same since we’re counting solutions to the same problem, and indeed we saw this in the section on the <a class="reference internal" href="combinations-and-bijective-proofs.html"><span class="doc std std-doc">binomial coefficient</span></a>.</p>
+<p>Now let’s modify this problem slightly. What if we wanted to ensure that each box had at least one ball placed into it? Or, to put it another way, we only want to count surjective functions for this problem. This turns out to be a very easy modification to make. First, we reserve <span class="math notranslate nohighlight">\(n\)</span> balls, leaving us with <code class="docutils literal notranslate"><span class="pre">k-n</span></code> remaining balls. We then place these as normal with our stars and bars technique, with <code class="docutils literal notranslate"><span class="pre">k-n</span></code> instead of <span class="math notranslate nohighlight">\(k\)</span> balls: <code class="docutils literal notranslate"><span class="pre">(n-1)!(k-n)+n-1</span> <span class="pre">←→</span> <span class="pre">(n-1)!k-1</span></code>. We then place one of our <span class="math notranslate nohighlight">\(n\)</span> reserved balls into each of the <span class="math notranslate nohighlight">\(n\)</span> boxes, to ensure that each box receives at least one ball.</p>
 </section>
 
     <script type="text/x-thebe-config">
@@ -490,11 +455,11 @@ document.write(`
       </div>
     </a>
     <a class="right-next"
-       href="twelvefold.html"
+       href="integer-partitions.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">The Twelvefold Way</p>
+        <p class="prev-next-title">Integer Partitions</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -504,23 +469,6 @@ document.write(`
             </div>
             
             
-              
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
-
-  <div class="sidebar-secondary-item">
-  <div class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> Contents
-  </div>
-  <nav class="bd-toc-nav page-toc">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Stars and Bars</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#integer-partitions">Integer Partitions</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#twelvefold-teaser">Twelvefold Teaser</a></li>
-</ul>
-
-  </nav></div>
-
-</div></div>
               
             
           </div>

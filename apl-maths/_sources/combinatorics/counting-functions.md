@@ -113,7 +113,7 @@ In the next section we're going to look at counting surjections, and see how var
 - We can model many counting problems as counting functions from `⍳k` to `⍳n`.
 - Each of these functions corresponds to a way of placing $k$ balls into $n$ boxes.
 - We might not want to distinguish between balls and boxes
-- We might want to say at most one, or at least 1, ball should b placed in each box.
+- We might want to say at most one, or at least one, ball should be placed in each box.
 - The effect of these restrictions is summarised below.
 
 | Balls into Boxes          | Functions                       |
