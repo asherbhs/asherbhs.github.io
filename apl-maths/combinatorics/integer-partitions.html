@@ -386,6 +386,13 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="integer-partitions">
 <h1>Integer Partitions<a class="headerlink" href="#integer-partitions" title="Permalink to this heading">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nf">⎕IO</span><span class="kd">←</span><span class="m">1</span>
+</pre></div>
+</div>
+</div>
+</div>
 <p>So far, we’ve covered many different variations of our balls into boxes scenario. We’re going to cover just one more before we tie them all up in a neat package. This last problem has a nice interpretation as partitioning a number into parts, and is also the first problem we’re looking at which doesn’t have a nice closed form for its count.</p>
 <p>We’re going to consider the case where we have unlabelled balls, and unlabelled boxes. To begin with, we’re also going to restrict ourselves to surjective functions, so there must be at least one ball in each box. This is equivalent to counting the number of ways to write the integer <span class="math notranslate nohighlight">\(k\)</span> as the sum of <span class="math notranslate nohighlight">\(n\)</span> positive integers. These are called the <em>integer partitions</em> of <span class="math notranslate nohighlight">\(k\)</span> into <span class="math notranslate nohighlight">\(n\)</span> parts (not to be confused with <em>set</em> partitions which we saw <a class="reference internal" href="inclusion-exclusion.html"><span class="doc std std-doc">in a previous section</span></a>. For example, there are <span class="math notranslate nohighlight">\(8\)</span> partitions of <span class="math notranslate nohighlight">\(10\)</span> into <span class="math notranslate nohighlight">\(3\)</span> parts:</p>
 <div class="cell docutils container">
@@ -567,7 +574,7 @@ CCC
 D            
 </pre></div></div>
 </div>
-<p>That’s a neat picture, but it takes some more effort to conclusively prove that this works. To do that, for each <span class="math notranslate nohighlight">\(1\)</span> in a Young tableau, let’s write the number of <span class="math notranslate nohighlight">\(1\)</span>s below and to the right of it, including the <span class="math notranslate nohighlight">\(1\)</span> itself. We’ll call these the <em>hook number</em> of each place.</p>
+<p>That’s a neat picture, but it takes some more effort to conclusively prove that this works. To do that, for each <span class="math notranslate nohighlight">\(1\)</span> in a Young tableau, let’s write the number of <span class="math notranslate nohighlight">\(1\)</span>s below and to the right of it, including the <span class="math notranslate nohighlight">\(1\)</span> itself. We’ll call these the <em>hook numbers</em> of each place.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">p</span>
@@ -604,6 +611,19 @@ D
 </pre></div></div>
 </div>
 <p>For a self-conjugate partition, the hook numbers along the leading diagonal must be odd, since the number of <span class="math notranslate nohighlight">\(1\)</span>s below and to the right are equal, so their sum is even, and we add the <span class="math notranslate nohighlight">\(1\)</span> itself. The hook numbers are necessarily decreasing (as a consequence of us ordering partitions in decreasing order), so the numbers along the leading diagonal must be odd. This means that we have a (bijective) correspondence between self-conjugate partitions of <span class="math notranslate nohighlight">\(k\)</span> and distinct odd partition of <span class="math notranslate nohighlight">\(k\)</span> by finding these diagonal hook numbers. Therefore, the number of self-conjugate partitions must be equal to the number of distinct odd partitions.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<ul class="simple">
+<li><p>An <em>integer partition</em> of <span class="math notranslate nohighlight">\(k\)</span> is a set of positive integers which sum to <span class="math notranslate nohighlight">\(k\)</span>.</p></li>
+<li><p>Integer partitions correspond to counting ways of placing unlabelled balls into unlabelled boxes, possibly with at least one per box.</p></li>
+<li><p>There is no known closed form for the number of integer partitions of <span class="math notranslate nohighlight">\(k\)</span>.</p></li>
+<li><p>We can represent an integer partition as a <em>Young tableau</em>.</p></li>
+<li><p>Any integer partition has a <em>conjugate partition</em>, which can be found by transposing the Young tableau.</p></li>
+<li><p>An integer partition which is its own conjugate is <em>self-conjugate</em>.</p></li>
+<li><p>Every self-conjugate partition has a corresponding distinct odd partition, found by unfolding its Young tableau.</p></li>
+<li><p>There are therefore an equal number of self-conjugate partitions of <span class="math notranslate nohighlight">\(k\)</span> and distinct odd partitions of <span class="math notranslate nohighlight">\(k\)</span>.</p></li>
+</ul>
+</div>
 <hr class="footnotes docutils" />
 <aside class="footnote brackets" id="tableau" role="note">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>

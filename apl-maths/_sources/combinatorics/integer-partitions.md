@@ -14,6 +14,10 @@ kernelspec:
 
 # Integer Partitions
 
+```{code-cell}
+⎕IO←1
+```
+
 So far, we've covered many different variations of our balls into boxes scenario. We're going to cover just one more before we tie them all up in a neat package. This last problem has a nice interpretation as partitioning a number into parts, and is also the first problem we're looking at which doesn't have a nice closed form for its count.
 
 We're going to consider the case where we have unlabelled balls, and unlabelled boxes. To begin with, we're also going to restrict ourselves to surjective functions, so there must be at least one ball in each box. This is equivalent to counting the number of ways to write the integer $k$ as the sum of $n$ positive integers. These are called the *integer partitions* of $k$ into $n$ parts (not to be confused with *set* partitions which we saw [in a previous section](./inclusion-exclusion.md). For example, there are $8$ partitions of $10$ into $3$ parts:
@@ -93,7 +97,7 @@ q←13 9 3 1⍴⍤0⊢1
 ' ABCD'[1+q×⍤1 0⍳≢q]
 ```
 
-That's a neat picture, but it takes some more effort to conclusively prove that this works. To do that, for each $1$ in a Young tableau, let's write the number of $1$s below and to the right of it, including the $1$ itself. We'll call these the *hook number* of each place.
+That's a neat picture, but it takes some more effort to conclusively prove that this works. To do that, for each $1$ in a Young tableau, let's write the number of $1$s below and to the right of it, including the $1$ itself. We'll call these the *hook numbers* of each place.
 
 ```{code-cell}
 p
@@ -108,3 +112,13 @@ Note the non-zero numbers on the leading diagonal - they are the terms of the di
 
 For a self-conjugate partition, the hook numbers along the leading diagonal must be odd, since the number of $1$s below and to the right are equal, so their sum is even, and we add the $1$ itself. The hook numbers are necessarily decreasing (as a consequence of us ordering partitions in decreasing order), so the numbers along the leading diagonal must be odd. This means that we have a (bijective) correspondence between self-conjugate partitions of $k$ and distinct odd partition of $k$ by finding these diagonal hook numbers. Therefore, the number of self-conjugate partitions must be equal to the number of distinct odd partitions.
 
+```{important}
+- An *integer partition* of $k$ is a set of positive integers which sum to $k$.
+- Integer partitions correspond to counting ways of placing unlabelled balls into unlabelled boxes, possibly with at least one per box.
+- There is no known closed form for the number of integer partitions of $k$.
+- We can represent an integer partition as a *Young tableau*.
+- Any integer partition has a *conjugate partition*, which can be found by transposing the Young tableau.
+- An integer partition which is its own conjugate is *self-conjugate*.
+- Every self-conjugate partition has a corresponding distinct odd partition, found by unfolding its Young tableau.
+- There are therefore an equal number of self-conjugate partitions of $k$ and distinct odd partitions of $k$.
+```
