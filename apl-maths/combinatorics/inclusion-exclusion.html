@@ -1,13 +1,12 @@
 
-
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="" >
+<html lang="en" data-content_root="../" >
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Inclusion-Exclusion and Counting Partitions &#8212; Some Mathematics in Dyalog APL</title>
   
@@ -15,54 +14,50 @@
   
   <script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
-    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
-<link href="../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
 
   
-  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=87e54e7c" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=bfa96906" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
-  <script src="../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/clipboard.min.js"></script>
-    <script src="../_static/copybutton.js"></script>
-    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="../_static/design-tabs.js"></script>
-    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
-const thebe_selector = ".thebe,.cell"
-const thebe_selector_input = "pre"
-const thebe_selector_output = ".output, .cell_output"
-</script>
-    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'combinatorics/inclusion-exclusion';</script>
@@ -79,28 +74,23 @@ const thebe_selector_output = ".output, .cell_output"
 
   
   
-  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
   
   <div id="pst-scroll-pixel-helper"></div>
-
   
   <button type="button" class="btn rounded-pill" id="pst-back-to-top">
-    <i class="fa-solid fa-arrow-up"></i>
-    Back to top
-  </button>
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
   <input type="checkbox"
           class="sidebar-toggle"
-          name="__primary"
-          id="__primary"/>
-  <label class="overlay overlay-primary" for="__primary"></label>
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
   
   <input type="checkbox"
           class="sidebar-toggle"
-          name="__secondary"
-          id="__secondary"/>
-  <label class="overlay overlay-secondary" for="__secondary"></label>
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
   
   <div class="search-button__wrapper">
     <div class="search-button__overlay"></div>
@@ -122,12 +112,20 @@ const thebe_selector_output = ".output, .cell_output"
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
 </form></div>
   </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
   
-    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
-    </nav>
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
   
+
   <div class="bd-container">
     <div class="bd-container__inner bd-page-width">
+      
+      
       
       <div class="bd-sidebar-primary bd-sidebar">
         
@@ -143,6 +141,8 @@ const thebe_selector_output = ".output, .cell_output"
     <div class="sidebar-primary-items__start sidebar-primary__section">
         <div class="sidebar-primary-item">
 
+  
+    
   
 
 <a class="navbar-brand logo" href="../intro.html">
@@ -161,32 +161,47 @@ const thebe_selector_output = ".output, .cell_output"
   
   
 </a></div>
-        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
                 <a class="reference internal" href="../intro.html">
-                    Some Mathematics in Dyalog APL
+                    Doing Things in Dyalog APL
                 </a>
             </li>
         </ul>
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Combinatorics</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active has-children"><a class="reference internal" href="enumerative.html">Enumerative Combinatorics</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="enumerative.html">Enumerative Combinatorics</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="combinations-and-bijective-proofs.html">Combinations and Bijective Proofs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="counting-functions.html">Counting Functions</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Inclusion-Exclusion and Counting Partitions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="stars-bars.html">Stars and Bars</a></li>
 <li class="toctree-l2"><a class="reference internal" href="integer-partitions.html">Integer Partitions</a></li>
 </ul>
-</li>
+</details></li>
 <li class="toctree-l1"><a class="reference internal" href="twelvefold.html">The Twelvefold Way</a></li>
 <li class="toctree-l1"><a class="reference internal" href="catalan.html">The Catalan Numbers</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Graph Theory</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Trees</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../graph-theory/graph-theory.html">Graph Theory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trees/trees.html">Trees</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Graphs</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../graphs/graphs.html">Graph Theory</a></li>
 </ul>
 
     </div>
@@ -202,7 +217,7 @@ const thebe_selector_output = ".output, .cell_output"
 
       </div>
       
-      <main id="main-content" class="bd-main">
+      <main id="main-content" class="bd-main" role="main">
         
         
 
@@ -211,14 +226,14 @@ const thebe_selector_output = ".output, .cell_output"
           <div class="bd-content">
             <div class="bd-article-container">
               
-              <div class="bd-header-article">
+              <div class="bd-header-article d-print-none">
 <div class="header-article-items header-article__inner">
   
     <div class="header-article-items__start">
       
-        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
   <span class="fa-solid fa-bars"></span>
-</label></div>
+</button></div>
       
     </div>
   
@@ -343,10 +358,10 @@ const thebe_selector_output = ".output, .cell_output"
 
 <script>
 document.write(`
-  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
-    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
-    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
   </button>
 `);
 </script>
@@ -354,14 +369,14 @@ document.write(`
 
 <script>
 document.write(`
-  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
   </button>
 `);
 </script>
-<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
-</label>
+</button>
 </div></div>
       
     </div>
@@ -397,10 +412,10 @@ document.write(`
               
                 
 <div id="searchbox"></div>
-                <article class="bd-article" role="main">
+                <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="inclusion-exclusion-and-counting-partitions">
-<h1>Inclusion-Exclusion and Counting Partitions<a class="headerlink" href="#inclusion-exclusion-and-counting-partitions" title="Permalink to this heading">#</a></h1>
+<h1>Inclusion-Exclusion and Counting Partitions<a class="headerlink" href="#inclusion-exclusion-and-counting-partitions" title="Link to this heading">#</a></h1>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nf">⎕IO</span><span class="kd">←</span><span class="m">1</span>
@@ -410,7 +425,7 @@ document.write(`
 </div>
 <p>The topic of this section will be counting surjective functions, but we need to build up some more tools before we can do that.</p>
 <section id="the-inclusion-exclusion-principle">
-<h2>The Inclusion-Exclusion Principle<a class="headerlink" href="#the-inclusion-exclusion-principle" title="Permalink to this heading">#</a></h2>
+<h2>The Inclusion-Exclusion Principle<a class="headerlink" href="#the-inclusion-exclusion-principle" title="Link to this heading">#</a></h2>
 <p>Say we have two sets <span class="math notranslate nohighlight">\(a\)</span> and <span class="math notranslate nohighlight">\(b\)</span>, and we want to know the size of their union. Of course, it’s easy to just calculate this for specific examples:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -501,7 +516,7 @@ document.write(`
 m←+/(1!t) (-2!t) .. ((¯1*1+t)×t!t)
 </pre></div>
 </div>
-<p>By the binomial theorem (see <a class="reference internal" href="combinations-and-bijective-proofs.html"><span class="doc std std-doc">here</span></a>), we have</p>
+<p>By the binomial theorem (see <a class="reference internal" href="combinations-and-bijective-proofs.html"><span class="std std-doc">here</span></a>), we have</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>0 ←→ (1-1)*t
   ←→ +/(0!t)   (-1!t) .. ((¯1*  t)×t!t)
   ←→   (0!t)++/(-1!t) .. ((¯1*  t)×t!t)
@@ -511,7 +526,7 @@ m←+/(1!t) (-2!t) .. ((¯1*1+t)×t!t)
 </div>
 <p>Since <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">←→</span> <span class="pre">0!t</span></code>, <span class="math notranslate nohighlight">\(m\)</span> must be equal to <span class="math notranslate nohighlight">\(1\)</span>, so <span class="math notranslate nohighlight">\(x\)</span> is counted only once in the inclusion-exclusion formula.</p>
 <section id="derangements">
-<h3>Derangements<a class="headerlink" href="#derangements" title="Permalink to this heading">#</a></h3>
+<h3>Derangements<a class="headerlink" href="#derangements" title="Link to this heading">#</a></h3>
 <p>To see a use of the principle of inclusion and exclusion, let’s take a look at another counting problem.</p>
 <p>A <em>derangement</em> is a permutation where no element stays in its original position.</p>
 <div class="cell docutils container">
@@ -600,7 +615,7 @@ p←s⊂⍤/⍨⍤1⍉2⊥⍣¯1⍳¯1+2*n    ⍝ all nonempty subsets of s
 </section>
 </section>
 <section id="counting-surjections">
-<h2>Counting Surjections<a class="headerlink" href="#counting-surjections" title="Permalink to this heading">#</a></h2>
+<h2>Counting Surjections<a class="headerlink" href="#counting-surjections" title="Link to this heading">#</a></h2>
 <p>Now that we’re used to the principle of inclusion and exclusion, we’re ready to start counting surjections. Returning to our balls in boxes analogy, a surjection <span class="math notranslate nohighlight">\([k]\to[n]\)</span> is a function which places at least one of the <span class="math notranslate nohighlight">\(k\)</span> balls into each of the <span class="math notranslate nohighlight">\(n\)</span> boxes. To count surjections, we’re going to use a similar method to the one we used to count derangements - we’re going to try and count all the functions which are <em>not</em> surjections, and subtract that from the total number of functions.</p>
 <p>Let <span class="math notranslate nohighlight">\(a\)</span> be the set of sets of functions <span class="math notranslate nohighlight">\([k]\to[n]\)</span> (represented as vectors as discussed in the previous sections) such that no function in <code class="docutils literal notranslate"><span class="pre">a[i]</span></code> sends any of its inputs to <span class="math notranslate nohighlight">\(i\)</span>. That is, <code class="docutils literal notranslate"><span class="pre">~∨/i∊¨a[i]</span></code>. Since each function in <code class="docutils literal notranslate"><span class="pre">a[i]</span></code> ‘misses’ <span class="math notranslate nohighlight">\(i\)</span>, <code class="docutils literal notranslate"><span class="pre">⊃∪/a</span></code> is the set of functions which miss any element of <code class="docutils literal notranslate"><span class="pre">⍳n</span></code>, i.e. the set of functions which are not surjections.</p>
 <p>Since there are no other restrictions on the functions in <code class="docutils literal notranslate"><span class="pre">a[i]</span></code> other than that they cannot send any input to <span class="math notranslate nohighlight">\(i\)</span>, there are <code class="docutils literal notranslate"><span class="pre">(n-1)*k</span></code> functions in <code class="docutils literal notranslate"><span class="pre">a[i]</span></code>. Likewise, there are <code class="docutils literal notranslate"><span class="pre">(n-2)*k</span></code> in <code class="docutils literal notranslate"><span class="pre">a[i]∩a[j]</span></code> for any different <span class="math notranslate nohighlight">\(i\)</span> and <span class="math notranslate nohighlight">\(j\)</span>, since these functions must miss both <span class="math notranslate nohighlight">\(i\)</span> and <span class="math notranslate nohighlight">\(j\)</span>. In general, for some subset <span class="math notranslate nohighlight">\(b\)</span> of <span class="math notranslate nohighlight">\(a\)</span>, <code class="docutils literal notranslate"><span class="pre">≢⊃∩/b</span> <span class="pre">←→</span> <span class="pre">(n-≢b)*k</span></code>. Just like we did when counting derangements, we can group together subsets of <span class="math notranslate nohighlight">\(a\)</span> which are the same size. There are <code class="docutils literal notranslate"><span class="pre">m!n</span></code> subsets of size <span class="math notranslate nohighlight">\(m\)</span> in <span class="math notranslate nohighlight">\(n\)</span>, and there are <code class="docutils literal notranslate"><span class="pre">(n-m)*k</span></code> functions in each of these subsets. Therefore, by applying the principle of inclusion and exclusion we have</p>
@@ -633,7 +648,7 @@ p←s⊂⍤/⍨⍤1⍉2⊥⍣¯1⍳¯1+2*n    ⍝ all nonempty subsets of s
 </div>
 </section>
 <section id="counting-set-partitions">
-<h2>Counting Set Partitions<a class="headerlink" href="#counting-set-partitions" title="Permalink to this heading">#</a></h2>
+<h2>Counting Set Partitions<a class="headerlink" href="#counting-set-partitions" title="Link to this heading">#</a></h2>
 <p>In our balls and boxes analogy, the surjections we just counted are placing <em>labelled</em> balls into <em>labelled</em> boxes. If we unlabel the boxes, we we’re solving the counting problem of <em>set partitions</em>, that is, ways to partition our set of <span class="math notranslate nohighlight">\(k\)</span> balls (or any set of size <span class="math notranslate nohighlight">\(k\)</span>) into <span class="math notranslate nohighlight">\(n\)</span> pieces. since the boxes (the partitions) are unlabelled we don’t care about their order.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>⍝ original set
 &#39;🍎🍌🍊🍐🍇&#39;
@@ -713,9 +728,11 @@ p←s⊂⍤/⍨⍤1⍉2⊥⍣¯1⍳¯1+2*n    ⍝ all nonempty subsets of s
 </ul>
 </div>
 <hr class="footnotes docutils" />
-<aside class="footnote brackets" id="stirling" role="note">
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="stirling" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
 <p>The Stirling numbers of the <em>first</em> kind count the number of permutations of <span class="math notranslate nohighlight">\(n\)</span> elements with <span class="math notranslate nohighlight">\(k\)</span> cycles.</p>
+</aside>
 </aside>
 </section>
 </section>
@@ -747,7 +764,7 @@ p←s⊂⍤/⍨⍤1⍉2⊥⍣¯1⍳¯1+2*n    ⍝ all nonempty subsets of s
               
               
               
-                <footer class="prev-next-footer">
+                <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
     <a class="left-prev"
@@ -776,6 +793,7 @@ p←s⊂⍤/⍨⍤1⍉2⊥⍣¯1⍳¯1+2*n    ⍝ all nonempty subsets of s
             
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
 
   <div class="sidebar-secondary-item">
   <div class="page-toc tocsection onthispage">
@@ -813,7 +831,7 @@ By Asher Harvey-Smith
 
   <p class="copyright">
     
-      © Copyright 2022.
+      © Copyright 2023.
       <br/>
     
   </p>
@@ -837,8 +855,8 @@ By Asher Harvey-Smith
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
-<script src="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
 
   <footer class="bd-footer">
   </footer>

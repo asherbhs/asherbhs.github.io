@@ -78,7 +78,7 @@ Invalid3Permutation←{     ⍝ invalid: both 2 and 3 are sent to 1
 '🍎🍌🍊🍐🍇'[p]
 ```
 
-This shows that in our counting problems which require at most one ball in a box, we are really counting *injective* functions, i.e. functions which which don't send more than one element of the input to the same output. Note that for a function $[k]\to[n]$ to be injective, we much have `k≤n`, or we would have so many balls that at least one box would need to be given more than one.
+This shows that in our counting problems which require at most one ball in a box, we are really counting *injective* functions, i.e. functions which which don't send more than one element of the input to the same output. Note that for a function $[k]\to[n]$ to be injective, we must have `k≤n`, or we would have so many balls that at least one box would need to be given more than one.
 
 We can also think about what counting *surjective* functions, that is, functions where each element of `⍳n` has at least one element of `⍳k` which is sent to it, means for our counting problems. In the balls and boxes analogy, it means that each box gets *at least* one ball placed in it, potentially more. Note that here, a function $[k]\to[n]$ must have `k≥n` to have a chance of being surjective, otherwise we wouldn't have enough balls to put at least one in each box.
 

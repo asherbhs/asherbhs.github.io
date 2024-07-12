@@ -30,7 +30,7 @@ We're going to consider the case where we have unlabelled balls, and unlabelled 
 We can think of each partition as a map of a balls into boxes placement, with each number indicating that many balls are placed in the box at that position.
 
 ```{code-cell}
-⍪5 3 2⍴¨'*'    ⍝ 7 balls in the first box, 2 in the second, and 1 in the third
+⍪5 3 2⍴¨'*'    ⍝ 5 balls in the first box, 3 in the second, and 2 in the third
 ```
 
 Note that since our boxes are unlabelled, we don't care about the ordering of these numbers. The partition `7 2 1` is the same as the partition `2 1 7`. Labelling boxes leads to the 'stars and bars' scenario we looked at in the [previous section](./stars-bars.md). We'll be representing each partition with its terms in decreasing order, for consistency.

@@ -1,4 +1,4 @@
-# Some Mathematics in Dyalog APL
+# Doing Things in Dyalog APL
 
 ```{tableofcontents}
 ```

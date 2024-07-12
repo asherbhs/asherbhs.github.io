@@ -23,6 +23,8 @@ kernelspec:
 - twelvefold table, partially filled in with already seen problems
 - we're going to explore the rest of the problems, and enumerate possibilities for each
 
+
+
 ## Implementing the Twelvefold Way
 
 - for each function, we can either have ball → box mappings, or box → ball mappings, or both!
