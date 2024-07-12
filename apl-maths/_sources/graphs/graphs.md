@@ -12,6 +12,6 @@ kernelspec:
   name:         dyalog_apl
 ---
 
-# Graph Theory
+# Graphs
 
 
