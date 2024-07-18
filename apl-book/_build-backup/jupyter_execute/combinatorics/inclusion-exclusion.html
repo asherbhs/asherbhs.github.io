@@ -1,0 +1,846 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Inclusion-Exclusion and Counting Partitions &#8212; Doing Things in Dyalog APL</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=87e54e7c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=bfa96906" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_build-backup/jupyter_execute/combinatorics/inclusion-exclusion';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/logo.png" class="logo__image only-light" alt="Doing Things in Dyalog APL - Home"/>
+    <script>document.write(`<img src="../../../_static/logo.png" class="logo__image only-dark" alt="Doing Things in Dyalog APL - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../intro.html">
+                    Doing Things in Dyalog APL
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Combinatorics</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../combinatorics/enumerative.html">Enumerative Combinatorics</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../combinatorics/combinations-and-bijective-proofs.html">Combinations and Bijective Proofs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../combinatorics/counting-functions.html">Counting Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../combinatorics/inclusion-exclusion.html">Inclusion-Exclusion and Counting Partitions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../combinatorics/stars-bars.html">Stars and Bars</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../combinatorics/integer-partitions.html">Integer Partitions</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../combinatorics/twelvefold.html">The Twelvefold Way</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../combinatorics/catalan.html">The Catalan Numbers</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Trees</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../trees/trees.html">Trees</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Graphs</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../graphs/graphs.html">Graph Theory</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2F_build-backup/jupyter_execute/combinatorics/inclusion-exclusion.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/_build-backup/jupyter_execute/combinatorics/inclusion-exclusion.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Inclusion-Exclusion and Counting Partitions</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-inclusion-exclusion-principle">The Inclusion-Exclusion Principle</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#derangements">Derangements</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#counting-surjections">Counting Surjections</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#counting-set-partitions">Counting Set Partitions</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="inclusion-exclusion-and-counting-partitions">
+<h1>Inclusion-Exclusion and Counting Partitions<a class="headerlink" href="#inclusion-exclusion-and-counting-partitions" title="Link to this heading">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nf">⎕IO</span><span class="kd">←</span><span class="m">1</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The topic of this section will be counting surjective functions, but we need to build up some more tools before we can do that.</p>
+<section id="the-inclusion-exclusion-principle">
+<h2>The Inclusion-Exclusion Principle<a class="headerlink" href="#the-inclusion-exclusion-principle" title="Link to this heading">#</a></h2>
+<p>Say we have two sets <span class="math notranslate nohighlight">\(a\)</span> and <span class="math notranslate nohighlight">\(b\)</span>, and we want to know the size of their union. Of course, it’s easy to just calculate this for specific examples:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">a</span><span class="kd">←</span><span class="s1">&#39;🍎🍌🍊🍐🍇🥑🫑&#39;</span>
+<span class="nv">b</span><span class="kd">←</span><span class="s1">&#39;🍄🥕🫑🧅🥑&#39;</span>
+<span class="nv">a</span><span class="o">∪</span><span class="nv">b</span>
+<span class="o">≢</span><span class="nv">a</span><span class="o">∪</span><span class="nv">b</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">🍎🍌🍊🍐🍇🥑🫑🍄🥕🧅
+</pre></div><div class="output text_html"><pre class="language-APL">10
+</pre></div></div>
+</div>
+<p><img alt="" src="_build-backup/jupyter_execute/manim/media/images/combinatorics/InclusionExclusion1_ManimCE_v0.18.0.png" /></p>
+<p>If we add together the sizes of the two sets, we are overcounting relative to their union, as we’re counting their intersection twice.</p>
+<p><img alt="" src="_build-backup/jupyter_execute/manim/media/images/combinatorics/InclusionExclusion2_ManimCE_v0.18.0.png" /></p>
+<p>Therefore, the size of the union of two sets is the sum of their individual sizes, minus the size of the overcounted intersection:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>≢a∪b ←→ (≢a)+(≢b)-≢a∩b
+</pre></div>
+</div>
+<p>We can apply the same logic when we have three sets.</p>
+<p><img alt="" src="_build-backup/jupyter_execute/manim/media/images/combinatorics/InclusionExclusion3_ManimCE_v0.18.0.png" /></p>
+<p>We’re still counting the pairwise intersections twice each. When we subtract the sizes of the extra pairwise intersections, we end up subtracting the size of the intersection of all three sets three times over. Since this intersection appeared three times in the original sum (once in each set), this means we have uncounted all of the elements in the intersection of all three sets, so we need to add it back in. This gives us:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>≢a∪b∪c ←→ (≢a)+(≢b)+(≢c)+(-≢a∩b)+(-≢a∩c)+(-≢b∩c)+≢a∩b∩c
+</pre></div>
+</div>
+<p>The pattern emerging here is that we add the individual set sizes, substract the pairwise intersection sizes, add the triple-wise intersection sizes, subtract the quadruple-wise intersection sizes, and so on. This pattern gives us the <em>principle of inclusion and exclusion</em>: given a set <span class="math notranslate nohighlight">\(a\)</span> of sets <code class="docutils literal notranslate"><span class="pre">a[1]</span></code> through <code class="docutils literal notranslate"><span class="pre">a[n]</span></code> where <code class="docutils literal notranslate"><span class="pre">n≡≢as</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>p←a⊂⍤/⍨⍤1⍉2⊥⍣¯1⍳¯1+2*≢a    ⍝ all non-empty subsets of a
+⍝                     ┌───────┬─sizes of the intersections of all the sets in subsets
+≢⊃∪/a ←→ +/(¯1*1+≢¨p)×{≢⊃∩/⍵}¨p
+⍝          └─────────┴─subtract if there are an even number of subsets, else add
+</pre></div>
+</div>
+<p>In traditional mathematical notation, this is written as</p>
+<div class="math notranslate nohighlight">
+\[
+\left|\bigcup_{i=1}^na_i\right|=\sum_{\emptyset\ne J\subseteq[n]}(-1)^{|J|+1}\left|\bigcap_{j\in J}a_j\right|
+\]</div>
+<p>Let’s see this in action:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">a</span><span class="kd">←</span><span class="s1">&#39;ABC&#39;</span><span class="w"> </span><span class="s1">&#39;CDEF&#39;</span><span class="w"> </span><span class="s1">&#39;DEFG&#39;</span><span class="w"> </span><span class="s1">&#39;FG&#39;</span>
+<span class="o">⊃∪</span><span class="na">/</span><span class="nv">a</span>
+<span class="o">≢⊃∪</span><span class="na">/</span><span class="nv">a</span>
+<span class="o">⍪</span><span class="nv">p</span><span class="kd">←</span><span class="nv">a</span><span class="o">⊂</span><span class="na">⍤/⍨⍤</span><span class="m">1</span><span class="o">⍉</span><span class="m">2</span><span class="o">⊥</span><span class="na">⍣</span><span class="m">¯1</span><span class="o">⍳</span><span class="m">¯1</span><span class="o">+</span><span class="m">2</span><span class="o">*≢</span><span class="nv">a</span>
+<span class="o">+</span><span class="na">/</span><span class="p">(</span><span class="m">¯1</span><span class="o">*</span><span class="m">1</span><span class="o">+≢</span><span class="na">¨</span><span class="nv">p</span><span class="p">)</span><span class="o">×</span><span class="kt">{</span><span class="o">≢⊃∩</span><span class="na">/</span><span class="bp">⍵</span><span class="kt">}</span><span class="na">¨</span><span class="nv">p</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">ABCDEFG
+</pre></div><div class="output text_html"><pre class="language-APL">7
+</pre></div><div class="output text_html"><pre class="language-APL">  FG                   
+  DEFG                 
+  DEFG  FG             
+  CDEF                 
+  CDEF  FG             
+  CDEF  DEFG           
+  CDEF  DEFG  FG       
+  ABC                  
+  ABC  FG              
+  ABC  DEFG            
+  ABC  DEFG  FG        
+  ABC  CDEF            
+  ABC  CDEF  FG        
+  ABC  CDEF  DEFG      
+  ABC  CDEF  DEFG  FG  
+</pre></div><div class="output text_html"><pre class="language-APL">7
+</pre></div></div>
+</div>
+<p>To prove that this is true, consider any element <span class="math notranslate nohighlight">\(x\)</span> of <code class="docutils literal notranslate"><span class="pre">⊃∪/a</span></code>. Let <span class="math notranslate nohighlight">\(b\)</span> be the subset of <span class="math notranslate nohighlight">\(a\)</span> which contains only the sets which contain <span class="math notranslate nohighlight">\(x\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="c1">⍝ for example</span>
+<span class="nv">x</span><span class="kd">←</span><span class="s1">&#39;F&#39;</span>
+<span class="o">⊢</span><span class="nv">b</span><span class="kd">←</span><span class="p">(</span><span class="nv">x</span><span class="o">∊</span><span class="na">¨</span><span class="nv">a</span><span class="p">)</span><span class="na">/</span><span class="nv">a</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL"> CDEF  DEFG  FG 
+</pre></div></div>
+</div>
+<p>In the inclusion-exclusion formula, <span class="math notranslate nohighlight">\(x\)</span> is counted once for each odd-sized subset of <span class="math notranslate nohighlight">\(b\)</span>, and uncounted once for every even-sized subset of <span class="math notranslate nohighlight">\(b\)</span>.Therefore, we have the following for <span class="math notranslate nohighlight">\(m\)</span>, the number of times <span class="math notranslate nohighlight">\(x\)</span> is counted:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>t←≢b
+m←+/(1!t) (-2!t) .. ((¯1*1+t)×t!t)
+</pre></div>
+</div>
+<p>By the binomial theorem (see <a class="reference internal" href="#./combinations-and-bijective-proofs.md"><span class="xref myst">here</span></a>), we have</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>0 ←→ (1-1)*t
+  ←→ +/(0!t)   (-1!t) .. ((¯1*  t)×t!t)
+  ←→   (0!t)++/(-1!t) .. ((¯1*  t)×t!t)
+  ←→   (0!t)-+/( 1!t) .. ((¯1*1+t)×t!t)
+  ←→   (0!t)-m
+</pre></div>
+</div>
+<p>Since <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">←→</span> <span class="pre">0!t</span></code>, <span class="math notranslate nohighlight">\(m\)</span> must be equal to <span class="math notranslate nohighlight">\(1\)</span>, so <span class="math notranslate nohighlight">\(x\)</span> is counted only once in the inclusion-exclusion formula.</p>
+<section id="derangements">
+<h3>Derangements<a class="headerlink" href="#derangements" title="Link to this heading">#</a></h3>
+<p>To see a use of the principle of inclusion and exclusion, let’s take a look at another counting problem.</p>
+<p>A <em>derangement</em> is a permutation where no element stays in its original position.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">a</span><span class="kd">←</span><span class="m">1</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="m">5</span>
+<span class="nv">b</span><span class="kd">←</span><span class="m">4</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="m">3</span>
+<span class="nv">c</span><span class="kd">←</span><span class="m">3</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="m">2</span>
+<span class="nv">a</span><span class="o">=</span><span class="nv">b</span><span class="w">            </span><span class="c1">⍝ b is a derangement of a, no elements in the same place</span>
+<span class="nv">a</span><span class="o">=</span><span class="nv">c</span><span class="w">            </span><span class="c1">⍝ c is not a derangement of a, 4 is in the same place</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">0 0 0 0 0
+</pre></div><div class="output text_html"><pre class="language-APL">0 0 0 1 0
+</pre></div></div>
+</div>
+<p>How many derangements are there of <span class="math notranslate nohighlight">\(n\)</span> elements?</p>
+<p>We already know that there are <code class="docutils literal notranslate"><span class="pre">!n</span></code> permutations of <span class="math notranslate nohighlight">\(n\)</span> elements. Let <span class="math notranslate nohighlight">\(s\)</span> be the set of sets such that <code class="docutils literal notranslate"><span class="pre">s[k]</span></code> is the set of permutations which fix the <span class="math notranslate nohighlight">\(k\)</span>th object in place. There will be <code class="docutils literal notranslate"><span class="pre">!n-1</span></code> permutations in this set, since one object is no longer free to move.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="c1">⍝ for example</span>
+<span class="nv">n</span><span class="kd">←</span><span class="m">3</span>
+<span class="nv">s</span><span class="kd">←</span><span class="no">⍬</span>
+<span class="nv">s</span><span class="o">,</span><span class="kd">←</span><span class="o">⊂</span><span class="p">(</span><span class="m">1</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">3</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="m">1</span><span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="m">2</span><span class="p">)</span><span class="w">    </span><span class="c1">⍝ permutations which fix 1</span>
+<span class="nv">s</span><span class="o">,</span><span class="kd">←</span><span class="o">⊂</span><span class="p">(</span><span class="m">1</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">3</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="m">3</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">1</span><span class="p">)</span><span class="w">    </span><span class="c1">⍝ permutations which fix 2</span>
+<span class="nv">s</span><span class="o">,</span><span class="kd">←</span><span class="o">⊂</span><span class="p">(</span><span class="m">1</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">3</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="m">2</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">3</span><span class="p">)</span><span class="w">    </span><span class="c1">⍝ permutations which fix 3</span>
+<span class="o">⍪</span><span class="nv">s</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">  1 2 3  1 3 2  
+  1 2 3  3 2 1  
+  1 2 3  2 1 3  
+</pre></div></div>
+</div>
+<p>The set of derangements of <span class="math notranslate nohighlight">\(n\)</span> elements is the set of permutations of <span class="math notranslate nohighlight">\(n\)</span> elements, without the union of sets in <span class="math notranslate nohighlight">\(s\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">p</span><span class="kd">←</span><span class="p">(</span><span class="m">1</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">3</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="m">1</span><span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="m">2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="m">2</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">3</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="m">2</span><span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="m">1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="m">3</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="m">3</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">1</span><span class="p">)</span><span class="w">    </span><span class="c1">⍝ all permutations of 3 elements</span>
+<span class="nv">p</span><span class="o">~⊃∪</span><span class="na">/</span><span class="nv">s</span><span class="w">    </span><span class="c1">⍝ derangements of 3 elements</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL"> 2 3 1  3 1 2 
+</pre></div></div>
+</div>
+<p>So, if we want to count the derangements of <span class="math notranslate nohighlight">\(n\)</span> elements (and we don’t want to generate them all to do it), we would take the number of permutations of <span class="math notranslate nohighlight">\(n\)</span> elements (<code class="docutils literal notranslate"><span class="pre">!n</span></code>), and subtract the number of permutations which fix at least one object (<code class="docutils literal notranslate"><span class="pre">≢⊃∪/s</span></code>).</p>
+<p>The intersection of any <span class="math notranslate nohighlight">\(i\)</span> sets in <span class="math notranslate nohighlight">\(s\)</span> will fix <span class="math notranslate nohighlight">\(i\)</span> objects, and therefore will have <code class="docutils literal notranslate"><span class="pre">!n-i</span></code> elements. There are <code class="docutils literal notranslate"><span class="pre">i!n</span></code> ways to pick <span class="math notranslate nohighlight">\(i\)</span> sets from <span class="math notranslate nohighlight">\(s\)</span>.</p>
+<p>This gives us all the information we need to use the principle of inclusion and exclusion find <code class="docutils literal notranslate"><span class="pre">≢⊃∪/s</span></code>. Rather than summing over all subsets of <span class="math notranslate nohighlight">\(s\)</span>, we can group together the subsets into those of the same size. For all <span class="math notranslate nohighlight">\(i\)</span>, the total size of subsets of <span class="math notranslate nohighlight">\(s\)</span> which have size <span class="math notranslate nohighlight">\(i\)</span> is <code class="docutils literal notranslate"><span class="pre">(i!n)×!n-i</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>n←≢s
+p←s⊂⍤/⍨⍤1⍉2⊥⍣¯1⍳¯1+2*n    ⍝ all nonempty subsets of s
+≢⊃∪/s ←→ +/(¯1*1+≢¨p)×{≢⊃∩/⍵}¨p
+      ←→ +/(¯1*1+i)×(i!n)×!n-i←⍳n               ⍝ grouping subsets of the same size
+                                                ⍝ note that i here is all the possible values for i above in a vector
+      ←→ +/(¯1*1+i)×((!n)÷(!i)×!n-i)×!n-i←⍳n    ⍝ expanding out the binomial coefficient
+      ←→ +/(¯1*1+i)×(!n)÷!i←⍳n                  ⍝ !n-i cancels out
+      ←→ (!n)×+/(¯1*1+i)÷!i←⍳n                  ⍝ factoring out !n
+</pre></div>
+</div>
+<p>Therefore, the number of derangements of <span class="math notranslate nohighlight">\(n\)</span> elements is</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>(!n)-≢⊃∪/s ←→ (!n)-(!n)×+/(¯1*1+i)÷!i←⍳n
+           ←→ (!n)×1-+/(¯1*1+i)÷!i←⍳n      ⍝ factor out !n
+           ←→ (!n)×  +/(¯1*  i)÷!i←0,⍳n    ⍝ the - cancels out the 1+, and we can absorb the 1 into the sum by adding 0, to i
+           ←→ (!n)×+/(¯1∘*÷!)0,⍳n          ⍝ in tacit form
+</pre></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">NDerangements</span><span class="kd">←</span><span class="kt">{</span><span class="p">(</span><span class="o">!</span><span class="bp">⍵</span><span class="p">)</span><span class="o">×+</span><span class="na">/</span><span class="p">(</span><span class="m">¯1</span><span class="na">∘</span><span class="o">*÷!</span><span class="p">)</span><span class="m">0</span><span class="o">,⍳</span><span class="bp">⍵</span><span class="kt">}</span>
+<span class="nv">NDerangements</span><span class="na">¨</span><span class="o">⍳</span><span class="m">10</span><span class="w">    </span><span class="c1">⍝ https://oeis.org/A000166</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">0 1 2 9 44 265 1854 14833 133496 1334961
+</pre></div></div>
+</div>
+<div class="admonition-aside admonition">
+<p class="admonition-title">Aside</p>
+<p>The sum in the formula we just derived is actually the Taylor polynomial for <span class="math notranslate nohighlight">\(e^{-1}\)</span> (<code class="docutils literal notranslate"><span class="pre">*¯1</span></code>), so we could also write</p>
+<p><code class="docutils literal notranslate"><span class="pre">NDerangements←⌊.5+(*¯1)×!</span></code></p>
+</div>
+</section>
+</section>
+<section id="counting-surjections">
+<h2>Counting Surjections<a class="headerlink" href="#counting-surjections" title="Link to this heading">#</a></h2>
+<p>Now that we’re used to the principle of inclusion and exclusion, we’re ready to start counting surjections. Returning to our balls in boxes analogy, a surjection <span class="math notranslate nohighlight">\([k]\to[n]\)</span> is a function which places at least one of the <span class="math notranslate nohighlight">\(k\)</span> balls into each of the <span class="math notranslate nohighlight">\(n\)</span> boxes. To count surjections, we’re going to use a similar method to the one we used to count derangements - we’re going to try and count all the functions which are <em>not</em> surjections, and subtract that from the total number of functions.</p>
+<p>Let <span class="math notranslate nohighlight">\(a\)</span> be the set of sets of functions <span class="math notranslate nohighlight">\([k]\to[n]\)</span> (represented as vectors as discussed in the previous sections) such that no function in <code class="docutils literal notranslate"><span class="pre">a[i]</span></code> sends any of its inputs to <span class="math notranslate nohighlight">\(i\)</span>. That is, <code class="docutils literal notranslate"><span class="pre">~∨/i∊¨a[i]</span></code>. Since each function in <code class="docutils literal notranslate"><span class="pre">a[i]</span></code> ‘misses’ <span class="math notranslate nohighlight">\(i\)</span>, <code class="docutils literal notranslate"><span class="pre">⊃∪/a</span></code> is the set of functions which miss any element of <code class="docutils literal notranslate"><span class="pre">⍳n</span></code>, i.e. the set of functions which are not surjections.</p>
+<p>Since there are no other restrictions on the functions in <code class="docutils literal notranslate"><span class="pre">a[i]</span></code> other than that they cannot send any input to <span class="math notranslate nohighlight">\(i\)</span>, there are <code class="docutils literal notranslate"><span class="pre">(n-1)*k</span></code> functions in <code class="docutils literal notranslate"><span class="pre">a[i]</span></code>. Likewise, there are <code class="docutils literal notranslate"><span class="pre">(n-2)*k</span></code> in <code class="docutils literal notranslate"><span class="pre">a[i]∩a[j]</span></code> for any different <span class="math notranslate nohighlight">\(i\)</span> and <span class="math notranslate nohighlight">\(j\)</span>, since these functions must miss both <span class="math notranslate nohighlight">\(i\)</span> and <span class="math notranslate nohighlight">\(j\)</span>. In general, for some subset <span class="math notranslate nohighlight">\(b\)</span> of <span class="math notranslate nohighlight">\(a\)</span>, <code class="docutils literal notranslate"><span class="pre">≢⊃∩/b</span> <span class="pre">←→</span> <span class="pre">(n-≢b)*k</span></code>. Just like we did when counting derangements, we can group together subsets of <span class="math notranslate nohighlight">\(a\)</span> which are the same size. There are <code class="docutils literal notranslate"><span class="pre">m!n</span></code> subsets of size <span class="math notranslate nohighlight">\(m\)</span> in <span class="math notranslate nohighlight">\(n\)</span>, and there are <code class="docutils literal notranslate"><span class="pre">(n-m)*k</span></code> functions in each of these subsets. Therefore, by applying the principle of inclusion and exclusion we have</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>≢⊃∪/a ←→ +/(¯1*1+m)×(m!n)×(n-m←⍳n)*k
+</pre></div>
+</div>
+<p>for the number of non-surjections <span class="math notranslate nohighlight">\([k]\to[n]\)</span>. To find the number of surjections, we just subtract this from the total number of functions <span class="math notranslate nohighlight">\([k]\to[n]\)</span>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>(n*k)-+/(¯1*1+m)×(m!n)×(n-m←  ⍳n)*k
+   ←→ +/(¯1*  m)×(m!n)×(n-m←0,⍳n)*k 
+</pre></div>
+</div>
+<p>Let’s give it a whirl:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">Surj</span><span class="kd">←</span><span class="kt">{</span><span class="nv">k</span><span class="w"> </span><span class="nv">n</span><span class="kd">←</span><span class="bp">⍺</span><span class="w"> </span><span class="bp">⍵</span>
+<span class="w">    </span><span class="nv">m</span><span class="kd">←</span><span class="m">0</span><span class="o">,⍳</span><span class="nv">n</span>
+<span class="w">    </span><span class="o">+</span><span class="na">/</span><span class="p">(</span><span class="m">¯1</span><span class="o">*</span><span class="nv">m</span><span class="p">)</span><span class="o">×</span><span class="p">(</span><span class="nv">m</span><span class="o">!</span><span class="nv">n</span><span class="p">)</span><span class="o">×</span><span class="p">(</span><span class="nv">n</span><span class="o">-</span><span class="nv">m</span><span class="p">)</span><span class="o">*</span><span class="nv">k</span>
+<span class="kt">}</span>
+
+<span class="c1">⍝ there are 2*4 ←→ 16 functions from ⍳4 to ⍳2</span>
+<span class="c1">⍝ only two of these are not surjections: 1 1 1 1 and 2 2 2 2</span>
+<span class="c1">⍝ 16-2 ←→ 14</span>
+<span class="m">4</span><span class="w"> </span><span class="nv">Surj</span><span class="w"> </span><span class="m">2</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">14
+</pre></div></div>
+</div>
+</section>
+<section id="counting-set-partitions">
+<h2>Counting Set Partitions<a class="headerlink" href="#counting-set-partitions" title="Link to this heading">#</a></h2>
+<p>In our balls and boxes analogy, the surjections we just counted are placing <em>labelled</em> balls into <em>labelled</em> boxes. If we unlabel the boxes, we we’re solving the counting problem of <em>set partitions</em>, that is, ways to partition our set of <span class="math notranslate nohighlight">\(k\)</span> balls (or any set of size <span class="math notranslate nohighlight">\(k\)</span>) into <span class="math notranslate nohighlight">\(n\)</span> pieces. since the boxes (the partitions) are unlabelled we don’t care about their order.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>⍝ original set
+&#39;🍎🍌🍊🍐🍇&#39;
+
+⍝ partitions into three pieces
+&#39;🍎🍌🍊&#39;  &#39;🍐&#39;    &#39;🍇&#39;    ⍝ same as &#39;🍎🍌🍊&#39; &#39;🍇&#39; &#39;🍐&#39;, we don&#39;t care about order of partitions
+&#39;🍎🍌🍐&#39;  &#39;🍊&#39;    &#39;🍇&#39;    ⍝ same as &#39;🍌🍎🍐&#39; &#39;🍊&#39; &#39;🍇&#39;, we don&#39;t care about order within a partition
+&#39;🍎🍌&#39;   &#39;🍊🍐&#39;   &#39;🍇&#39;
+&#39;🍎🍌🍇&#39;  &#39;🍊&#39;    &#39;🍐&#39;
+&#39;🍎🍌&#39;   &#39;🍊🍇&#39;   &#39;🍐&#39;
+⍝ and so on
+</pre></div>
+</div>
+<p>Since the only difference between counting partitions and counting surjections is the labelling of the boxes, it’s very easy to derive a formula for the number of set partitions for a given <span class="math notranslate nohighlight">\(k\)</span> and <span class="math notranslate nohighlight">\(n\)</span>. There are <code class="docutils literal notranslate"><span class="pre">!n</span></code> ways to label the <span class="math notranslate nohighlight">\(n\)</span> boxes, so we just need to divide the number of surjections by <code class="docutils literal notranslate"><span class="pre">!n</span></code> to find the number of set partitions. The resulting numbers are the <em>Stirling numbers of the second kind</em><a class="footnote-reference brackets" href="#stirling" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">Stirling</span><span class="kd">←</span><span class="kt">{</span><span class="nv">k</span><span class="w"> </span><span class="nv">n</span><span class="kd">←</span><span class="bp">⍺</span><span class="w"> </span><span class="bp">⍵</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">k</span><span class="w"> </span><span class="nv">Surj</span><span class="w"> </span><span class="nv">n</span><span class="p">)</span><span class="o">÷!</span><span class="nv">n</span>
+<span class="kt">}</span>
+
+<span class="c1">⍝ there are 25 ways to partition a 5-element set into 3 pieces</span>
+<span class="m">5</span><span class="w"> </span><span class="nv">Stirling</span><span class="w"> </span><span class="m">3</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">25
+</pre></div></div>
+</div>
+<p>In traditional mathematical notation, <code class="docutils literal notranslate"><span class="pre">k</span> <span class="pre">Stirling</span> <span class="pre">n</span></code> is often written</p>
+<div class="math notranslate nohighlight">
+\[n\brace k\]</div>
+<p>Just as we did with binomial coefficients, we can arrange the Stirling numbers in a triangle.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="na">∘.</span><span class="nv">Stirling</span><span class="na">⍨</span><span class="o">⍳</span><span class="m">7</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">1  0   0   0   0  0 0
+1  1   0   0   0  0 0
+1  3   1   0   0  0 0
+1  7   6   1   0  0 0
+1 15  25  10   1  0 0
+1 31  90  65  15  1 0
+1 63 301 350 140 21 1
+</pre></div></div>
+</div>
+<p>Each <span class="math notranslate nohighlight">\(k\)</span>th row of this triangle represents the number of ways to partition a <span class="math notranslate nohighlight">\(k\)</span> element set into <span class="math notranslate nohighlight">\(1,2,\ldots,n\)</span> pieces. Therefore, summing along the rows gives the number of ways to partition a <span class="math notranslate nohighlight">\(k\)</span> element set into any number of pieces.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="o">+</span><span class="na">/∘.</span><span class="nv">Stirling</span><span class="na">⍨</span><span class="o">⍳</span><span class="m">7</span><span class="w">    </span><span class="c1">⍝ https://oeis.org/A000110</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">1 2 5 15 52 203 877
+</pre></div></div>
+</div>
+<p>These are the <em>Bell numbers</em>.</p>
+<p>The Stirling number for any <code class="docutils literal notranslate"><span class="pre">k&lt;n</span></code> is <span class="math notranslate nohighlight">\(0\)</span>. You can interpret this as there not being enough balls to fill all the boxes. So we know we don’t need to count any Stirling numbers with <code class="docutils literal notranslate"><span class="pre">k&lt;n</span></code> when calculating the Bell numbers.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">Bell</span><span class="kd">←</span><span class="kt">{</span><span class="o">+</span><span class="na">/</span><span class="nv">k</span><span class="w"> </span><span class="nv">Stirling</span><span class="na">¨</span><span class="o">⍳</span><span class="nv">k</span><span class="kd">←</span><span class="bp">⍵</span><span class="kt">}</span><span class="w">    </span><span class="c1">⍝ or +/Stirling¨∘⍳⍨ if you prefer tacit</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<ul class="simple">
+<li><p>The principle of inclusion and exclusion says that, for some set of subsets <span class="math notranslate nohighlight">\(a\)</span>, <code class="docutils literal notranslate"><span class="pre">≢⊃∪/a</span> <span class="pre">←→</span> <span class="pre">+/(¯1*1+≢¨p)×{≢⊃∩/⍵}¨p</span></code>, where <span class="math notranslate nohighlight">\(p\)</span> is the powerset of <span class="math notranslate nohighlight">\(a\)</span>.</p></li>
+<li><p>There are <code class="docutils literal notranslate"><span class="pre">+/(¯1*m)×(m!n)×(n-m←0,⍳n)*k</span></code> surjective functions of type <span class="math notranslate nohighlight">\([k]\to[n]\)</span>.</p></li>
+<li><p>There are <code class="docutils literal notranslate"><span class="pre">(k</span> <span class="pre">Surj</span> <span class="pre">n)÷!n</span></code> ways to partition a <span class="math notranslate nohighlight">\(k\)</span>-element set into <span class="math notranslate nohighlight">\(n\)</span> pieces. These are the <em>Stirling numbers of the second kind</em>.</p></li>
+<li><p>There are <code class="docutils literal notranslate"><span class="pre">+/k</span> <span class="pre">Stirling¨⍳k</span></code> ways to partition a <span class="math notranslate nohighlight">\(k\)</span>-element set into any number of pieces. These are the <em>Bell numbers</em>.</p></li>
+</ul>
+</div>
+<hr class="footnotes docutils" />
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="stirling" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>The Stirling numbers of the <em>first</em> kind count the number of permutations of <span class="math notranslate nohighlight">\(n\)</span> elements with <span class="math notranslate nohighlight">\(k\)</span> cycles.</p>
+</aside>
+</aside>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "dyalog_apl"
+        },
+        kernelOptions: {
+            name: "dyalog_apl",
+            path: "./_build-backup/jupyter_execute/combinatorics"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'dyalog_apl'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-inclusion-exclusion-principle">The Inclusion-Exclusion Principle</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#derangements">Derangements</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#counting-surjections">Counting Surjections</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#counting-set-partitions">Counting Set Partitions</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Asher Harvey-Smith
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
