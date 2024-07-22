@@ -1,0 +1,20 @@
+- more combinatorics
+    - finish algorithms and catalan numbers
+    - latin squares
+    - polyominos
+- graph algorithms
+    - make sparse matrix library first
+- analysis
+    - draw from elementary analysis by iverson
+- algebra
+    - draw from algebra an algorithmic approach
+- linear algebra redux
+    - draw from that one apl linear algebra book
+- groups and representations
+    - multiplication tables
+        - `∆←{t[⍵;⍺]}`
+        - examples examples examples
+    - representations (not in terms of modules)
+        - homomorphisms to matrices
+        - character theory
+        - examples examples examples

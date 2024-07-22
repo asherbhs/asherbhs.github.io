@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>&lt;no title&gt; &#8212; Doing Things in Dyalog APL</title>
+    <title>Introduction &#8212; Doing Things in Dyalog APL</title>
   
   
   
@@ -58,9 +58,13 @@
     <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'trees/trees';</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'trees/intro';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Representing Trees" href="representing-trees.html" />
+    <link rel="prev" title="Doing Things in Dyalog APL" href="../intro.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -123,8 +127,6 @@
       
       
       
-        
-      
       <div class="bd-sidebar-primary bd-sidebar">
         
 
@@ -181,8 +183,8 @@
             </li>
         </ul>
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Trees</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="representing-trees.html">Representing Trees</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Combinatorics</span></p>
@@ -272,7 +274,7 @@
       
       
       
-      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Ftrees/trees.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Ftrees/intro.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -302,7 +304,7 @@
       
       
       
-      <li><a href="../_sources/trees/trees.md" target="_blank"
+      <li><a href="../_sources/trees/intro.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -373,9 +375,7 @@ document.write(`
   </button>
 `);
 </script>
-<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="fa-solid fa-list"></span>
-</button>
+
 </div></div>
       
     </div>
@@ -386,19 +386,11 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1><no title></h1>
+    <h1>Introduction</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
             
-            <div>
-                <h2> Contents </h2>
-            </div>
-            <nav aria-label="Page">
-                <ul class="simple visible nav section-nav flex-column">
-</ul>
-
-            </nav>
         </div>
     </div>
 </div>
@@ -408,135 +400,65 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <ul class="simple">
-<li><p>Trying out some formats</p>
-<ul>
-<li><p>preliminary definitions</p>
-<ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">I←{⍵[⍺]}</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">⎕IO←0</span></code></p></li>
+  <section class="tex2jax_ignore mathjax_ignore" id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">#</a></h1>
+<p>APL is fantastic for working with linear data. If you can organise your data in an array, you have dozens of primitives and years of collective wisdom to lead you to success. Sadly, in the wild, there are many problems which have a fundamentally non-linear structure. These present an issue for the brave APL programmer, whose array primitives are little help.</p>
+<p>One of the most common cases of this is dealing with hierarchical data, where pieces of data are variously ‘contained in’ or ‘belonging to’ others. Data like this are examples of a general structure called a <em>tree</em>.</p>
+<p>Formally, trees are made up of <em>nodes</em>. Each node may have some number of <em>child nodes</em>, and usually one <em>parent node</em>. There is exactly one node in a tree which has no parent, this is the tree’s <em>root node</em>.</p>
+<p>For many kinds of hierarchical data, we can model its structure as a tree:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Data</p></th>
+<th class="head"><p>Nodes</p></th>
+<th class="head"><p>Root node</p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(x\)</span> is a child node of <span class="math notranslate nohighlight">\(y\)</span></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>A file system</p></td>
+<td><p>Files and folders</p></td>
+<td><p>The root or home directory</p></td>
+<td><p><span class="math notranslate nohighlight">\(x\)</span> is in folder <span class="math notranslate nohighlight">\(y\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>Jobs in a company</p></td>
+<td><p>Employees</p></td>
+<td><p>CEO</p></td>
+<td><p><span class="math notranslate nohighlight">\(x\)</span> reports to <span class="math notranslate nohighlight">\(y\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://en.wikipedia.org/wiki/Tree_of_life_(biology)">Evolutionary tree of life</a></p></td>
+<td><p>Species</p></td>
+<td><p>Some unknown early micro-organism</p></td>
+<td><p><span class="math notranslate nohighlight">\(x\)</span> evolved from <span class="math notranslate nohighlight">\(y\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://www.json.org/json-en.html">JSON</a></p></td>
+<td><p>Data</p></td>
+<td><p>The outermost object or array</p></td>
+<td><p><span class="math notranslate nohighlight">\(x\)</span> is a member of array or object <span class="math notranslate nohighlight">\(y\)</span></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Interestingly, a family tree is not an example of this kind of tree, as each child typically does not have just one unique parent.</p>
+<p>We will generally draw trees with the root node at the top, and all child nodes arranged below, with a line connecting each child to its parent. For instance, in the following tree, the node labelled <span class="math notranslate nohighlight">\(a\)</span> is the root node, and is a parent of <span class="math notranslate nohighlight">\(b\)</span> and <span class="math notranslate nohighlight">\(c\)</span> - its children.</p>
+<figure class="align-default" id="id1">
+<img alt="A diagram of a simple tree." src="../_images/IntroTree_ManimCE_v0.18.1.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 1 </span><span class="caption-text">Baby’s first tree.</span><a class="headerlink" href="#id1" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>So how can we work with trees in APL? The answer, of course, is to find a way to encode the nodes and relationships in an array. In fact, we’re going to find that encoding trees as arrays doesn’t involve bending over backwards to fit a square peg into a round hole - instead we’ll see that the right representation leads to extremely elegant and fast code.</p>
+<p>I can take no credit for discovering the techniques discussed in this tutorial. The following resources have been especially influential:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://scholarworks.iu.edu/dspace/items/3ab772c9-92c9-4f59-bd95-40aff99e8c7a">Aaron Hsu’s thesis</a> on working with tree transformations in the context of a compiler. The thesis is extremely readable, especially for an academic paper, so you’re encouraged to take a look if you’re curious about a specialised application of tree transformation techniques.</p></li>
+<li><p><a class="reference external" href="http://archive.vector.org.uk/art10500340">Stevan Apter’s Vector article</a> on working with trees in q, a relative of APL. In various places, you can find trees represented with a parent vector (a technique which we will cover in due course) referred to as ‘Apter trees’ thanks to the influence of this excellent article.</p></li>
 </ul>
-</li>
-<li><p>nested array representation</p>
-<ul>
-<li><p>this is what lisp does</p></li>
+<p>Other useful resources on working with trees in array languages include:</p>
+<ul class="simple">
+<li><p>Aaron Hsu’s talks on <a class="reference external" href="https://dyalog.tv/Dyalog22/?v=5I4YPkVU7mY">text processing</a> and <a class="reference external" href="https://dyalog.tv/Dyalog18/?v=hzPd3umu78g">tree wrangling</a></p></li>
+<li><p>The <a class="reference external" href="https://github.com/tlack/atree/blob/master/README.md">README</a> of a C++ implementation of Apter trees.</p></li>
+<li><p><a class="reference external" href="https://github.com/JohnEarnest/ok/blob/gh-pages/docs/Trees.md">This</a> section of the oK documentation covering two different representations of trees.</p></li>
 </ul>
-</li>
-<li><p>depth vector</p>
-<ul>
-<li><p>what you get out of ⎕json</p></li>
-<li><p>slow to work with subtrees</p></li>
-</ul>
-</li>
-<li><p>path matrix</p>
-<ul>
-<li><p>construction from depth vector</p></li>
-<li><p>distances between nodes?</p></li>
-<li><p>oh no it’s O(nd)</p></li>
-</ul>
-</li>
-<li><p>parent vector</p></li>
-</ul>
-</li>
-<li><p>parent vector representation</p>
-<ul>
-<li><p>this is super great</p></li>
-<li><p>basic operations</p>
-<ul>
-<li><p>find children:    <code class="docutils literal notranslate"><span class="pre">⍸p∊i</span></code></p></li>
-<li><p>find leaves:      <code class="docutils literal notranslate"><span class="pre">p~⍨⍳≢p</span></code></p></li>
-<li><p>find roots:       <code class="docutils literal notranslate"><span class="pre">I⍣≡⍨p</span></code></p>
-<ul>
-<li><p>note forests are possible</p></li>
-</ul>
-</li>
-<li><p>select sub-trees: <code class="docutils literal notranslate"><span class="pre">I&#64;{...}⍣≡⍨p</span></code></p></li>
-<li><p>snip:             <code class="docutils literal notranslate"><span class="pre">i&#64;i⊢p</span></code></p></li>
-</ul>
-</li>
-<li><p>ordering</p>
-<ul>
-<li><p>don’t need to maintain dfpt order</p></li>
-<li><p>need to maintain sibling order if it matters for your operation</p></li>
-</ul>
-</li>
-<li><p><code class="docutils literal notranslate"><span class="pre">_pp_</span> <span class="pre">PPV</span> <span class="pre">PPH</span></code></p>
-<ul>
-<li><p>we will explain the general approach later</p></li>
-<li><p>for now feel free to copy and use these for noodling</p></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p>relationship to depth vector</p>
-<ul>
-<li><p>construction from depth vector</p></li>
-<li><p>finding depths</p></li>
-<li><p>imposing dfpt order</p></li>
-</ul>
-</li>
-<li><p>forests</p>
-<ul>
-<li><p>join multiple into a forest</p></li>
-<li><p>split multiple into individual (deforest)</p></li>
-<li><p>exercise: join all trees in a forest under 1 root: <code class="docutils literal notranslate"><span class="pre">{0,(⍵≠⍳≢⍵)×1+⍵}</span></code></p></li>
-</ul>
-</li>
-<li><p>deletion</p></li>
-<li><p>bottom-up acculumation</p>
-<ul>
-<li><p>Lisp</p>
-<ul>
-<li><p>using key</p></li>
-<li><p>without using key</p></li>
-<li><p>using a fold</p></li>
-</ul>
-</li>
-<li><p>go back and look at <code class="docutils literal notranslate"><span class="pre">_pp_</span></code></p></li>
-<li><p>challenges</p>
-<ul>
-<li><p>sum each tree in a forest</p>
-<ul>
-<li><p>sanity check: sum of trees should equal sum of all values</p></li>
-<li><p>bonus: find <code class="docutils literal notranslate"><span class="pre">(I⍣≡⍨p)+/⍤⊢⌸v</span></code></p></li>
-</ul>
-</li>
-<li><p>find height of every node in a tree</p></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p>top-down construction</p>
-<ul>
-<li><p>Nary</p>
-<ul>
-<li><p>challenge: find Mary</p></li>
-</ul>
-</li>
-<li><p>Collatz</p></li>
-<li><p>Leet as an example</p></li>
-</ul>
-</li>
-<li><p>leetcode problems</p>
-<ul>
-<li><p><a class="reference external" href="https://leetcode.com/problems/invert-binary-tree/">invert</a></p></li>
-<li><p><a class="reference external" href="https://leetcode.com/problems/balanced-binary-tree/">height balanced</a></p></li>
-<li><p><a class="reference external" href="https://leetcode.com/problems/leaf-similar-trees/">leaf similar</a></p></li>
-</ul>
-</li>
-<li><p>manipulating json with matrix import ⎕json</p>
-<ul>
-<li><p>grouping astronauts example</p></li>
-<li><p>mention that ⎕xml uses a similar format</p></li>
-</ul>
-</li>
-<li><p>small calculator as a larger example</p>
-<ul>
-<li><p>point to co-dfns for more</p></li>
-</ul>
-</li>
-<li><p>performance benchmarks vs record layout in c</p></li>
-</ul>
+</section>
 
     <script type="text/x-thebe-config">
     {
@@ -547,16 +469,16 @@ document.write(`
         },
         codeMirrorConfig: {
             theme: "abcdef",
-            mode: "python"
+            mode: "dyalog_apl"
         },
         kernelOptions: {
-            name: "python3",
+            name: "dyalog_apl",
             path: "./trees"
         },
         predefinedOutput: true
     }
     </script>
-    <script>kernelName = 'python3'</script>
+    <script>kernelName = 'dyalog_apl'</script>
 
                 </article>
               
@@ -568,27 +490,30 @@ document.write(`
                 <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
+    <a class="left-prev"
+       href="../intro.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Doing Things in Dyalog APL</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="representing-trees.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Representing Trees</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
 </div>
                 </footer>
               
             </div>
             
             
-              
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
-
-
-  <div class="sidebar-secondary-item">
-  <div class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> Contents
-  </div>
-  <nav class="bd-toc-nav page-toc">
-    <ul class="simple visible nav section-nav flex-column">
-</ul>
-
-  </nav></div>
-
-</div></div>
               
             
           </div>

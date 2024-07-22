@@ -1,32 +1,9 @@
----
-jupytext:
-  formats: md:myst
-  text_representation:
-    extension:        .md
-    format_name:      myst
-    format_version:   0.13
-    jupytext_version: 1.11.5
-kernelspec:
-  display_name: Dyalog APL
-  language:     Dyalog APL
-  name:         dyalog_apl
----
-
-# Trees
-
-- introduction
+- Trying out some formats
     - preliminary definitions
         - `I←{⍵[⍺]}`
         - `⎕IO←0`
-    - references:
-        - [aaron's thesis](https://scholarworks.iu.edu/dspace/items/3ab772c9-92c9-4f59-bd95-40aff99e8c7a)
-        - aaron's talks
-            - [text processing](https://dyalog.tv/Dyalog22/?v=5I4YPkVU7mY)
-            - [tree wrangling](https://dyalog.tv/Dyalog18/?v=hzPd3umu78g)
-        - [apter's article](http://archive.vector.org.uk/art10500340)
-        - [tlack readme](https://github.com/tlack/atree/blob/master/README.md)
-        - [ok docs](https://github.com/JohnEarnest/ok/blob/gh-pages/docs/Trees.md)
-- depth vector and path matrix
+    - nested array representation
+        - this is what lisp does
     - depth vector
         - what you get out of ⎕json
         - slow to work with subtrees
@@ -84,3 +61,4 @@ kernelspec:
     - mention that ⎕xml uses a similar format
 - small calculator as a larger example
     - point to co-dfns for more
+- performance benchmarks vs record layout in c
