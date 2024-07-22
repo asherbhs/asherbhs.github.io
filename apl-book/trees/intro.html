@@ -404,7 +404,7 @@ document.write(`
 <h1>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">#</a></h1>
 <p>APL is fantastic for working with linear data. If you can organise your data in an array, you have dozens of primitives and years of collective wisdom to lead you to success. Sadly, in the wild, there are many problems which have a fundamentally non-linear structure. These present an issue for the brave APL programmer, whose array primitives are little help.</p>
 <p>One of the most common cases of this is dealing with hierarchical data, where pieces of data are variously ‘contained in’ or ‘belonging to’ others. Data like this are examples of a general structure called a <em>tree</em>.</p>
-<p>Formally, trees are made up of <em>nodes</em>. Each node may have some number of <em>child nodes</em>, and usually one <em>parent node</em>. There is exactly one node in a tree which has no parent, this is the tree’s <em>root node</em>.</p>
+<p>Formally, trees are made up of <em>nodes</em>. Each node may have some number of <em>child nodes</em>, and usually one <em>parent node</em>. There is exactly one node in a tree which has no parent, this is the tree’s <em>root node</em>. Nodes which share a parent are <em>sibling nodes</em>, and nodes with no children are <em>leaf nodes</em>.</p>
 <p>For many kinds of hierarchical data, we can model its structure as a tree:</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -439,7 +439,7 @@ document.write(`
 </table>
 </div>
 <p>Interestingly, a family tree is not an example of this kind of tree, as each child typically does not have just one unique parent.</p>
-<p>We will generally draw trees with the root node at the top, and all child nodes arranged below, with a line connecting each child to its parent. For instance, in the following tree, the node labelled <span class="math notranslate nohighlight">\(a\)</span> is the root node, and is a parent of <span class="math notranslate nohighlight">\(b\)</span> and <span class="math notranslate nohighlight">\(c\)</span> - its children.</p>
+<p>We will generally draw trees with the root node at the top, and all child nodes arranged below, with a line connecting each child to its parent. For instance, in the following tree, the node labelled <span class="math notranslate nohighlight">\(a\)</span> is the root node, and is a parent of <span class="math notranslate nohighlight">\(b\)</span>, <span class="math notranslate nohighlight">\(c\)</span> and <span class="math notranslate nohighlight">\(d\)</span> - its children.</p>
 <figure class="align-default" id="id1">
 <img alt="A diagram of a simple tree." src="../_images/IntroTree_ManimCE_v0.18.1.png" />
 <figcaption>

@@ -58,6 +58,8 @@
     <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'trees/representing-trees';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -398,6 +400,8 @@ document.write(`
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#preliminary-definitions">Preliminary Definitions</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-nested-representation">The Nested Representation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-depth-vector-representation">The Depth Vector Representation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-path-matrix-representation">The Path Matrix Representation</a></li>
 </ul>
             </nav>
         </div>
@@ -432,9 +436,145 @@ document.write(`
 </div>
 </div>
 <p>If/when Dyalog gets the proposed <a class="reference external" href="https://aplwiki.com/wiki/From">Select</a> function, we’ll be able to drop the name and just write <code class="docutils literal notranslate"><span class="pre">⊇⍨</span></code>, but for now we will use <code class="docutils literal notranslate"><span class="pre">I</span></code>.</p>
+<p>Finally, for cosmetic reasons:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="sr">]</span><span class="nv">box</span><span class="w"> </span><span class="nv">on</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">Was OFF
+</pre></div></div>
+</div>
 </section>
 <section id="the-nested-representation">
 <h2>The Nested Representation<a class="headerlink" href="#the-nested-representation" title="Link to this heading">#</a></h2>
+<p>The naive way to represent a tree with an array is with a nested vector. Each node in a tree has an associated piece of data and some number of child nodes. We can represent this structure directly in a nested vector by storing the data of each node as the first element, and then storing the nested vectors representing the child nodes in the tail of the vector.</p>
+<p>Take the simple tree from the previous page:</p>
+<figure class="align-default" id="id1">
+<img alt="A diagram of a simple tree." src="../_images/IntroTree_ManimCE_v0.18.1.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 2 </span><span class="caption-text">A simple tree.</span><a class="headerlink" href="#id1" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>We can represent this tree like so:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">,</span><span class="s1">&#39;a&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="o">,</span><span class="s1">&#39;b&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="o">,⊂,</span><span class="s1">&#39;e&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="o">,⊂,</span><span class="s1">&#39;f&#39;</span><span class="p">))</span><span class="w"> </span><span class="p">((</span><span class="o">,</span><span class="s1">&#39;c&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="o">,</span><span class="s1">&#39;g&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="o">,⊂,</span><span class="s1">&#39;h&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="o">,⊂,</span><span class="s1">&#39;i&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="o">,⊂,</span><span class="s1">&#39;j&#39;</span><span class="p">)))</span><span class="w"> </span><span class="p">(</span><span class="o">,</span><span class="s1">&#39;d&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">┌─┬───────────┬───────────────────┬─┐
+│a│┌─┬───┬───┐│┌─┬───────────────┐│d│
+│ ││b│┌─┐│┌─┐│││c│┌─┬───┬───┬───┐││ │
+│ ││ ││e│││f││││ ││g│┌─┐│┌─┐│┌─┐│││ │
+│ ││ │└─┘│└─┘│││ ││ ││h│││i│││j││││ │
+│ │└─┴───┴───┘││ ││ │└─┘│└─┘│└─┘│││ │
+│ │           ││ │└─┴───┴───┴───┘││ │
+│ │           │└─┴───────────────┘│ │
+└─┴───────────┴───────────────────┴─┘
+</pre></div></div>
+</div>
+<p>The vector represents the root node labelled <code class="docutils literal notranslate"><span class="pre">a</span></code>, with the label stored as the first element, and the representations of the children placed in the tail.</p>
+<p>While messy to write out, this representation is elegant, and in most programming paradigms this kind of representation is used for working with trees. However, this structure isn’t suited for making the most of APL. To get really good performance, it’s important for us to be working with flat arrays. Deeply nested arrays are stored internally with pointers to potentially disparate allocations in the workspace. Traversing these pointers is a costly operation, compared to using APL’s well optimised array primitives.</p>
+</section>
+<section id="the-depth-vector-representation">
+<h2>The Depth Vector Representation<a class="headerlink" href="#the-depth-vector-representation" title="Link to this heading">#</a></h2>
+<p>So, let’s try to find a more APL-friendly representation for trees. Some information that tells us a lot about the structure of a tree is the <em>depth</em> of each node. We say the root node of a tree has depth <span class="math notranslate nohighlight">\(0\)</span>, the root’s children have depth <span class="math notranslate nohighlight">\(1\)</span>, their children have depth <span class="math notranslate nohighlight">\(2\)</span>, and so on.</p>
+<p>We can label each node of our example tree with its depth:</p>
+<figure class="align-default" id="id2">
+<img alt="The same tree, with nodes labelled with their depth." src="../_images/IntroTreeDepth_ManimCE_v0.18.1.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 3 </span><span class="caption-text">The same tree, with nodes labelled with their depth.</span><a class="headerlink" href="#id2" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>Notice that the depth corresponds to horizontal levels in the tree, and that siblings share the same depth.</p>
+<p>It’s fairly straightforward to calculate the depth of each node for a tree represented by a nested vector:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">t</span><span class="kd">←</span><span class="p">(</span><span class="o">,</span><span class="s1">&#39;a&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="o">,</span><span class="s1">&#39;b&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="o">,⊂,</span><span class="s1">&#39;e&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="o">,⊂,</span><span class="s1">&#39;f&#39;</span><span class="p">))</span><span class="w"> </span><span class="p">((</span><span class="o">,</span><span class="s1">&#39;c&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="o">,</span><span class="s1">&#39;g&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="o">,⊂,</span><span class="s1">&#39;h&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="o">,⊂,</span><span class="s1">&#39;i&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="o">,⊂,</span><span class="s1">&#39;j&#39;</span><span class="p">)))</span><span class="w"> </span><span class="p">(</span><span class="o">,</span><span class="s1">&#39;d&#39;</span><span class="p">)</span>
+<span class="nv">NestedDepth</span><span class="kd">←</span><span class="kt">{</span>
+<span class="w">    </span><span class="bp">⍺</span><span class="kd">←</span><span class="m">0</span><span class="w">             </span><span class="c1">⍝ depth of the root is 0</span>
+<span class="w">    </span><span class="m">1</span><span class="o">=≢</span><span class="bp">⍵:</span><span class="w"> </span><span class="o">,</span><span class="bp">⍺</span><span class="w">        </span><span class="c1">⍝ if there are no children, just return own depth</span>
+<span class="w">    </span><span class="bp">⍺</span><span class="o">,</span><span class="p">(</span><span class="bp">⍺</span><span class="o">+</span><span class="m">1</span><span class="p">)</span><span class="bp">∇</span><span class="na">¨</span><span class="m">1</span><span class="o">↓</span><span class="bp">⍵</span><span class="w">    </span><span class="c1">⍝ else, recursively find depths of children</span>
+<span class="kt">}</span>
+<span class="nv">NestedDepth</span><span class="w"> </span><span class="nv">t</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">┌─┬───────┬─────────────┬─┐
+│0│┌─┬─┬─┐│┌─┬─────────┐│1│
+│ ││1│2│2│││1│┌─┬─┬─┬─┐││ │
+│ │└─┴─┴─┘││ ││2│3│3│3│││ │
+│ │       ││ │└─┴─┴─┴─┘││ │
+│ │       │└─┴─────────┘│ │
+└─┴───────┴─────────────┴─┘
+</pre></div></div>
+</div>
+<p>Reading this result from left to right (<code class="docutils literal notranslate"><span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">1</span></code>, <code class="docutils literal notranslate"><span class="pre">2</span></code>, <code class="docutils literal notranslate"><span class="pre">2</span></code>, <code class="docutils literal notranslate"><span class="pre">1</span></code>, and so on), we can see some useful patterns. Every time the depth steps up by one, we are descending to a child node. Similarly, whenever the depth decreases, we are ascending to a sibling of an ancestor. This means that we can do away with the nesting, keeping only the depth numbers, and preserve a full description of the structure of the tree.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="o">⊢</span><span class="nv">depths</span><span class="kd">←</span><span class="o">∊</span><span class="nv">NestedDepth</span><span class="w"> </span><span class="nv">t</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">0 1 2 2 1 2 3 3 3 1
+</pre></div></div>
+</div>
+<p>We call this description of a tree a <em>depth vector</em>. Nodes are now identified by an index into this vector. On its own, the depth vector doesn’t tell us anything about the extra data associated with each node. We therefore need to store the data associated with each node in a separate vector.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="o">⊢</span><span class="nv">data</span><span class="kd">←</span><span class="o">,</span><span class="na">¨</span><span class="s1">&#39;abefcghijd&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">┌─┬─┬─┬─┬─┬─┬─┬─┬─┬─┐
+│a│b│e│f│c│g│h│i│j│d│
+└─┴─┴─┴─┴─┴─┴─┴─┴─┴─┘
+</pre></div></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">data</span></code> vector is indexed by the same indices as the <code class="docutils literal notranslate"><span class="pre">depths</span></code> vector, so that for a node at index <code class="docutils literal notranslate"><span class="pre">i</span></code>, <code class="docutils literal notranslate"><span class="pre">depths[i]</span></code> is its depth and <code class="docutils literal notranslate"><span class="pre">data[i]</span></code> is its data.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="o">↑</span><span class="p">(</span><span class="o">⊂</span><span class="na">¨</span><span class="s1">&#39;index:&#39;</span><span class="w"> </span><span class="s1">&#39;depths:&#39;</span><span class="w"> </span><span class="s1">&#39;data:&#39;</span><span class="p">)</span><span class="o">,</span><span class="na">¨</span><span class="p">(</span><span class="o">⍳≢</span><span class="nv">depths</span><span class="p">)</span><span class="w"> </span><span class="nv">depths</span><span class="w"> </span><span class="nv">data</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">┌───────┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┐
+│index: │0│1│2│3│4│5│6│7│8│9│
+├───────┼─┼─┼─┼─┼─┼─┼─┼─┼─┼─┤
+│depths:│0│1│2│2│1│2│3│3│3│1│
+├───────┼─┼─┼─┼─┼─┼─┼─┼─┼─┼─┤
+│data:  │a│b│e│f│c│g│h│i│j│d│
+└───────┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┘
+</pre></div></div>
+</div>
+<p>Labelling each node of our tree with its corresponding index in the <code class="docutils literal notranslate"><span class="pre">depth</span></code> and <code class="docutils literal notranslate"><span class="pre">data</span></code> vectors reveals an interesting pattern.</p>
+<figure class="align-default" id="id3">
+<img alt="Nodes labelled with their index into the `depth` and `data` vectors." src="../_images/IntroTreeDFPT_ManimCE_v0.18.1.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 4 </span><span class="caption-text">The same tree, with nodes labelled with their index into the <code class="docutils literal notranslate"><span class="pre">depth</span></code> and <code class="docutils literal notranslate"><span class="pre">data</span></code> vectors.</span><a class="headerlink" href="#id3" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>If we trace the path through the tree given by these indices, we find that we traverse the tree in a particular pattern. We dive down the tree until we hit a leaf node (<span class="math notranslate nohighlight">\(0 \to 1 \to 2\)</span>). When we reach a leaf node, we step back along our path until we find a junction with an unexplored path, and then resume our traversal, once again descending until we hit a leaf before backtracking. In technical jargon, this is a <em>depth-first, pre-order traversal</em>.</p>
+<figure class="align-default" id="id4">
+<img alt="An animation of a depth-first, pre-order traversal on the example tree." src="../_images/IntroTreeDFPTAnim_ManimCE_v0.18.1.gif" />
+<figcaption>
+<p><span class="caption-number">Fig. 5 </span><span class="caption-text">The depth-first, pre-order traversal in action.</span><a class="headerlink" href="#id4" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>So the depth vector representation orders nodes in a depth-first, pre-order traversal order. This presents a problem for manipulating trees in this format, as we are required to maintain this ordering exactly whenever we change the structure of the tree, which can be fairly inconvenient and costly. Additionally, we often want to find parents or siblings of a node for various reasons. These nodes will be fairly local in the structure of the tree, but may be frustratingly far apart in the depth vector, with no easy way to find them without a linear search.</p>
+<p>The depth vector representation is therefore useful in some situations, but not the representation that we would like to settle on for most of our operations.</p>
+</section>
+<section id="the-path-matrix-representation">
+<h2>The Path Matrix Representation<a class="headerlink" href="#the-path-matrix-representation" title="Link to this heading">#</a></h2>
+<p>[TODO]</p>
 </section>
 </section>
 
@@ -504,6 +644,8 @@ document.write(`
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#preliminary-definitions">Preliminary Definitions</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-nested-representation">The Nested Representation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-depth-vector-representation">The Depth Vector Representation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-path-matrix-representation">The Path Matrix Representation</a></li>
 </ul>
   </nav></div>
 

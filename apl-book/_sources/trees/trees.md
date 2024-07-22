@@ -12,6 +12,9 @@
         - distances between nodes?
         - oh no it's O(nd)
     - parent vector
+    - challenge:
+        - on paper, draw a simple tree and write down the nested representation, depth vector, path matrix, and parent vector for the tree
+        - use an interpreter to check your answers
 - parent vector representation
     - this is super great
     - basic operations

@@ -18,7 +18,7 @@ APL is fantastic for working with linear data. If you can organise your data in 
 
 One of the most common cases of this is dealing with hierarchical data, where pieces of data are variously 'contained in' or 'belonging to' others. Data like this are examples of a general structure called a *tree*.
 
-Formally, trees are made up of *nodes*. Each node may have some number of *child nodes*, and usually one *parent node*. There is exactly one node in a tree which has no parent, this is the tree's *root node*.
+Formally, trees are made up of *nodes*. Each node may have some number of *child nodes*, and usually one *parent node*. There is exactly one node in a tree which has no parent, this is the tree's *root node*. Nodes which share a parent are *sibling nodes*, and nodes with no children are *leaf nodes*.
 
 For many kinds of hierarchical data, we can model its structure as a tree:
 
@@ -31,9 +31,9 @@ For many kinds of hierarchical data, we can model its structure as a tree:
 
 Interestingly, a family tree is not an example of this kind of tree, as each child typically does not have just one unique parent.
 
-We will generally draw trees with the root node at the top, and all child nodes arranged below, with a line connecting each child to its parent. For instance, in the following tree, the node labelled $a$ is the root node, and is a parent of $b$ and $c$ - its children.
+We will generally draw trees with the root node at the top, and all child nodes arranged below, with a line connecting each child to its parent. For instance, in the following tree, the node labelled $a$ is the root node, and is a parent of $b$, $c$ and $d$ - its children.
 
-```{figure} ../manim/media/images/trees/IntroTree_ManimCE_v0.18.1.png
+```{figure} media/IntroTree_ManimCE_v0.18.1.png
 :alt: A diagram of a simple tree.
 
 Baby's first tree.
