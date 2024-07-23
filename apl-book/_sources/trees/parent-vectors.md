@@ -16,7 +16,7 @@ kernelspec:
 :tags: [remove-cell]
 
 ⎕IO←0
-I←{⍵[⍺]}
+I←{⍺[⍵]}
 ]box on
 ```
 
@@ -160,12 +160,14 @@ Notice that the result at each index `i` is now the root of the tree `i` is part
 {p[⍵]}⍣≡p
 ```
 
-Recall that we defined `I←{⍵[⍺]}`, this is why. We can rephrase the above as
+Recall that we defined `I←{⍺[⍵]}`, this is why. We can rephrase the above as
 
 ```{code-cell}
 p I⍣≡p    ⍝ substituting I
 I⍣≡⍨p     ⍝ this is equivalent
 ```
+
+Using vectors with multiple trees is covered in more detail in the page on [forests](forests.md).
 
 ### Selecting Sub-Trees
 
@@ -177,7 +179,38 @@ We can use a similar technique to select sub-trees of a tree. In the previous ex
 Node $4$ has been kindly reattached.
 ```
 
-If 
+Let's reset `p` to this tree.
+
+```{code-cell}
+⊢p←parent
+```
+
+Since there is only one tree in this vector, all nodes have the same root - $0$.
+
+```{code-cell}
+I⍣≡⍨p
+```
+
+Let's say we want to find all the nodes which are a child of node $5$. We can use the same process as in the above code, and use the `@` operator to prevent the indexing from going above node $5$ each time:
+
+```{code-cell}
+  I@{⍵≠5}⍣≡⍨p
+⍝  └────┴ only index where parent is not a 5
+```
+
+Then, by comparing the result with $5$, we obtain a mask of the nodes for which stepping up the parents eventually hit node $5$, i.e. those nodes which are a descendant of node $5$. Note that this does not include the node $5$ itself.
+
+```{code-cell}
+5=I@{⍵≠5}⍣≡⍨p
+```
+
+This can be easily extended to work with multiple nodes as roots, for example if we want nodes which are descendants of nodes $5$ and $1$:
+
+```{code-cell}
+  1 5∊⍨I@{~⍵∊1 5}⍣≡⍨p
+⍝ │   │ └───────┴ index where not a 1 or a 5
+⍝ └───┴────────── find those which hit 1 or 5
+```
 
 ## Favourite Children (Ordering Siblings)
 

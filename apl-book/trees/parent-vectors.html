@@ -612,7 +612,7 @@ p: 0 0 1 1 4 4 5 5 5 0
 <div class="output text_html"><pre class="language-APL">0 0 0 0 4 4 4 4 4 0
 </pre></div></div>
 </div>
-<p>Recall that we defined <code class="docutils literal notranslate"><span class="pre">I←{⍵[⍺]}</span></code>, this is why. We can rephrase the above as</p>
+<p>Recall that we defined <code class="docutils literal notranslate"><span class="pre">I←{⍺[⍵]}</span></code>, this is why. We can rephrase the above as</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">p</span><span class="w"> </span><span class="nv">I</span><span class="na">⍣</span><span class="o">≡</span><span class="nv">p</span><span class="w">    </span><span class="c1">⍝ substituting I</span>
@@ -625,6 +625,7 @@ p: 0 0 1 1 4 4 5 5 5 0
 </pre></div><div class="output text_html"><pre class="language-APL">0 0 0 0 4 4 4 4 4 0
 </pre></div></div>
 </div>
+<p>Using vectors with multiple trees is covered in more detail in the page on <a class="reference internal" href="forests.html"><span class="std std-doc">forests</span></a>.</p>
 </section>
 <section id="selecting-sub-trees">
 <h3>Selecting Sub-Trees<a class="headerlink" href="#selecting-sub-trees" title="Link to this heading">#</a></h3>
@@ -635,7 +636,64 @@ p: 0 0 1 1 4 4 5 5 5 0
 <p><span class="caption-number">Fig. 11 </span><span class="caption-text">Node <span class="math notranslate nohighlight">\(4\)</span> has been kindly reattached.</span><a class="headerlink" href="#id4" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<p>If</p>
+<p>Let’s reset <code class="docutils literal notranslate"><span class="pre">p</span></code> to this tree.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="o">⊢</span><span class="nv">p</span><span class="kd">←</span><span class="nv">parent</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">0 0 1 1 0 4 5 5 5 0
+</pre></div></div>
+</div>
+<p>Since there is only one tree in this vector, all nodes have the same root - <span class="math notranslate nohighlight">\(0\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">I</span><span class="na">⍣</span><span class="o">≡</span><span class="na">⍨</span><span class="nv">p</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">0 0 0 0 0 0 0 0 0 0
+</pre></div></div>
+</div>
+<p>Let’s say we want to find all the nodes which are a child of node <span class="math notranslate nohighlight">\(5\)</span>. We can use the same process as in the above code, and use the <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> operator to prevent the indexing from going above node <span class="math notranslate nohighlight">\(5\)</span> each time:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="nv">I</span><span class="na">@</span><span class="kt">{</span><span class="bp">⍵</span><span class="o">≠</span><span class="m">5</span><span class="kt">}</span><span class="na">⍣</span><span class="o">≡</span><span class="na">⍨</span><span class="nv">p</span>
+<span class="c1">⍝  └────┴ only index where parent is not a 5</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">0 0 0 0 0 0 5 5 5 0
+</pre></div></div>
+</div>
+<p>Then, by comparing the result with <span class="math notranslate nohighlight">\(5\)</span>, we obtain a mask of the nodes for which stepping up the parents eventually hit node <span class="math notranslate nohighlight">\(5\)</span>, i.e. those nodes which are a descendant of node <span class="math notranslate nohighlight">\(5\)</span>. Note that this does not include the node <span class="math notranslate nohighlight">\(5\)</span> itself.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="m">5</span><span class="o">=</span><span class="nv">I</span><span class="na">@</span><span class="kt">{</span><span class="bp">⍵</span><span class="o">≠</span><span class="m">5</span><span class="kt">}</span><span class="na">⍣</span><span class="o">≡</span><span class="na">⍨</span><span class="nv">p</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">0 0 0 0 0 0 1 1 1 0
+</pre></div></div>
+</div>
+<p>This can be easily extended to work with multiple nodes as roots, for example if we want nodes which are descendants of nodes <span class="math notranslate nohighlight">\(5\)</span> and <span class="math notranslate nohighlight">\(1\)</span>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="m">1</span><span class="w"> </span><span class="m">5</span><span class="o">∊</span><span class="na">⍨</span><span class="nv">I</span><span class="na">@</span><span class="kt">{</span><span class="o">~</span><span class="bp">⍵</span><span class="o">∊</span><span class="m">1</span><span class="w"> </span><span class="m">5</span><span class="kt">}</span><span class="na">⍣</span><span class="o">≡</span><span class="na">⍨</span><span class="nv">p</span>
+<span class="c1">⍝ │   │ └───────┴ index where not a 1 or a 5</span>
+<span class="c1">⍝ └───┴────────── find those which hit 1 or 5</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">0 0 1 1 0 0 1 1 1 0
+</pre></div></div>
+</div>
 </section>
 </section>
 <section id="favourite-children-ordering-siblings">

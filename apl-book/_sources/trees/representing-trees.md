@@ -29,7 +29,7 @@ The unending debate over what value `⎕IO` should take rages on. I don't have a
 Additionally, there are some places where we're going to want to use indexing functionally, so it will be helpful to define:
 
 ```{code-cell}
-I←{⍵[⍺]}
+I←{⍺[⍵]}
 ```
 
 If/when Dyalog gets the proposed [Select](https://aplwiki.com/wiki/From) function, we'll be able to drop the name and just write `⊇⍨`, but for now we will use `I`.
