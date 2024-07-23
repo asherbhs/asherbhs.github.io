@@ -184,6 +184,14 @@
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="representing-trees.html">Representing Trees</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parent-vectors.html">Parent Vectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="relating-depth-and-parent-vectors.html">Relating the Depth and Parent Vectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="forests.html">Forests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deleting-nodes.html">Deleting Nodes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bottom-up-accumulation.html">Bottom-Up Accumulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="top-down-construction.html">Top-Down Construction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="working-with-json.html">Working with ⎕JSON</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parsing.html">Parsing</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Combinatorics</span></p>
 <ul class="nav bd-sidenav">
@@ -408,35 +416,21 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <ul class="simple">
-<li><p>Trying out some formats</p>
-<ul>
-<li><p>preliminary definitions</p>
-<ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">I←{⍵[⍺]}</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">⎕IO←0</span></code></p></li>
+  <ul class="contains-task-list simple">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Trying out some formats</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" checked="checked" disabled="disabled" type="checkbox"> preliminary definitions</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" checked="checked" disabled="disabled" type="checkbox"> nested array representation</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" checked="checked" disabled="disabled" type="checkbox"> depth vector</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" checked="checked" disabled="disabled" type="checkbox"> path matrix</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> construction from depth vector</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> distances between nodes?</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" checked="checked" disabled="disabled" type="checkbox"> oh no it’s O(nd)</p></li>
 </ul>
 </li>
-<li><p>nested array representation</p>
-<ul>
-<li><p>this is what lisp does</p></li>
-</ul>
-</li>
-<li><p>depth vector</p>
-<ul>
-<li><p>what you get out of ⎕json</p></li>
-<li><p>slow to work with subtrees</p></li>
-</ul>
-</li>
-<li><p>path matrix</p>
-<ul>
-<li><p>construction from depth vector</p></li>
-<li><p>distances between nodes?</p></li>
-<li><p>oh no it’s O(nd)</p></li>
-</ul>
-</li>
-<li><p>parent vector</p></li>
-<li><p>challenge:</p>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> parent vector</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> challenge:</p>
 <ul>
 <li><p>on paper, draw a simple tree and write down the nested representation, depth vector, path matrix, and parent vector for the tree</p></li>
 <li><p>use an interpreter to check your answers</p></li>
@@ -444,29 +438,29 @@ document.write(`
 </li>
 </ul>
 </li>
-<li><p>parent vector representation</p>
-<ul>
-<li><p>this is super great</p></li>
-<li><p>basic operations</p>
-<ul>
-<li><p>find children:    <code class="docutils literal notranslate"><span class="pre">⍸p∊i</span></code></p></li>
-<li><p>find leaves:      <code class="docutils literal notranslate"><span class="pre">p~⍨⍳≢p</span></code></p></li>
-<li><p>find roots:       <code class="docutils literal notranslate"><span class="pre">I⍣≡⍨p</span></code></p>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> parent vector representation</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> this is super great</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> basic operations</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> find children:    <code class="docutils literal notranslate"><span class="pre">⍸p∊i</span></code></p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> find leaves:      <code class="docutils literal notranslate"><span class="pre">p~⍨⍳≢p</span></code></p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> find roots:       <code class="docutils literal notranslate"><span class="pre">I⍣≡⍨p</span></code></p>
 <ul>
 <li><p>note forests are possible</p></li>
 </ul>
 </li>
-<li><p>select sub-trees: <code class="docutils literal notranslate"><span class="pre">I&#64;{...}⍣≡⍨p</span></code></p></li>
-<li><p>snip:             <code class="docutils literal notranslate"><span class="pre">i&#64;i⊢p</span></code></p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> select sub-trees: <code class="docutils literal notranslate"><span class="pre">I&#64;{...}⍣≡⍨p</span></code></p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> snip:             <code class="docutils literal notranslate"><span class="pre">i&#64;i⊢p</span></code></p></li>
 </ul>
 </li>
-<li><p>ordering</p>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> ordering</p>
 <ul>
 <li><p>don’t need to maintain dfpt order</p></li>
 <li><p>need to maintain sibling order if it matters for your operation</p></li>
 </ul>
 </li>
-<li><p><code class="docutils literal notranslate"><span class="pre">_pp_</span> <span class="pre">PPV</span> <span class="pre">PPH</span></code></p>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> <code class="docutils literal notranslate"><span class="pre">_pp_</span> <span class="pre">PPV</span> <span class="pre">PPH</span></code></p>
 <ul>
 <li><p>we will explain the general approach later</p></li>
 <li><p>for now feel free to copy and use these for noodling</p></li>
@@ -474,74 +468,73 @@ document.write(`
 </li>
 </ul>
 </li>
-<li><p>relationship to depth vector</p>
-<ul>
-<li><p>construction from depth vector</p></li>
-<li><p>finding depths</p></li>
-<li><p>imposing dfpt order</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> relationship to depth vector</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> construction from depth vector</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> finding depths</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> imposing dfpt order</p></li>
 </ul>
 </li>
-<li><p>forests</p>
-<ul>
-<li><p>join multiple into a forest</p></li>
-<li><p>split multiple into individual (deforest)</p></li>
-<li><p>exercise: join all trees in a forest under 1 root: <code class="docutils literal notranslate"><span class="pre">{0,(⍵≠⍳≢⍵)×1+⍵}</span></code></p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> forests</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> join multiple into a forest</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> split multiple into individual (deforest)</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> exercise: join all trees in a forest under 1 root: <code class="docutils literal notranslate"><span class="pre">{0,(⍵≠⍳≢⍵)×1+⍵}</span></code></p></li>
 </ul>
 </li>
-<li><p>deletion</p></li>
-<li><p>bottom-up acculumation</p>
-<ul>
-<li><p>Lisp</p>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> deletion</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> bottom-up acculumation</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Lisp</p>
 <ul>
 <li><p>using key</p></li>
 <li><p>without using key</p></li>
 <li><p>using a fold</p></li>
 </ul>
 </li>
-<li><p>go back and look at <code class="docutils literal notranslate"><span class="pre">_pp_</span></code></p></li>
-<li><p>challenges</p>
-<ul>
-<li><p>sum each tree in a forest</p>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> go back and look at <code class="docutils literal notranslate"><span class="pre">_pp_</span></code></p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> challenges</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> sum each tree in a forest</p>
 <ul>
 <li><p>sanity check: sum of trees should equal sum of all values</p></li>
 <li><p>bonus: find <code class="docutils literal notranslate"><span class="pre">(I⍣≡⍨p)+/⍤⊢⌸v</span></code></p></li>
 </ul>
 </li>
-<li><p>find height of every node in a tree</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> find height of every node in a tree</p></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><p>top-down construction</p>
-<ul>
-<li><p>Nary</p>
-<ul>
-<li><p>challenge: find Mary</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> top-down construction</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Nary</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> challenge: find Mary</p></li>
 </ul>
 </li>
-<li><p>Collatz</p></li>
-<li><p>Leet as an example</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Collatz</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Leet as an example</p></li>
 </ul>
 </li>
-<li><p>leetcode problems</p>
-<ul>
-<li><p><a class="reference external" href="https://leetcode.com/problems/invert-binary-tree/">invert</a></p></li>
-<li><p><a class="reference external" href="https://leetcode.com/problems/balanced-binary-tree/">height balanced</a></p></li>
-<li><p><a class="reference external" href="https://leetcode.com/problems/leaf-similar-trees/">leaf similar</a></p></li>
-</ul>
-</li>
-<li><p>manipulating json with matrix import ⎕json</p>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> manipulating json with matrix import ⎕json</p>
 <ul>
 <li><p>grouping astronauts example</p></li>
 <li><p>mention that ⎕xml uses a similar format</p></li>
 </ul>
 </li>
-<li><p>small calculator as a larger example</p>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> small calculator as a larger example</p>
 <ul>
 <li><p>point to co-dfns for more</p></li>
 </ul>
 </li>
-<li><p>performance benchmarks vs record layout in c</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> leetcode problems</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> <a class="reference external" href="https://leetcode.com/problems/invert-binary-tree/">invert</a></p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> <a class="reference external" href="https://leetcode.com/problems/balanced-binary-tree/">height balanced</a></p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> <a class="reference external" href="https://leetcode.com/problems/leaf-similar-trees/">leaf similar</a></p></li>
+</ul>
+</li>
 </ul>
 
     <script type="text/x-thebe-config">

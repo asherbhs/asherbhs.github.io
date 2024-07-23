@@ -1,0 +1,777 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Parent Vectors &#8212; Doing Things in Dyalog APL</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=87e54e7c" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=bfa96906" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'trees/parent-vectors';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Relating the Depth and Parent Vectors" href="relating-depth-and-parent-vectors.html" />
+    <link rel="prev" title="Representing Trees" href="representing-trees.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Doing Things in Dyalog APL - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Doing Things in Dyalog APL - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Doing Things in Dyalog APL
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Trees</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="representing-trees.html">Representing Trees</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Parent Vectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="relating-depth-and-parent-vectors.html">Relating the Depth and Parent Vectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="forests.html">Forests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deleting-nodes.html">Deleting Nodes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bottom-up-accumulation.html">Bottom-Up Accumulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="top-down-construction.html">Top-Down Construction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="working-with-json.html">Working with ⎕JSON</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parsing.html">Parsing</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Combinatorics</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../combinatorics/enumerative.html">Enumerative Combinatorics</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../combinatorics/combinations-and-bijective-proofs.html">Combinations and Bijective Proofs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../combinatorics/counting-functions.html">Counting Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../combinatorics/inclusion-exclusion.html">Inclusion-Exclusion and Counting Partitions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../combinatorics/stars-bars.html">Stars and Bars</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../combinatorics/integer-partitions.html">Integer Partitions</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../combinatorics/twelvefold.html">The Twelvefold Way</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../combinatorics/catalan.html">The Catalan Numbers</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Graphs</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../graphs/graphs.html">Graphs</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Ftrees/parent-vectors.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/trees/parent-vectors.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Parent Vectors</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-operations">Basic Operations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#finding-children">Finding Children</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#finding-leaves">Finding Leaves</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trimming-branches">Trimming Branches</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#finding-roots">Finding Roots</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#selecting-sub-trees">Selecting Sub-Trees</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#favourite-children-ordering-siblings">Favourite Children (Ordering Siblings)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pretty-printing">Pretty Printing</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="parent-vectors">
+<h1>Parent Vectors<a class="headerlink" href="#parent-vectors" title="Link to this heading">#</a></h1>
+<p>At the end of the previous section we settled on the parent vector representation as the main representation of trees we will be using in this tutorial. To reiterate, to represent a tree on <span class="math notranslate nohighlight">\(n\)</span> nodes, we associate each node with an index in <code class="docutils literal notranslate"><span class="pre">⍳n</span></code>, and create an <span class="math notranslate nohighlight">\(n\)</span>-element vector <code class="docutils literal notranslate"><span class="pre">parent</span></code> such that if a node <code class="docutils literal notranslate"><span class="pre">i</span></code> is a child of a node <code class="docutils literal notranslate"><span class="pre">j</span></code>, then <code class="docutils literal notranslate"><span class="pre">parent[i]=j</span></code>.</p>
+<p>For instance, the tree we saw many times in the previous section:</p>
+<figure class="align-default" id="id1">
+<img alt="The tree diagram from the previous section." src="../_images/IntroTreeDFPT_ManimCE_v0.18.1.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 8 </span><span class="caption-text">Our favourite tree, back again… again!</span><a class="headerlink" href="#id1" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>and the parent vector representing this tree:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="o">⊢</span><span class="nv">parent</span><span class="kd">←</span><span class="m">0</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="m">0</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">0 0 1 1 0 4 5 5 5 0
+</pre></div></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>        ┌─┐─────┐ ┌─┐─┐─┐
+        ↓ │     │ ↓ │ │ │
+parent: 0 0 1 1 0 4 5 5 5 0
+        ↑ ↑ │ │ ↑ │       │
+        │ └─┘─┘ └─┘       │
+        └─────────────────┘
+</pre></div>
+</div>
+<p>In this section, we’re going to look at some of the basic operations you can do on trees represented in this way.</p>
+<section id="basic-operations">
+<h2>Basic Operations<a class="headerlink" href="#basic-operations" title="Link to this heading">#</a></h2>
+<p>For brevity, we’ll abbreviate <code class="docutils literal notranslate"><span class="pre">parent</span></code> to <code class="docutils literal notranslate"><span class="pre">p</span></code> from now on.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">p</span><span class="kd">←</span><span class="nv">parent</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="finding-children">
+<h3>Finding Children<a class="headerlink" href="#finding-children" title="Link to this heading">#</a></h3>
+<p>Given a node <code class="docutils literal notranslate"><span class="pre">i</span></code>, the children of <code class="docutils literal notranslate"><span class="pre">i</span></code> are all those nodes whose parent is <code class="docutils literal notranslate"><span class="pre">i</span></code>. We can therefore easily create a mask of nodes which are children of <code class="docutils literal notranslate"><span class="pre">i</span></code>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">i</span><span class="kd">←</span><span class="m">1</span>
+<span class="nv">p</span><span class="o">=</span><span class="nv">i</span><span class="w">    </span><span class="c1">⍝ nodes 2 and 3 are children of node 1</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">0 0 1 1 0 0 0 0 0 0
+</pre></div></div>
+</div>
+<p>If we have multiple nodes which we want to find the children of, we can simply mask for those nodes which have a parent that is any of the parent nodes in question:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">i</span><span class="kd">←</span><span class="m">1</span><span class="w"> </span><span class="m">5</span>
+<span class="nv">p</span><span class="o">∊</span><span class="nv">i</span><span class="w">    </span><span class="c1">⍝ additionally, nodes 6, 7, and 8 are children of node 5</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">0 0 1 1 0 0 1 1 1 0
+</pre></div></div>
+</div>
+<p>Applying Where (<code class="docutils literal notranslate"><span class="pre">⍸</span></code>) gives us the nodes which this mask selects.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="o">⍸</span><span class="nv">p</span><span class="o">∊</span><span class="nv">i</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">2 3 6 7 8
+</pre></div></div>
+</div>
+</section>
+<section id="finding-leaves">
+<h3>Finding Leaves<a class="headerlink" href="#finding-leaves" title="Link to this heading">#</a></h3>
+<p>We can create a vector of all the node IDs in a tree, as it is just every index in <code class="docutils literal notranslate"><span class="pre">p</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="o">⍳≢</span><span class="nv">p</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">0 1 2 3 4 5 6 7 8 9
+</pre></div></div>
+</div>
+<p>The leaf nodes are those nodes which do not have any children, i.e. those nodes which are not pointed to in the parent vector. We can think of the parent vector as a list of all nodes which are not leaves, and remove them from a list of all nodes to obtain only the leaf nodes:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">⍳≢</span><span class="nv">p</span><span class="p">)</span><span class="o">~</span><span class="nv">p</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">2 3 6 7 8 9
+</pre></div></div>
+</div>
+</section>
+<section id="trimming-branches">
+<h3>Trimming Branches<a class="headerlink" href="#trimming-branches" title="Link to this heading">#</a></h3>
+<p>Time for our first structural change to a tree. Say that we want to remove a sub-tree from the main tree, but still keep the nodes around for reference. In a sense, we just want to snip the connection between a parent and child node:</p>
+<figure class="align-default" id="id2">
+<img alt="The same tree, with the edge between nodes 0 and 4 fading away, while the tree rearranges itself." src="../_images/IntroTreeSnip_ManimCE_v0.18.1.gif" />
+<figcaption>
+<p><span class="caption-number">Fig. 9 </span><span class="caption-text">Trimming the branch between nodes <span class="math notranslate nohighlight">\(0\)</span> and <span class="math notranslate nohighlight">\(4\)</span>.</span><a class="headerlink" href="#id2" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>Recall that a root node (a node with no parent) is indicated by a self-loop in the parent vector - it is considered its own parent. Because of this, it’s easy to trim a node from its parent by setting its parent to itself.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">i</span><span class="kd">←</span><span class="m">4</span>
+<span class="nv">i</span><span class="na">@</span><span class="nv">i</span><span class="o">⊢</span><span class="nv">p</span><span class="w">     </span><span class="c1">⍝ using @</span>
+<span class="nv">p</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]</span><span class="kd">←</span><span class="nv">i</span><span class="w">    </span><span class="c1">⍝ using indexing</span>
+<span class="nv">p</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">0 0 1 1 4 4 5 5 5 0
+</pre></div><div class="output text_html"><pre class="language-APL">0 0 1 1 4 4 5 5 5 0
+</pre></div></div>
+</div>
+<p>Note that the above code also works when given a vector of indices to be trimmed off, instead of a single scalar index.</p>
+<p>Interestingly, <code class="docutils literal notranslate"><span class="pre">p</span></code> now represents two disconnected trees. The parent vector representation is versatile enough to handle this.</p>
+</section>
+<section id="finding-roots">
+<h3>Finding Roots<a class="headerlink" href="#finding-roots" title="Link to this heading">#</a></h3>
+<p>Given a parent vector which represents multiple trees, we may like to find which tree each node is part of. Each tree is uniquely identified by its root node, so we can find the tree each node is a member of by finding which root node it descends from.</p>
+<p>After trimming node <span class="math notranslate nohighlight">\(4\)</span> from our tree, our two new trees look like:</p>
+<figure class="align-default" id="id3">
+<img alt="The two trees resulting from the snipping operation shown previously." src="../_images/IntroTreeSnipped_ManimCE_v0.18.1.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 10 </span><span class="caption-text">Our two trees after snipping the branch between nodes <span class="math notranslate nohighlight">\(0\)</span> and <span class="math notranslate nohighlight">\(4\)</span>.</span><a class="headerlink" href="#id3" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>and they are represented by the parent vector:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   ┌─┐       ┌─┐─┐─┐
+   ↓ │       ↓ │ │ │
+p: 0 0 1 1 4 4 5 5 5 0
+   ↑ ↑ │ │ ↑ │       │
+   │ └─┘─┘ └─┘       │
+   └─────────────────┘
+</pre></div>
+</div>
+<p>We can quite easily find the grandparents of each node, by simply finding the parent of each parent:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">p</span><span class="sr">[</span><span class="nv">p</span><span class="sr">]</span><span class="w">    </span><span class="c1">⍝ great-grandparents - parents of parents</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">0 0 0 0 4 4 4 4 4 0
+</pre></div></div>
+</div>
+<p>Now we can see why we decided to indicate roots with a self-loop. When we repeatedly index with the parent vector, the roots are constant.</p>
+<p>If we try to find the great-grandparents of each node, we find that the result doesn’t change, since there are no nodes deep enough in the tree to have great-grandparents, so the result loops at the grandparents.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">p</span><span class="sr">[</span><span class="nv">p</span><span class="sr">[</span><span class="nv">p</span><span class="sr">]]</span>
+<span class="nv">p</span><span class="sr">[</span><span class="nv">p</span><span class="sr">[</span><span class="nv">p</span><span class="sr">]]</span><span class="o">≡</span><span class="nv">p</span><span class="sr">[</span><span class="nv">p</span><span class="sr">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">0 0 0 0 4 4 4 4 4 0
+</pre></div><div class="output text_html"><pre class="language-APL">1
+</pre></div></div>
+</div>
+<p>Notice that the result at each index <code class="docutils literal notranslate"><span class="pre">i</span></code> is now the root of the tree <code class="docutils literal notranslate"><span class="pre">i</span></code> is part of. So in general, to find the root of the tree each node is part of, we repeatedly index with the parent vector to a fixed point.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="kt">{</span><span class="nv">p</span><span class="sr">[</span><span class="bp">⍵</span><span class="sr">]</span><span class="kt">}</span><span class="na">⍣</span><span class="o">≡</span><span class="nv">p</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">0 0 0 0 4 4 4 4 4 0
+</pre></div></div>
+</div>
+<p>Recall that we defined <code class="docutils literal notranslate"><span class="pre">I←{⍵[⍺]}</span></code>, this is why. We can rephrase the above as</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">p</span><span class="w"> </span><span class="nv">I</span><span class="na">⍣</span><span class="o">≡</span><span class="nv">p</span><span class="w">    </span><span class="c1">⍝ substituting I</span>
+<span class="nv">I</span><span class="na">⍣</span><span class="o">≡</span><span class="na">⍨</span><span class="nv">p</span><span class="w">     </span><span class="c1">⍝ this is equivalent</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">0 0 0 0 4 4 4 4 4 0
+</pre></div><div class="output text_html"><pre class="language-APL">0 0 0 0 4 4 4 4 4 0
+</pre></div></div>
+</div>
+</section>
+<section id="selecting-sub-trees">
+<h3>Selecting Sub-Trees<a class="headerlink" href="#selecting-sub-trees" title="Link to this heading">#</a></h3>
+<p>We can use a similar technique to select sub-trees of a tree. In the previous example, repeatedly indexing with <code class="docutils literal notranslate"><span class="pre">p</span></code> saturated at the root node. With a small modification to the expression, we can have the indexing saturate at a different point. Take our tree from before we snipped node <span class="math notranslate nohighlight">\(4\)</span> off:</p>
+<figure class="align-default" id="id4">
+<img alt="The tree diagram from the previous section." src="../_images/IntroTreeDFPT_ManimCE_v0.18.1.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 11 </span><span class="caption-text">Node <span class="math notranslate nohighlight">\(4\)</span> has been kindly reattached.</span><a class="headerlink" href="#id4" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>If</p>
+</section>
+</section>
+<section id="favourite-children-ordering-siblings">
+<h2>Favourite Children (Ordering Siblings)<a class="headerlink" href="#favourite-children-ordering-siblings" title="Link to this heading">#</a></h2>
+</section>
+<section id="pretty-printing">
+<h2>Pretty Printing<a class="headerlink" href="#pretty-printing" title="Link to this heading">#</a></h2>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "dyalog_apl"
+        },
+        kernelOptions: {
+            name: "dyalog_apl",
+            path: "./trees"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'dyalog_apl'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="representing-trees.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Representing Trees</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="relating-depth-and-parent-vectors.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Relating the Depth and Parent Vectors</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-operations">Basic Operations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#finding-children">Finding Children</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#finding-leaves">Finding Leaves</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trimming-branches">Trimming Branches</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#finding-roots">Finding Roots</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#selecting-sub-trees">Selecting Sub-Trees</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#favourite-children-ordering-siblings">Favourite Children (Ordering Siblings)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pretty-printing">Pretty Printing</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Asher Harvey-Smith
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
