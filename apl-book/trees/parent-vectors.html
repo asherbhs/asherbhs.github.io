@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=87e54e7c" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=bfa96906" />
@@ -433,30 +433,30 @@ document.write(`
   <section class="tex2jax_ignore mathjax_ignore" id="parent-vectors">
 <h1>Parent Vectors<a class="headerlink" href="#parent-vectors" title="Link to this heading">#</a></h1>
 <p>At the end of the previous section we settled on the parent vector representation as the main representation of trees we will be using in this tutorial. To reiterate, to represent a tree on <span class="math notranslate nohighlight">\(n\)</span> nodes, we associate each node with an index in <code class="docutils literal notranslate"><span class="pre">⍳n</span></code>, and create an <span class="math notranslate nohighlight">\(n\)</span>-element vector <code class="docutils literal notranslate"><span class="pre">parent</span></code> such that if a node <code class="docutils literal notranslate"><span class="pre">i</span></code> is a child of a node <code class="docutils literal notranslate"><span class="pre">j</span></code>, then <code class="docutils literal notranslate"><span class="pre">parent[i]=j</span></code>.</p>
-<p>For instance, the tree we saw many times in the previous section:</p>
+<p>We’re going to use a slightly larger tree for the examples in this section:</p>
 <figure class="align-default" id="id1">
-<img alt="The tree diagram from the previous section." src="../_images/IntroTreeDFPT_ManimCE_v0.18.1.png" />
+<img alt="A diagram of a new tree." src="../_images/PV_ManimCE_v0.18.1.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 8 </span><span class="caption-text">Our favourite tree, back again… again!</span><a class="headerlink" href="#id1" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 8 </span><span class="caption-text">The tree we’re going to work with in this section.</span><a class="headerlink" href="#id1" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p>and the parent vector representing this tree:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="o">⊢</span><span class="nv">parent</span><span class="kd">←</span><span class="m">0</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="m">0</span>
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="o">⊢</span><span class="nv">parent</span><span class="kd">←</span><span class="m">0</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">6</span><span class="w"> </span><span class="m">7</span><span class="w"> </span><span class="m">7</span><span class="w"> </span><span class="m">7</span><span class="w"> </span><span class="m">0</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><pre class="language-APL">0 0 1 1 0 4 5 5 5 0
+<div class="output text_html"><pre class="language-APL">0 0 1 2 2 1 0 6 7 7 7 0
 </pre></div></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>        ┌─┐─────┐ ┌─┐─┐─┐
-        ↓ │     │ ↓ │ │ │
-parent: 0 0 1 1 0 4 5 5 5 0
-        ↑ ↑ │ │ ↑ │       │
-        │ └─┘─┘ └─┘       │
-        └─────────────────┘
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>        ┌───────────┐─────────┐
+        ┌─┐ ┌─┐─┐   │ ┌─┐─┐─┐ │
+        ↓ │ ↓ │ │   │ ↓ │ │ │ │
+parent: 0 0 1 2 2 1 0 6 7 7 7 0
+          ↑ │     │ ↑ │        
+          └─┘─────┘ └─┘        
 </pre></div>
 </div>
 <p>In this section, we’re going to look at some of the basic operations you can do on trees represented in this way.</p>
@@ -476,27 +476,27 @@ parent: 0 0 1 1 0 4 5 5 5 0
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">i</span><span class="kd">←</span><span class="m">1</span>
-<span class="nv">p</span><span class="o">=</span><span class="nv">i</span><span class="w">    </span><span class="c1">⍝ nodes 2 and 3 are children of node 1</span>
+<span class="nv">p</span><span class="o">=</span><span class="nv">i</span><span class="w">    </span><span class="c1">⍝ nodes 2 and 5 are children of node 1</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><pre class="language-APL">0 0 1 1 0 0 0 0 0 0
+<div class="output text_html"><pre class="language-APL">0 0 1 0 0 1 0 0 0 0 0 0
 </pre></div></div>
 </div>
 <p>If we have multiple nodes which we want to find the children of, we can simply mask for those nodes which have a parent that is any of the parent nodes in question:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">i</span><span class="kd">←</span><span class="m">1</span><span class="w"> </span><span class="m">5</span>
-<span class="nv">p</span><span class="o">∊</span><span class="nv">i</span><span class="w">    </span><span class="c1">⍝ additionally, nodes 6, 7, and 8 are children of node 5</span>
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">i</span><span class="kd">←</span><span class="m">1</span><span class="w"> </span><span class="m">6</span>
+<span class="nv">p</span><span class="o">∊</span><span class="nv">i</span><span class="w">    </span><span class="c1">⍝ additionally, nodes 7 is a child of node 6</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><pre class="language-APL">0 0 1 1 0 0 1 1 1 0
+<div class="output text_html"><pre class="language-APL">0 0 1 0 0 1 0 1 0 0 0 0
 </pre></div></div>
 </div>
-<p>Applying Where (<code class="docutils literal notranslate"><span class="pre">⍸</span></code>) gives us the nodes which this mask selects.</p>
+<p>Applying <code class="docutils literal notranslate"><span class="pre">⍸</span></code> gives us the nodes which this mask selects.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="o">⍸</span><span class="nv">p</span><span class="o">∊</span><span class="nv">i</span>
@@ -504,7 +504,7 @@ parent: 0 0 1 1 0 4 5 5 5 0
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><pre class="language-APL">2 3 6 7 8
+<div class="output text_html"><pre class="language-APL">2 5 7
 </pre></div></div>
 </div>
 </section>
@@ -518,7 +518,7 @@ parent: 0 0 1 1 0 4 5 5 5 0
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><pre class="language-APL">0 1 2 3 4 5 6 7 8 9
+<div class="output text_html"><pre class="language-APL">0 1 2 3 4 5 6 7 8 9 10 11
 </pre></div></div>
 </div>
 <p>The leaf nodes are those nodes which do not have any children, i.e. those nodes which are not pointed to in the parent vector. We can think of the parent vector as a list of all nodes which are not leaves, and remove them from a list of all nodes to obtain only the leaf nodes:</p>
@@ -529,7 +529,18 @@ parent: 0 0 1 1 0 4 5 5 5 0
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><pre class="language-APL">2 3 6 7 8 9
+<div class="output text_html"><pre class="language-APL">3 4 5 8 9 10 11
+</pre></div></div>
+</div>
+<p>Alternatively, if we want a mask of leaf nodes, we just mask those nodes which are not in the parent vector:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="o">~</span><span class="p">(</span><span class="o">⍳≢</span><span class="nv">p</span><span class="p">)</span><span class="o">∊</span><span class="nv">p</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">0 0 0 1 1 1 0 0 1 1 1 1
 </pre></div></div>
 </div>
 </section>
@@ -537,15 +548,15 @@ parent: 0 0 1 1 0 4 5 5 5 0
 <h3>Trimming Branches<a class="headerlink" href="#trimming-branches" title="Link to this heading">#</a></h3>
 <p>Time for our first structural change to a tree. Say that we want to remove a sub-tree from the main tree, but still keep the nodes around for reference. In a sense, we just want to snip the connection between a parent and child node:</p>
 <figure class="align-default" id="id2">
-<img alt="The same tree, with the edge between nodes 0 and 4 fading away, while the tree rearranges itself." src="../_images/IntroTreeSnip_ManimCE_v0.18.1.gif" />
+<img alt="The same tree, with the edge between nodes 0 and 6 fading away, while the tree rearranges itself." src="../_images/PVSnip_ManimCE_v0.18.1.gif" />
 <figcaption>
-<p><span class="caption-number">Fig. 9 </span><span class="caption-text">Trimming the branch between nodes <span class="math notranslate nohighlight">\(0\)</span> and <span class="math notranslate nohighlight">\(4\)</span>.</span><a class="headerlink" href="#id2" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 9 </span><span class="caption-text">Trimming the branch between nodes <span class="math notranslate nohighlight">\(0\)</span> and <span class="math notranslate nohighlight">\(6\)</span>.</span><a class="headerlink" href="#id2" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p>Recall that a root node (a node with no parent) is indicated by a self-loop in the parent vector - it is considered its own parent. Because of this, it’s easy to trim a node from its parent by setting its parent to itself.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">i</span><span class="kd">←</span><span class="m">4</span>
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">i</span><span class="kd">←</span><span class="m">6</span>
 <span class="nv">i</span><span class="na">@</span><span class="nv">i</span><span class="o">⊢</span><span class="nv">p</span><span class="w">     </span><span class="c1">⍝ using @</span>
 <span class="nv">p</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]</span><span class="kd">←</span><span class="nv">i</span><span class="w">    </span><span class="c1">⍝ using indexing</span>
 <span class="nv">p</span>
@@ -553,8 +564,8 @@ parent: 0 0 1 1 0 4 5 5 5 0
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><pre class="language-APL">0 0 1 1 4 4 5 5 5 0
-</pre></div><div class="output text_html"><pre class="language-APL">0 0 1 1 4 4 5 5 5 0
+<div class="output text_html"><pre class="language-APL">0 0 1 2 2 1 6 6 7 7 7 0
+</pre></div><div class="output text_html"><pre class="language-APL">0 0 1 2 2 1 6 6 7 7 7 0
 </pre></div></div>
 </div>
 <p>Note that the above code also works when given a vector of indices to be trimmed off, instead of a single scalar index.</p>
@@ -565,46 +576,57 @@ parent: 0 0 1 1 0 4 5 5 5 0
 <p>Given a parent vector which represents multiple trees, we may like to find which tree each node is part of. Each tree is uniquely identified by its root node, so we can find the tree each node is a member of by finding which root node it descends from.</p>
 <p>After trimming node <span class="math notranslate nohighlight">\(4\)</span> from our tree, our two new trees look like:</p>
 <figure class="align-default" id="id3">
-<img alt="The two trees resulting from the snipping operation shown previously." src="../_images/IntroTreeSnipped_ManimCE_v0.18.1.png" />
+<img alt="The two trees resulting from the snipping operation shown previously." src="../_images/PVSnipped_ManimCE_v0.18.1.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 10 </span><span class="caption-text">Our two trees after snipping the branch between nodes <span class="math notranslate nohighlight">\(0\)</span> and <span class="math notranslate nohighlight">\(4\)</span>.</span><a class="headerlink" href="#id3" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 10 </span><span class="caption-text">Our two trees after snipping the branch between nodes <span class="math notranslate nohighlight">\(0\)</span> and <span class="math notranslate nohighlight">\(6\)</span>.</span><a class="headerlink" href="#id3" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p>and they are represented by the parent vector:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   ┌─┐       ┌─┐─┐─┐
-   ↓ │       ↓ │ │ │
-p: 0 0 1 1 4 4 5 5 5 0
-   ↑ ↑ │ │ ↑ │       │
-   │ └─┘─┘ └─┘       │
-   └─────────────────┘
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>        ┌─────────────────────┐
+        ┌─┐ ┌─┐─┐     ┌─┐─┐─┐ │
+        ↓ │ ↓ │ │     ↓ │ │ │ │
+parent: 0 0 1 2 2 1 6 6 7 7 7 0
+          ↑ │     │ ↑ │        
+          └─┘─────┘ └─┘        
 </pre></div>
 </div>
 <p>We can quite easily find the grandparents of each node, by simply finding the parent of each parent:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">p</span><span class="sr">[</span><span class="nv">p</span><span class="sr">]</span><span class="w">    </span><span class="c1">⍝ great-grandparents - parents of parents</span>
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">p</span><span class="sr">[</span><span class="nv">p</span><span class="sr">]</span><span class="w">    </span><span class="c1">⍝ grandparents - parents of parents</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><pre class="language-APL">0 0 0 0 4 4 4 4 4 0
+<div class="output text_html"><pre class="language-APL">0 0 0 1 1 0 6 6 6 6 6 0
 </pre></div></div>
 </div>
 <p>Now we can see why we decided to indicate roots with a self-loop. When we repeatedly index with the parent vector, the roots are constant.</p>
-<p>If we try to find the great-grandparents of each node, we find that the result doesn’t change, since there are no nodes deep enough in the tree to have great-grandparents, so the result loops at the grandparents.</p>
+<p>We can similarly find the great-grandparents of each node.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">p</span><span class="sr">[</span><span class="nv">p</span><span class="sr">[</span><span class="nv">p</span><span class="sr">]]</span>
-<span class="nv">p</span><span class="sr">[</span><span class="nv">p</span><span class="sr">[</span><span class="nv">p</span><span class="sr">]]</span><span class="o">≡</span><span class="nv">p</span><span class="sr">[</span><span class="nv">p</span><span class="sr">]</span>
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">p</span><span class="sr">[</span><span class="nv">p</span><span class="sr">[</span><span class="nv">p</span><span class="sr">]]</span><span class="w">    </span><span class="c1">⍝ great-grandparents - parents of parents of parents</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><pre class="language-APL">0 0 0 0 4 4 4 4 4 0
+<div class="output text_html"><pre class="language-APL">0 0 0 0 0 0 6 6 6 6 6 0
+</pre></div></div>
+</div>
+<p>If we try to find the great-great-grandparents of each node, we notice that the result doesn’t change.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">p</span><span class="sr">[</span><span class="nv">p</span><span class="sr">[</span><span class="nv">p</span><span class="sr">[</span><span class="nv">p</span><span class="sr">]]]</span>
+<span class="nv">p</span><span class="sr">[</span><span class="nv">p</span><span class="sr">[</span><span class="nv">p</span><span class="sr">[</span><span class="nv">p</span><span class="sr">]]]</span><span class="o">≡</span><span class="nv">p</span><span class="sr">[</span><span class="nv">p</span><span class="sr">[</span><span class="nv">p</span><span class="sr">]]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">0 0 0 0 0 0 6 6 6 6 6 0
 </pre></div><div class="output text_html"><pre class="language-APL">1
 </pre></div></div>
 </div>
-<p>Notice that the result at each index <code class="docutils literal notranslate"><span class="pre">i</span></code> is now the root of the tree <code class="docutils literal notranslate"><span class="pre">i</span></code> is part of. So in general, to find the root of the tree each node is part of, we repeatedly index with the parent vector to a fixed point.</p>
+<p>No node is deep enough in the tree to have a great-great-grandparent, so our result doesn’t change. Notice that the result at each index <code class="docutils literal notranslate"><span class="pre">i</span></code> is now the root of the tree <code class="docutils literal notranslate"><span class="pre">i</span></code> is part of. So in general, to find the root of the tree each node is part of, we repeatedly index with the parent vector to a fixed point.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="kt">{</span><span class="nv">p</span><span class="sr">[</span><span class="bp">⍵</span><span class="sr">]</span><span class="kt">}</span><span class="na">⍣</span><span class="o">≡</span><span class="nv">p</span>
@@ -612,31 +634,29 @@ p: 0 0 1 1 4 4 5 5 5 0
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><pre class="language-APL">0 0 0 0 4 4 4 4 4 0
+<div class="output text_html"><pre class="language-APL">0 0 0 0 0 0 6 6 6 6 6 0
 </pre></div></div>
 </div>
 <p>Recall that we defined <code class="docutils literal notranslate"><span class="pre">I←{⍺[⍵]}</span></code>, this is why. We can rephrase the above as</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">p</span><span class="w"> </span><span class="nv">I</span><span class="na">⍣</span><span class="o">≡</span><span class="nv">p</span><span class="w">    </span><span class="c1">⍝ substituting I</span>
-<span class="nv">I</span><span class="na">⍣</span><span class="o">≡</span><span class="na">⍨</span><span class="nv">p</span><span class="w">     </span><span class="c1">⍝ this is equivalent</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><pre class="language-APL">0 0 0 0 4 4 4 4 4 0
-</pre></div><div class="output text_html"><pre class="language-APL">0 0 0 0 4 4 4 4 4 0
+<div class="output text_html"><pre class="language-APL">0 0 0 0 0 0 6 6 6 6 6 0
 </pre></div></div>
 </div>
 <p>Using vectors with multiple trees is covered in more detail in the page on <a class="reference internal" href="forests.html"><span class="std std-doc">forests</span></a>.</p>
 </section>
 <section id="selecting-sub-trees">
 <h3>Selecting Sub-Trees<a class="headerlink" href="#selecting-sub-trees" title="Link to this heading">#</a></h3>
-<p>We can use a similar technique to select sub-trees of a tree. In the previous example, repeatedly indexing with <code class="docutils literal notranslate"><span class="pre">p</span></code> saturated at the root node. With a small modification to the expression, we can have the indexing saturate at a different point. Take our tree from before we snipped node <span class="math notranslate nohighlight">\(4\)</span> off:</p>
+<p>We can use a similar technique to select sub-trees of a tree. In the previous example, repeatedly indexing with <code class="docutils literal notranslate"><span class="pre">p</span></code> saturated at the root node. With a small modification to the expression, we can have the indexing saturate at a different point. Take our tree from before we snipped node <span class="math notranslate nohighlight">\(6\)</span> off:</p>
 <figure class="align-default" id="id4">
-<img alt="The tree diagram from the previous section." src="../_images/IntroTreeDFPT_ManimCE_v0.18.1.png" />
+<img alt="The tree diagram from the previous section." src="../_images/PV_ManimCE_v0.18.1.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 11 </span><span class="caption-text">Node <span class="math notranslate nohighlight">\(4\)</span> has been kindly reattached.</span><a class="headerlink" href="#id4" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 11 </span><span class="caption-text">Node <span class="math notranslate nohighlight">\(6\)</span> has been kindly reattached.</span><a class="headerlink" href="#id4" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p>Let’s reset <code class="docutils literal notranslate"><span class="pre">p</span></code> to this tree.</p>
@@ -647,54 +667,66 @@ p: 0 0 1 1 4 4 5 5 5 0
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><pre class="language-APL">0 0 1 1 0 4 5 5 5 0
+<div class="output text_html"><pre class="language-APL">0 0 1 2 2 1 0 6 7 7 7 0
 </pre></div></div>
 </div>
 <p>Since there is only one tree in this vector, all nodes have the same root - <span class="math notranslate nohighlight">\(0\)</span>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">I</span><span class="na">⍣</span><span class="o">≡</span><span class="na">⍨</span><span class="nv">p</span>
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">p</span><span class="w"> </span><span class="nv">I</span><span class="na">⍣</span><span class="o">≡</span><span class="nv">p</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><pre class="language-APL">0 0 0 0 0 0 0 0 0 0
+<div class="output text_html"><pre class="language-APL">0 0 0 0 0 0 0 0 0 0 0 0
 </pre></div></div>
 </div>
-<p>Let’s say we want to find all the nodes which are a child of node <span class="math notranslate nohighlight">\(5\)</span>. We can use the same process as in the above code, and use the <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> operator to prevent the indexing from going above node <span class="math notranslate nohighlight">\(5\)</span> each time:</p>
+<p>Let’s say we want to find all the nodes which are a descendant of node <span class="math notranslate nohighlight">\(6\)</span>. We can use the same process as in the above code, and use the <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> operator to prevent the indexing from going above node <span class="math notranslate nohighlight">\(6\)</span> each time:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="nv">I</span><span class="na">@</span><span class="kt">{</span><span class="bp">⍵</span><span class="o">≠</span><span class="m">5</span><span class="kt">}</span><span class="na">⍣</span><span class="o">≡</span><span class="na">⍨</span><span class="nv">p</span>
-<span class="c1">⍝  └────┴ only index where parent is not a 5</span>
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">p</span><span class="w"> </span><span class="nv">I</span><span class="na">@</span><span class="kt">{</span><span class="bp">⍵</span><span class="o">≠</span><span class="m">6</span><span class="kt">}</span><span class="na">⍣</span><span class="o">≡</span><span class="nv">p</span>
+<span class="c1">⍝  └────┴ only index where parent is not a 6</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><pre class="language-APL">0 0 0 0 0 0 5 5 5 0
+<div class="output text_html"><pre class="language-APL">0 0 0 0 0 0 0 6 6 6 6 0
 </pre></div></div>
 </div>
-<p>Then, by comparing the result with <span class="math notranslate nohighlight">\(5\)</span>, we obtain a mask of the nodes for which stepping up the parents eventually hit node <span class="math notranslate nohighlight">\(5\)</span>, i.e. those nodes which are a descendant of node <span class="math notranslate nohighlight">\(5\)</span>. Note that this does not include the node <span class="math notranslate nohighlight">\(5\)</span> itself.</p>
+<p>Then, by comparing the result with <span class="math notranslate nohighlight">\(6\)</span>, we obtain a mask of the nodes for which stepping up the parents eventually hit node <span class="math notranslate nohighlight">\(6\)</span>, i.e. those nodes which are a descendant of node <span class="math notranslate nohighlight">\(1\)</span>. Note that this does not include the node <span class="math notranslate nohighlight">\(6\)</span> itself.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="m">5</span><span class="o">=</span><span class="nv">I</span><span class="na">@</span><span class="kt">{</span><span class="bp">⍵</span><span class="o">≠</span><span class="m">5</span><span class="kt">}</span><span class="na">⍣</span><span class="o">≡</span><span class="na">⍨</span><span class="nv">p</span>
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="m">6</span><span class="o">=</span><span class="nv">p</span><span class="w"> </span><span class="nv">I</span><span class="na">@</span><span class="kt">{</span><span class="bp">⍵</span><span class="o">≠</span><span class="m">6</span><span class="kt">}</span><span class="na">⍣</span><span class="o">≡</span><span class="nv">p</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><pre class="language-APL">0 0 0 0 0 0 1 1 1 0
+<div class="output text_html"><pre class="language-APL">0 0 0 0 0 0 0 1 1 1 1 0
 </pre></div></div>
 </div>
-<p>This can be easily extended to work with multiple nodes as roots, for example if we want nodes which are descendants of nodes <span class="math notranslate nohighlight">\(5\)</span> and <span class="math notranslate nohighlight">\(1\)</span>:</p>
+<p>To include the node <span class="math notranslate nohighlight">\(6\)</span>, we can start our computation with a set of all nodes, rather than skipping straight to the parents. This way our indexing mask notices the node <span class="math notranslate nohighlight">\(6\)</span>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="m">1</span><span class="w"> </span><span class="m">5</span><span class="o">∊</span><span class="na">⍨</span><span class="nv">I</span><span class="na">@</span><span class="kt">{</span><span class="o">~</span><span class="bp">⍵</span><span class="o">∊</span><span class="m">1</span><span class="w"> </span><span class="m">5</span><span class="kt">}</span><span class="na">⍣</span><span class="o">≡</span><span class="na">⍨</span><span class="nv">p</span>
-<span class="c1">⍝ │   │ └───────┴ index where not a 1 or a 5</span>
-<span class="c1">⍝ └───┴────────── find those which hit 1 or 5</span>
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="m">6</span><span class="o">=</span><span class="nv">p</span><span class="w"> </span><span class="nv">I</span><span class="na">@</span><span class="kt">{</span><span class="bp">⍵</span><span class="o">≠</span><span class="m">6</span><span class="kt">}</span><span class="na">⍣</span><span class="o">≡⍳≢</span><span class="nv">p</span>
+<span class="c1">⍝            └─┴ starting with all nodes</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><pre class="language-APL">0 0 1 1 0 0 1 1 1 0
+<div class="output text_html"><pre class="language-APL">0 0 0 0 0 0 1 1 1 1 1 0
+</pre></div></div>
+</div>
+<p>This can be easily extended to work with multiple nodes as roots, for example if we want nodes which are descendants of node <span class="math notranslate nohighlight">\(1\)</span> as well:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="m">1</span><span class="w"> </span><span class="m">6</span><span class="o">∊</span><span class="na">⍨</span><span class="nv">p</span><span class="w"> </span><span class="nv">I</span><span class="na">@</span><span class="kt">{</span><span class="o">~</span><span class="bp">⍵</span><span class="o">∊</span><span class="m">1</span><span class="w"> </span><span class="m">6</span><span class="kt">}</span><span class="na">⍣</span><span class="o">≡⍳≢</span><span class="nv">p</span>
+<span class="c1">⍝ │   │   └───────┴ index where not a 1 or a 6</span>
+<span class="c1">⍝ └───┴──────────── find those which hit 1 or 6</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">0 1 1 1 1 1 1 1 1 1 1 0
 </pre></div></div>
 </div>
 </section>
@@ -707,7 +739,7 @@ p: 0 0 1 1 4 4 5 5 5 0
 <h3>Inverting<a class="headerlink" href="#inverting" title="Link to this heading">#</a></h3>
 <p>Because it doesn’t really fit anywhere else in the tutorial, let’s look at a neat way to reverse the order of all siblings in a tree - in other words, mirroring the tree. On our example tree, this looks like:</p>
 <figure class="align-default" id="id5">
-<img alt="The tree moving to mirror itself horizontally." src="../_images/IntroTreeInvert_ManimCE_v0.18.1.gif" />
+<img alt="The tree moving to mirror itself horizontally." src="../_images/PVInvert_ManimCE_v0.18.1.gif" />
 <figcaption>
 <p><span class="caption-number">Fig. 12 </span><span class="caption-text">Mirroring the tree.</span><a class="headerlink" href="#id5" title="Link to this image">#</a></p>
 </figcaption>
@@ -720,10 +752,10 @@ p: 0 0 1 1 4 4 5 5 5 0
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><pre class="language-APL">0 5 5 5 4 0 1 1 0 0
+<div class="output text_html"><pre class="language-APL">0 7 7 7 6 0 1 2 2 1 0 0
 </pre></div></div>
 </div>
-<p>Since the whole vector has been reversed, the order between siblings is reversed as well. Sadly, we’re not done. If a node <code class="docutils literal notranslate"><span class="pre">i</span></code>’s parent was <code class="docutils literal notranslate"><span class="pre">j</span></code> in the original <code class="docutils literal notranslate"><span class="pre">p</span></code>, that parent will now be in place <code class="docutils literal notranslate"><span class="pre">¯1+(≢p)-j</span></code> - in our <span class="math notranslate nohighlight">\(10\)</span> element vector, node <span class="math notranslate nohighlight">\(9\)</span> goes to place <span class="math notranslate nohighlight">\(0\)</span>, <span class="math notranslate nohighlight">\(8\)</span> goes to <span class="math notranslate nohighlight">\(1\)</span>, and so on. Therefore, after reversing the parent vector, we can correct the parent pointers like so:</p>
+<p>Since the whole vector has been reversed, the order between siblings is reversed as well. Sadly, we’re not done. If a node <code class="docutils literal notranslate"><span class="pre">i</span></code>’s parent was <code class="docutils literal notranslate"><span class="pre">j</span></code> in the original <code class="docutils literal notranslate"><span class="pre">p</span></code>, that parent will now be in place <code class="docutils literal notranslate"><span class="pre">¯1+(≢p)-j</span></code> - in our <span class="math notranslate nohighlight">\(12\)</span> element vector, node <span class="math notranslate nohighlight">\(11\)</span> goes to place <span class="math notranslate nohighlight">\(0\)</span>, <span class="math notranslate nohighlight">\(10\)</span> goes to <span class="math notranslate nohighlight">\(1\)</span>, and so on. Therefore, after reversing the parent vector, we can correct the parent pointers like so:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="m">¯1</span><span class="o">+</span><span class="p">(</span><span class="o">≢</span><span class="nv">p</span><span class="p">)</span><span class="o">-⌽</span><span class="nv">p</span><span class="w">    </span><span class="c1">⍝ explicitly</span>
@@ -732,8 +764,8 @@ p: 0 0 1 1 4 4 5 5 5 0
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><pre class="language-APL">9 4 4 4 5 9 8 8 9 9
-</pre></div><div class="output text_html"><pre class="language-APL">9 4 4 4 5 9 8 8 9 9
+<div class="output text_html"><pre class="language-APL">11 4 4 4 5 11 10 9 9 10 11 11
+</pre></div><div class="output text_html"><pre class="language-APL">11 4 4 4 5 11 10 9 9 10 11 11
 </pre></div></div>
 </div>
 </section>
@@ -741,6 +773,261 @@ p: 0 0 1 1 4 4 5 5 5 0
 <section id="pretty-printing">
 <h2>Pretty Printing<a class="headerlink" href="#pretty-printing" title="Link to this heading">#</a></h2>
 <p>We’re now looking at some sufficiently complicated tree operations that you might like to play around with other examples in the APL session yourself. It can be extremely frustrating to try an expression and be met just with a list of numbers and no way of visualising the resulting tree. For this reason, we’re going to include here some definitions that will let you pretty-print trees in character matrices, which you can copy and use right away. If you’re so inclined, you can have a crack at reading the code right away, but the general technique it employs is explained on the page for <a class="reference internal" href="bottom-up-aggregation.html"><span class="std std-doc">bottom-up aggregation</span></a>.</p>
+<div class="cell tag_hide-cell docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell content</span>
+<span class="expanded">Hide code cell content</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="c1">⍝ renders a tree given labels, box drawing characters, and padding</span>
+<span class="c1">⍝     ┌─────── vector of character matrices giving the labels for each node</span>
+<span class="c1">⍝     │ ┌───── box drawing characters to render the tree, e.g: &#39;─┌┬┐│┴├┼┤│&#39;</span>
+<span class="c1">⍝     │ │                                               normal ─┴───┘└───┴─ upstruck</span>
+<span class="c1">⍝     │ │ ┌─── number of spaces to pad with between sub-tree</span>
+<span class="c1">⍝     │ │ │ ┌─ parent vector</span>
+<span class="nv">_pp_</span><span class="kd">←</span><span class="kt">{</span><span class="nv">v</span><span class="w"> </span><span class="nv">b</span><span class="w"> </span><span class="nv">s</span><span class="w"> </span><span class="nv">p</span><span class="kd">←</span><span class="bp">⍺</span><span class="w"> </span><span class="bp">⍺⍺</span><span class="w"> </span><span class="bp">⍵⍵</span><span class="w"> </span><span class="bp">⍵</span>
+<span class="w">    </span><span class="nv">d</span><span class="kd">←</span><span class="nv">p</span><span class="o">≠⍳≢</span><span class="nv">p</span>
+<span class="w">    </span><span class="nv">_</span><span class="kd">←</span><span class="kt">{</span>
+<span class="w">        </span><span class="nv">q</span><span class="kd">←</span><span class="nv">p</span><span class="sr">[</span><span class="bp">⍵</span><span class="sr">]</span>
+<span class="w">        </span><span class="nv">d</span><span class="o">+</span><span class="kd">←</span><span class="bp">⍵</span><span class="o">≠</span><span class="nv">q</span>
+<span class="w">        </span><span class="nv">q</span>
+<span class="w">    </span><span class="kt">}</span><span class="na">⍣</span><span class="o">≡</span><span class="nv">p</span>
+<span class="w">    </span><span class="nv">md</span><span class="kd">←</span><span class="o">⌈</span><span class="na">/</span><span class="nv">d</span>
+<span class="w">    </span><span class="nv">r</span><span class="kd">←</span><span class="nv">v</span><span class="w">        </span><span class="c1">⍝ result of rendering each sub-tree, seeded with labels</span>
+<span class="w">    </span><span class="nv">md</span><span class="o">=</span><span class="m">0</span><span class="bp">:</span><span class="w"> </span><span class="nv">r</span><span class="w">    </span><span class="c1">⍝ avoid the each running on the prototype</span>
+<span class="w">    </span><span class="nv">_</span><span class="kd">←</span><span class="kt">{</span>
+<span class="w">        </span><span class="nv">i</span><span class="kd">←</span><span class="o">⍸</span><span class="nv">d</span><span class="o">=</span><span class="bp">⍵</span><span class="w">    </span><span class="c1">⍝ nodes at this depth</span>
+<span class="w">        </span><span class="nv">F</span><span class="kd">←</span><span class="kt">{</span><span class="w">                                          </span><span class="c1">⍝ ⍺ parent, ⍵ rendered child sub-trees</span>
+<span class="w">            </span><span class="nv">ws</span><span class="kd">←</span><span class="p">(</span><span class="m">1</span><span class="o">⊃⍴</span><span class="p">)</span><span class="na">¨</span><span class="bp">⍵</span><span class="w">                               </span><span class="c1">⍝ widths of each rendered child</span>
+<span class="w">            </span><span class="nv">w</span><span class="kd">←</span><span class="nv">s</span><span class="o">-</span><span class="na">⍨</span><span class="o">+</span><span class="na">/</span><span class="nv">s</span><span class="o">+</span><span class="nv">ws</span><span class="w">                              </span><span class="c1">⍝ eventual width of the rendered tree       wwwwwww</span>
+<span class="w">            </span><span class="nv">cs</span><span class="kd">←</span><span class="p">(</span><span class="o">+</span><span class="na">\</span><span class="m">0</span><span class="o">,</span><span class="m">¯1</span><span class="o">↓</span><span class="nv">s</span><span class="o">+</span><span class="nv">ws</span><span class="p">)</span><span class="o">+</span><span class="m">¯1</span><span class="o">+⌈</span><span class="m">2</span><span class="o">÷</span><span class="na">⍨</span><span class="nv">ws</span><span class="w">               </span><span class="c1">⍝ centres of each rendered sub-tree         ∘ss∘ss∘</span>
+<span class="w">            </span><span class="nv">t</span><span class="kd">←</span><span class="nv">w</span><span class="o">⍴</span><span class="s1">&#39; &#39;</span><span class="w">                                  </span><span class="c1">⍝ header to be decorated                   &#39;       &#39;</span>
+<span class="w">            </span><span class="nv">t</span><span class="sr">[</span><span class="p">(</span><span class="o">⊢⊢</span><span class="na">⍤/⍨</span><span class="p">((</span><span class="o">⊃⌽</span><span class="nv">cs</span><span class="p">)</span><span class="o">&gt;⊢</span><span class="p">)</span><span class="o">∧</span><span class="p">(</span><span class="o">⊃</span><span class="nv">cs</span><span class="p">)</span><span class="o">&lt;⊢</span><span class="p">)</span><span class="o">⍳</span><span class="nv">w</span><span class="sr">]</span><span class="kd">←</span><span class="nv">b</span><span class="sr">[</span><span class="m">0</span><span class="sr">]</span><span class="w">      </span><span class="c1">⍝ add horizontal bar                       &#39; ───── &#39;</span>
+<span class="w">            </span><span class="nv">t</span><span class="sr">[</span><span class="w">   </span><span class="o">⊃</span><span class="w"> </span><span class="nv">cs</span><span class="sr">]</span><span class="kd">←</span><span class="nv">b</span><span class="sr">[</span><span class="m">1</span><span class="sr">]</span><span class="w">                          </span><span class="c1">⍝ left end of bar                          &#39;┌───── &#39;</span>
+<span class="w">            </span><span class="nv">t</span><span class="sr">[</span><span class="w">   </span><span class="o">⊃⌽</span><span class="nv">cs</span><span class="sr">]</span><span class="kd">←</span><span class="nv">b</span><span class="sr">[</span><span class="m">3</span><span class="sr">]</span><span class="w">                          </span><span class="c1">⍝ right end of bar                         &#39;┌─────┐&#39;</span>
+<span class="w">            </span><span class="nv">t</span><span class="sr">[</span><span class="m">¯1</span><span class="o">↓</span><span class="m">1</span><span class="o">↓</span><span class="nv">cs</span><span class="sr">]</span><span class="kd">←</span><span class="nv">b</span><span class="sr">[</span><span class="m">2</span><span class="sr">]</span><span class="w">                          </span><span class="c1">⍝ connectors to intermediate children      &#39;┌──┬──┐&#39;</span>
+<span class="w">            </span><span class="nv">t</span><span class="sr">[</span><span class="p">(</span><span class="m">1</span><span class="o">=≢</span><span class="nv">cs</span><span class="p">)</span><span class="o">⍴⊃</span><span class="nv">cs</span><span class="sr">]</span><span class="kd">←</span><span class="nv">b</span><span class="sr">[</span><span class="m">4</span><span class="sr">]</span><span class="w">                      </span><span class="c1">⍝ if there&#39;s only one child, just make it a lone upstrike</span>
+<span class="w">            </span><span class="nv">c</span><span class="kd">←</span><span class="m">¯1</span><span class="o">+⌈</span><span class="m">2</span><span class="o">÷</span><span class="na">⍨</span><span class="nv">w</span><span class="w">                               </span><span class="c1">⍝ index of the centre of the rendered tree     ∘</span>
+<span class="w">            </span><span class="nv">t</span><span class="sr">[</span><span class="nv">c</span><span class="sr">]</span><span class="kd">←</span><span class="nv">b</span><span class="sr">[</span><span class="m">5</span><span class="w"> </span><span class="m">6</span><span class="w"> </span><span class="m">7</span><span class="w"> </span><span class="m">8</span><span class="w"> </span><span class="m">9</span><span class="sr">][</span><span class="nv">b</span><span class="sr">[</span><span class="m">0</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="m">4</span><span class="sr">]</span><span class="o">⍳</span><span class="nv">t</span><span class="sr">[</span><span class="nv">c</span><span class="sr">]]</span><span class="w">     </span><span class="c1">⍝ connector to the parent                  &#39;┌──┼──┐&#39;</span>
+<span class="w">            </span><span class="nv">t</span><span class="o">⍪</span><span class="kd">←</span><span class="p">(</span><span class="o">-</span><span class="nv">s</span><span class="p">)</span><span class="o">↓</span><span class="na">⍤</span><span class="m">1</span><span class="o">⊃,</span><span class="na">/</span><span class="o">,</span><span class="na">∘</span><span class="p">(</span><span class="nv">s</span><span class="o">⍴</span><span class="s1">&#39; &#39;</span><span class="p">)</span><span class="na">⍤</span><span class="m">1</span><span class="na">¨</span><span class="p">((</span><span class="o">⌈</span><span class="na">/</span><span class="o">≢</span><span class="na">¨</span><span class="p">)</span><span class="o">↑</span><span class="na">¨</span><span class="o">⊢</span><span class="p">)</span><span class="bp">⍵</span><span class="w">    </span><span class="c1">⍝ pad lables, join under header</span>
+<span class="w">            </span><span class="nv">rp</span><span class="kd">←</span><span class="bp">⍺</span><span class="o">⊃</span><span class="nv">r</span><span class="w">                                   </span><span class="c1">⍝ label of the parent</span>
+<span class="w">            </span><span class="nv">ww</span><span class="kd">←</span><span class="m">1</span><span class="o">⊃⍴</span><span class="nv">rp</span><span class="w">                                 </span><span class="c1">⍝ width of label of parent</span>
+<span class="w">            </span><span class="nv">cc</span><span class="kd">←</span><span class="m">¯1</span><span class="o">+⌈</span><span class="m">2</span><span class="o">÷</span><span class="na">⍨</span><span class="nv">ww</span><span class="w">                             </span><span class="c1">⍝ centre of label of parent</span>
+<span class="w">            </span><span class="nv">t</span><span class="w"> </span><span class="kd">←</span><span class="p">((</span><span class="nv">c</span><span class="o">-</span><span class="nv">cc</span><span class="p">)</span><span class="o">⌽</span><span class="nv">ww</span><span class="o">↑</span><span class="na">⍤</span><span class="m">1</span><span class="o">⊢</span><span class="p">)</span><span class="na">⍣</span><span class="p">(</span><span class="nv">w</span><span class="o">&lt;</span><span class="nv">ww</span><span class="p">)</span><span class="o">⊢</span><span class="nv">t</span><span class="w">              </span><span class="c1">⍝ pad and recentre text so far if it&#39;s less wide</span>
+<span class="w">            </span><span class="nv">rp</span><span class="kd">←</span><span class="p">((</span><span class="nv">cc</span><span class="o">-</span><span class="nv">c</span><span class="p">)</span><span class="o">⌽</span><span class="w"> </span><span class="nv">w</span><span class="o">↑</span><span class="na">⍤</span><span class="m">1</span><span class="o">⊢</span><span class="p">)</span><span class="na">⍣</span><span class="p">(</span><span class="nv">w</span><span class="o">&gt;</span><span class="nv">ww</span><span class="p">)</span><span class="o">⊢</span><span class="nv">rp</span><span class="w">             </span><span class="c1">⍝ pad and recentre parent label if it&#39;s less wide</span>
+<span class="w">            </span><span class="nv">t</span><span class="o">⍪</span><span class="na">⍨</span><span class="kd">←</span><span class="nv">rp</span><span class="w">                                   </span><span class="c1">⍝ add parent label</span>
+<span class="w">            </span><span class="nv">r</span><span class="sr">[</span><span class="bp">⍺</span><span class="sr">]</span><span class="kd">←</span><span class="o">⊂</span><span class="nv">t</span><span class="w">                                  </span><span class="c1">⍝ record result</span>
+<span class="w">            </span><span class="no">⍬</span>
+<span class="w">        </span><span class="kt">}</span>
+<span class="w">        </span><span class="nv">_</span><span class="kd">←</span><span class="nv">p</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]</span><span class="nv">F</span><span class="na">⌸</span><span class="nv">r</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]</span>
+<span class="w">        </span><span class="no">⍬</span>
+<span class="w">    </span><span class="kt">}</span><span class="na">¨</span><span class="o">⌽</span><span class="m">1</span><span class="o">+⍳</span><span class="nv">md</span><span class="w">    </span><span class="c1">⍝ bottom up accumulation</span>
+<span class="w">    </span><span class="nv">r</span><span class="na">/⍨</span><span class="nv">p</span><span class="o">=⍳≢</span><span class="nv">p</span><span class="w">    </span><span class="c1">⍝ return results at roots only</span>
+<span class="kt">}</span>
+
+<span class="nv">PPV</span><span class="kd">←</span><span class="kt">{</span><span class="bp">⍺</span><span class="kd">←</span><span class="s1">&#39;∘&#39;</span><span class="w"> </span><span class="p">⋄</span><span class="w"> </span><span class="nv">v</span><span class="w"> </span><span class="nv">p</span><span class="kd">←</span><span class="bp">⍺⍵</span><span class="w"> </span><span class="p">⋄</span><span class="w">   </span><span class="p">((</span><span class="o">≢</span><span class="nv">p</span><span class="p">)</span><span class="o">⍴⍉</span><span class="na">⍤</span><span class="o">⍪</span><span class="na">⍤</span><span class="o">⍕</span><span class="na">¨</span><span class="s1">&#39;∘&#39;</span><span class="na">@</span><span class="p">(</span><span class="m">0</span><span class="o">=≢</span><span class="na">¨</span><span class="p">)</span><span class="nv">v</span><span class="p">)(</span><span class="s1">&#39;─┌┬┐│┴├┼┤│&#39;</span><span class="nv">_pp_</span><span class="w"> </span><span class="m">1</span><span class="p">)</span><span class="nv">p</span><span class="kt">}</span><span class="w">    </span><span class="c1">⍝ vertical</span>
+<span class="nv">PPH</span><span class="kd">←</span><span class="kt">{</span><span class="bp">⍺</span><span class="kd">←</span><span class="s1">&#39;∘&#39;</span><span class="w"> </span><span class="p">⋄</span><span class="w"> </span><span class="nv">v</span><span class="w"> </span><span class="nv">p</span><span class="kd">←</span><span class="bp">⍺⍵</span><span class="w"> </span><span class="p">⋄</span><span class="w"> </span><span class="o">⍉</span><span class="na">¨</span><span class="p">((</span><span class="o">≢</span><span class="nv">p</span><span class="p">)</span><span class="o">⍴</span><span class="w">  </span><span class="o">⍪</span><span class="na">⍤</span><span class="o">⍕</span><span class="na">¨</span><span class="s1">&#39;∘&#39;</span><span class="na">@</span><span class="p">(</span><span class="m">0</span><span class="o">=≢</span><span class="na">¨</span><span class="p">)</span><span class="nv">v</span><span class="p">)(</span><span class="s1">&#39;│┌├└─┤┬┼┴─&#39;</span><span class="nv">_pp_</span><span class="w"> </span><span class="m">0</span><span class="p">)</span><span class="nv">p</span><span class="kt">}</span><span class="w">    </span><span class="c1">⍝ horizontal</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<p>(You may also find <a class="reference external" href="https://code.jsoftware.com/wiki/Essays/Tree_Display">this essay</a> by Roger Hui interesting.)</p>
+<p>We now have access to the <code class="docutils literal notranslate"><span class="pre">PPV</span></code> and <code class="docutils literal notranslate"><span class="pre">PPH</span></code> functions to visualise trees vertically and horizontally respectively. These functions take a parent vector as their right argument, and optionally a scalar label or vector of labels as their left argument. The left argument is reshaped to the length of the given parent vector, and matched up so that node <span class="math notranslate nohighlight">\(0\)</span> used label <span class="math notranslate nohighlight">\(0\)</span>, node <span class="math notranslate nohighlight">\(1\)</span> uses label <span class="math notranslate nohighlight">\(1\)</span>, and so on.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">PPV</span><span class="w"> </span><span class="nv">p</span><span class="w">    </span><span class="c1">⍝ visualise vertically</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">┌─────────────┐
+│      ∘      │
+│  ┌───┴─┬───┐│
+│  ∘     ∘   ∘│
+│ ┌┴─┐   │    │
+│ ∘  ∘   ∘    │
+│┌┴┐   ┌─┼─┐  │
+│∘ ∘   ∘ ∘ ∘  │
+└─────────────┘
+</pre></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">PPH</span><span class="w"> </span><span class="nv">p</span><span class="w">    </span><span class="c1">⍝ visualise horizontally</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">┌───────┐
+│   ┌∘┬∘│
+│ ┌∘┤ └∘│
+│ │ └∘  │
+│∘┤   ┌∘│
+│ ├∘─∘┼∘│
+│ │   └∘│
+│ └∘    │
+└───────┘
+</pre></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;*&#39;</span><span class="w"> </span><span class="nv">PPV</span><span class="w"> </span><span class="nv">p</span><span class="w">    </span><span class="c1">⍝ change the label</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">┌─────────────┐
+│      *      │
+│  ┌───┴─┬───┐│
+│  *     *   *│
+│ ┌┴─┐   │    │
+│ *  *   *    │
+│┌┴┐   ┌─┼─┐  │
+│* *   * * *  │
+└─────────────┘
+</pre></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">⍳≢</span><span class="nv">p</span><span class="p">)</span><span class="w"> </span><span class="nv">PPV</span><span class="w"> </span><span class="nv">p</span><span class="w">    </span><span class="c1">⍝ label each node by its index</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">┌───────────────┐
+│       0       │
+│  ┌────┴┬────┐ │
+│  1     6    11│
+│ ┌┴─┐   │      │
+│ 2  5   7      │
+│┌┴┐   ┌─┼─┐    │
+│3 4   8 9 10   │
+└───────────────┘
+</pre></div></div>
+</div>
+<p>This lets us check the results of the tree transformations we’ve done on this page:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="c1">⍝ children of nodes 1 and 6</span>
+<span class="nv">i</span><span class="kd">←</span><span class="m">1</span><span class="w"> </span><span class="m">6</span>
+<span class="p">(</span><span class="nv">p</span><span class="o">∊</span><span class="nv">i</span><span class="p">)</span><span class="w"> </span><span class="nv">PPV</span><span class="w"> </span><span class="nv">p</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">┌─────────────┐
+│      0      │
+│  ┌───┴─┬───┐│
+│  0     0   0│
+│ ┌┴─┐   │    │
+│ 1  1   1    │
+│┌┴┐   ┌─┼─┐  │
+│0 0   0 0 0  │
+└─────────────┘
+</pre></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="c1">⍝ leaf nodes</span>
+<span class="p">(</span><span class="o">~</span><span class="p">(</span><span class="o">⍳≢</span><span class="nv">p</span><span class="p">)</span><span class="o">∊</span><span class="nv">p</span><span class="p">)</span><span class="w"> </span><span class="nv">PPV</span><span class="w"> </span><span class="nv">p</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">┌─────────────┐
+│      0      │
+│  ┌───┴─┬───┐│
+│  0     0   1│
+│ ┌┴─┐   │    │
+│ 0  1   0    │
+│┌┴┐   ┌─┼─┐  │
+│1 1   1 1 1  │
+└─────────────┘
+</pre></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="c1">⍝ trimming branches</span>
+<span class="nv">i</span><span class="kd">←</span><span class="m">6</span>
+<span class="nv">p</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]</span><span class="kd">←</span><span class="nv">i</span>
+<span class="p">(</span><span class="o">⍳≢</span><span class="nv">p</span><span class="p">)</span><span class="w"> </span><span class="nv">PPV</span><span class="w"> </span><span class="nv">p</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">┌────────┬──────┐
+│   0    │  6   │
+│  ┌┴──┐ │  │   │
+│  1   11│  7   │
+│ ┌┴─┐   │┌─┼─┐ │
+│ 2  5   │8 9 10│
+│┌┴┐     │      │
+│3 4     │      │
+└────────┴──────┘
+</pre></div></div>
+</div>
+<p>Note that the output of PPV is a vector of character matrices, one for each tree represented in the parent vector.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="c1">⍝ finding roots</span>
+<span class="p">(</span><span class="nv">p</span><span class="w"> </span><span class="nv">I</span><span class="na">⍣</span><span class="o">≡</span><span class="nv">p</span><span class="p">)</span><span class="w"> </span><span class="nv">PPV</span><span class="w"> </span><span class="nv">p</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">┌───────┬─────┐
+│   0   │  6  │
+│  ┌┴──┐│  │  │
+│  0   0│  6  │
+│ ┌┴─┐  │┌─┼─┐│
+│ 0  0  │6 6 6│
+│┌┴┐    │     │
+│0 0    │     │
+└───────┴─────┘
+</pre></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="c1">⍝ selecting sub-trees</span>
+<span class="nv">p</span><span class="kd">←</span><span class="nv">parent</span>
+<span class="nv">i</span><span class="kd">←</span><span class="m">1</span><span class="w"> </span><span class="m">6</span>
+<span class="p">(</span><span class="nv">i</span><span class="o">∊</span><span class="na">⍨</span><span class="nv">p</span><span class="w"> </span><span class="nv">I</span><span class="na">@</span><span class="kt">{</span><span class="o">~</span><span class="bp">⍵</span><span class="o">∊</span><span class="nv">i</span><span class="kt">}</span><span class="na">⍣</span><span class="o">≡⍳≢</span><span class="nv">p</span><span class="p">)</span><span class="w"> </span><span class="nv">PPV</span><span class="w"> </span><span class="nv">p</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">┌─────────────┐
+│      0      │
+│  ┌───┴─┬───┐│
+│  1     1   0│
+│ ┌┴─┐   │    │
+│ 1  1   1    │
+│┌┴┐   ┌─┼─┐  │
+│1 1   1 1 1  │
+└─────────────┘
+</pre></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="c1">⍝ mirroring</span>
+<span class="p">(</span><span class="o">⌽⍳≢</span><span class="nv">p</span><span class="p">)</span><span class="w"> </span><span class="nv">PPV</span><span class="w"> </span><span class="p">(</span><span class="m">¯1</span><span class="o">+≢-⌽</span><span class="p">)</span><span class="nv">p</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">┌───────────────┐
+│       0       │
+│┌────┬─┴────┐  │
+│11   6      1  │
+│     │    ┌─┴┐ │
+│     7    5  2 │
+│   ┌─┴┬─┐   ┌┴┐│
+│   10 9 8   4 3│
+└───────────────┘
+</pre></div></div>
+</div>
 </section>
 </section>
 

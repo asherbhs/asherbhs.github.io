@@ -24,27 +24,27 @@ I←{⍺[⍵]}
 
 At the end of the previous section we settled on the parent vector representation as the main representation of trees we will be using in this tutorial. To reiterate, to represent a tree on $n$ nodes, we associate each node with an index in `⍳n`, and create an $n$-element vector `parent` such that if a node `i` is a child of a node `j`, then `parent[i]=j`.
 
-For instance, the tree we saw many times in the previous section:
+We're going to use a slightly larger tree for the examples in this section:
 
-```{figure} media/IntroTreeDFPT_ManimCE_v0.18.1.png
-:alt: The tree diagram from the previous section.
+```{figure} media/PV_ManimCE_v0.18.1.png
+:alt: A diagram of a new tree.
 
-Our favourite tree, back again... again!
+The tree we're going to work with in this section.
 ```
 
 and the parent vector representing this tree:
 
 ```{code-cell}
-⊢parent←0 0 1 1 0 4 5 5 5 0
+⊢parent←0 0 1 2 2 1 0 6 7 7 7 0
 ```
 
 ```
-        ┌─┐─────┐ ┌─┐─┐─┐
-        ↓ │     │ ↓ │ │ │
-parent: 0 0 1 1 0 4 5 5 5 0
-        ↑ ↑ │ │ ↑ │       │
-        │ └─┘─┘ └─┘       │
-        └─────────────────┘
+        ┌───────────┐─────────┐
+        ┌─┐ ┌─┐─┐   │ ┌─┐─┐─┐ │
+        ↓ │ ↓ │ │   │ ↓ │ │ │ │
+parent: 0 0 1 2 2 1 0 6 7 7 7 0
+          ↑ │     │ ↑ │        
+          └─┘─────┘ └─┘        
 ```
 
 In this section, we're going to look at some of the basic operations you can do on trees represented in this way.
@@ -63,17 +63,17 @@ Given a node `i`, the children of `i` are all those nodes whose parent is `i`. W
 
 ```{code-cell}
 i←1
-p=i    ⍝ nodes 2 and 3 are children of node 1
+p=i    ⍝ nodes 2 and 5 are children of node 1
 ```
 
 If we have multiple nodes which we want to find the children of, we can simply mask for those nodes which have a parent that is any of the parent nodes in question:
 
 ```{code-cell}
-i←1 5
-p∊i    ⍝ additionally, nodes 6, 7, and 8 are children of node 5
+i←1 6
+p∊i    ⍝ additionally, nodes 7 is a child of node 6
 ```
 
-Applying Where (`⍸`) gives us the nodes which this mask selects.
+Applying `⍸` gives us the nodes which this mask selects.
 
 ```{code-cell}
 ⍸p∊i
@@ -93,20 +93,26 @@ The leaf nodes are those nodes which do not have any children, i.e. those nodes 
 (⍳≢p)~p
 ```
 
+Alternatively, if we want a mask of leaf nodes, we just mask those nodes which are not in the parent vector:
+
+```{code-cell}
+~(⍳≢p)∊p
+```
+
 ### Trimming Branches
 
 Time for our first structural change to a tree. Say that we want to remove a sub-tree from the main tree, but still keep the nodes around for reference. In a sense, we just want to snip the connection between a parent and child node:
 
-```{figure} media/IntroTreeSnip_ManimCE_v0.18.1.gif
-:alt: The same tree, with the edge between nodes 0 and 4 fading away, while the tree rearranges itself.
+```{figure} media/PVSnip_ManimCE_v0.18.1.gif
+:alt: The same tree, with the edge between nodes 0 and 6 fading away, while the tree rearranges itself.
 
-Trimming the branch between nodes $0$ and $4$.
+Trimming the branch between nodes $0$ and $6$.
 ```
 
 Recall that a root node (a node with no parent) is indicated by a self-loop in the parent vector - it is considered its own parent. Because of this, it's easy to trim a node from its parent by setting its parent to itself.
 
 ```{code-cell}
-i←4
+i←6
 i@i⊢p     ⍝ using @
 p[i]←i    ⍝ using indexing
 p
@@ -122,39 +128,45 @@ Given a parent vector which represents multiple trees, we may like to find which
 
 After trimming node $4$ from our tree, our two new trees look like:
 
-```{figure} media/IntroTreeSnipped_ManimCE_v0.18.1.png
+```{figure} media/PVSnipped_ManimCE_v0.18.1.png
 :alt: The two trees resulting from the snipping operation shown previously.
 
-Our two trees after snipping the branch between nodes $0$ and $4$.
+Our two trees after snipping the branch between nodes $0$ and $6$.
 ```
 
 and they are represented by the parent vector:
 
 ```
-   ┌─┐       ┌─┐─┐─┐
-   ↓ │       ↓ │ │ │
-p: 0 0 1 1 4 4 5 5 5 0
-   ↑ ↑ │ │ ↑ │       │
-   │ └─┘─┘ └─┘       │
-   └─────────────────┘
+        ┌─────────────────────┐
+        ┌─┐ ┌─┐─┐     ┌─┐─┐─┐ │
+        ↓ │ ↓ │ │     ↓ │ │ │ │
+parent: 0 0 1 2 2 1 6 6 7 7 7 0
+          ↑ │     │ ↑ │        
+          └─┘─────┘ └─┘        
 ```
 
 We can quite easily find the grandparents of each node, by simply finding the parent of each parent:
 
 ```{code-cell}
-p[p]    ⍝ great-grandparents - parents of parents
+p[p]    ⍝ grandparents - parents of parents
 ```
 
 Now we can see why we decided to indicate roots with a self-loop. When we repeatedly index with the parent vector, the roots are constant.
 
-If we try to find the great-grandparents of each node, we find that the result doesn't change, since there are no nodes deep enough in the tree to have great-grandparents, so the result loops at the grandparents.
+We can similarly find the great-grandparents of each node.
 
 ```{code-cell}
-p[p[p]]
-p[p[p]]≡p[p]
+p[p[p]]    ⍝ great-grandparents - parents of parents of parents
 ```
 
-Notice that the result at each index `i` is now the root of the tree `i` is part of. So in general, to find the root of the tree each node is part of, we repeatedly index with the parent vector to a fixed point.
+If we try to find the great-great-grandparents of each node, we notice that the result doesn't change.
+
+```{code-cell}
+p[p[p[p]]]
+p[p[p[p]]]≡p[p[p]]
+```
+
+No node is deep enough in the tree to have a great-great-grandparent, so our result doesn't change. Notice that the result at each index `i` is now the root of the tree `i` is part of. So in general, to find the root of the tree each node is part of, we repeatedly index with the parent vector to a fixed point.
 
 ```{code-cell}
 {p[⍵]}⍣≡p
@@ -164,19 +176,18 @@ Recall that we defined `I←{⍺[⍵]}`, this is why. We can rephrase the above 
 
 ```{code-cell}
 p I⍣≡p    ⍝ substituting I
-I⍣≡⍨p     ⍝ this is equivalent
 ```
 
 Using vectors with multiple trees is covered in more detail in the page on [forests](forests.md).
 
 ### Selecting Sub-Trees
 
-We can use a similar technique to select sub-trees of a tree. In the previous example, repeatedly indexing with `p` saturated at the root node. With a small modification to the expression, we can have the indexing saturate at a different point. Take our tree from before we snipped node $4$ off:
+We can use a similar technique to select sub-trees of a tree. In the previous example, repeatedly indexing with `p` saturated at the root node. With a small modification to the expression, we can have the indexing saturate at a different point. Take our tree from before we snipped node $6$ off:
 
-```{figure} media/IntroTreeDFPT_ManimCE_v0.18.1.png
+```{figure} media/PV_ManimCE_v0.18.1.png
 :alt: The tree diagram from the previous section.
 
-Node $4$ has been kindly reattached.
+Node $6$ has been kindly reattached.
 ```
 
 Let's reset `p` to this tree.
@@ -188,28 +199,35 @@ Let's reset `p` to this tree.
 Since there is only one tree in this vector, all nodes have the same root - $0$.
 
 ```{code-cell}
-I⍣≡⍨p
+p I⍣≡p
 ```
 
-Let's say we want to find all the nodes which are a child of node $5$. We can use the same process as in the above code, and use the `@` operator to prevent the indexing from going above node $5$ each time:
+Let's say we want to find all the nodes which are a descendant of node $6$. We can use the same process as in the above code, and use the `@` operator to prevent the indexing from going above node $6$ each time:
 
 ```{code-cell}
-  I@{⍵≠5}⍣≡⍨p
-⍝  └────┴ only index where parent is not a 5
+p I@{⍵≠6}⍣≡p
+⍝  └────┴ only index where parent is not a 6
 ```
 
-Then, by comparing the result with $5$, we obtain a mask of the nodes for which stepping up the parents eventually hit node $5$, i.e. those nodes which are a descendant of node $5$. Note that this does not include the node $5$ itself.
+Then, by comparing the result with $6$, we obtain a mask of the nodes for which stepping up the parents eventually hit node $6$, i.e. those nodes which are a descendant of node $1$. Note that this does not include the node $6$ itself.
 
 ```{code-cell}
-5=I@{⍵≠5}⍣≡⍨p
+6=p I@{⍵≠6}⍣≡p
 ```
 
-This can be easily extended to work with multiple nodes as roots, for example if we want nodes which are descendants of nodes $5$ and $1$:
+To include the node $6$, we can start our computation with a set of all nodes, rather than skipping straight to the parents. This way our indexing mask notices the node $6$.
 
 ```{code-cell}
-  1 5∊⍨I@{~⍵∊1 5}⍣≡⍨p
-⍝ │   │ └───────┴ index where not a 1 or a 5
-⍝ └───┴────────── find those which hit 1 or 5
+6=p I@{⍵≠6}⍣≡⍳≢p
+⍝            └─┴ starting with all nodes
+```
+
+This can be easily extended to work with multiple nodes as roots, for example if we want nodes which are descendants of node $1$ as well:
+
+```{code-cell}
+  1 6∊⍨p I@{~⍵∊1 6}⍣≡⍳≢p
+⍝ │   │   └───────┴ index where not a 1 or a 6
+⍝ └───┴──────────── find those which hit 1 or 6
 ```
 
 ## Favourite Children (Ordering Siblings)
@@ -222,7 +240,7 @@ Sometimes, the order of siblings in a tree matters. Without any extra informatio
 
 Because it doesn't really fit anywhere else in the tutorial, let's look at a neat way to reverse the order of all siblings in a tree - in other words, mirroring the tree. On our example tree, this looks like:
 
-```{figure} media/IntroTreeInvert_ManimCE_v0.18.1.gif
+```{figure} media/PVInvert_ManimCE_v0.18.1.gif
 :alt: The tree moving to mirror itself horizontally.
 
 Mirroring the tree.
@@ -234,7 +252,7 @@ Our first step is to simply reverse the parent vector.
 ⌽p
 ```
 
-Since the whole vector has been reversed, the order between siblings is reversed as well. Sadly, we're not done. If a node `i`'s parent was `j` in the original `p`, that parent will now be in place `¯1+(≢p)-j` - in our $10$ element vector, node $9$ goes to place $0$, $8$ goes to $1$, and so on. Therefore, after reversing the parent vector, we can correct the parent pointers like so:
+Since the whole vector has been reversed, the order between siblings is reversed as well. Sadly, we're not done. If a node `i`'s parent was `j` in the original `p`, that parent will now be in place `¯1+(≢p)-j` - in our $12$ element vector, node $11$ goes to place $0$, $10$ goes to $1$, and so on. Therefore, after reversing the parent vector, we can correct the parent pointers like so:
 
 ```{code-cell}
 ¯1+(≢p)-⌽p    ⍝ explicitly
@@ -244,3 +262,115 @@ Since the whole vector has been reversed, the order between siblings is reversed
 ## Pretty Printing
 
 We're now looking at some sufficiently complicated tree operations that you might like to play around with other examples in the APL session yourself. It can be extremely frustrating to try an expression and be met just with a list of numbers and no way of visualising the resulting tree. For this reason, we're going to include here some definitions that will let you pretty-print trees in character matrices, which you can copy and use right away. If you're so inclined, you can have a crack at reading the code right away, but the general technique it employs is explained on the page for [bottom-up aggregation](bottom-up-aggregation.md).
+
+```{code-cell}
+:tags: [hide-cell]
+
+⍝ renders a tree given labels, box drawing characters, and padding
+⍝     ┌─────── vector of character matrices giving the labels for each node
+⍝     │ ┌───── box drawing characters to render the tree, e.g: '─┌┬┐│┴├┼┤│'
+⍝     │ │                                               normal ─┴───┘└───┴─ upstruck
+⍝     │ │ ┌─── number of spaces to pad with between sub-tree
+⍝     │ │ │ ┌─ parent vector
+_pp_←{v b s p←⍺ ⍺⍺ ⍵⍵ ⍵
+    d←p≠⍳≢p
+    _←{
+        q←p[⍵]
+        d+←⍵≠q
+        q
+    }⍣≡p
+    md←⌈/d
+    r←v        ⍝ result of rendering each sub-tree, seeded with labels
+    md=0: r    ⍝ avoid the each running on the prototype
+    _←{
+        i←⍸d=⍵    ⍝ nodes at this depth
+        F←{                                          ⍝ ⍺ parent, ⍵ rendered child sub-trees
+            ws←(1⊃⍴)¨⍵                               ⍝ widths of each rendered child
+            w←s-⍨+/s+ws                              ⍝ eventual width of the rendered tree       wwwwwww
+            cs←(+\0,¯1↓s+ws)+¯1+⌈2÷⍨ws               ⍝ centres of each rendered sub-tree         ∘ss∘ss∘
+            t←w⍴' '                                  ⍝ header to be decorated                   '       '
+            t[(⊢⊢⍤/⍨((⊃⌽cs)>⊢)∧(⊃cs)<⊢)⍳w]←b[0]      ⍝ add horizontal bar                       ' ───── '
+            t[   ⊃ cs]←b[1]                          ⍝ left end of bar                          '┌───── '
+            t[   ⊃⌽cs]←b[3]                          ⍝ right end of bar                         '┌─────┐'
+            t[¯1↓1↓cs]←b[2]                          ⍝ connectors to intermediate children      '┌──┬──┐'
+            t[(1=≢cs)⍴⊃cs]←b[4]                      ⍝ if there's only one child, just make it a lone upstrike
+            c←¯1+⌈2÷⍨w                               ⍝ index of the centre of the rendered tree     ∘
+            t[c]←b[5 6 7 8 9][b[0 1 2 3 4]⍳t[c]]     ⍝ connector to the parent                  '┌──┼──┐'
+            t⍪←(-s)↓⍤1⊃,/,∘(s⍴' ')⍤1¨((⌈/≢¨)↑¨⊢)⍵    ⍝ pad lables, join under header
+            rp←⍺⊃r                                   ⍝ label of the parent
+            ww←1⊃⍴rp                                 ⍝ width of label of parent
+            cc←¯1+⌈2÷⍨ww                             ⍝ centre of label of parent
+            t ←((c-cc)⌽ww↑⍤1⊢)⍣(w<ww)⊢t              ⍝ pad and recentre text so far if it's less wide
+            rp←((cc-c)⌽ w↑⍤1⊢)⍣(w>ww)⊢rp             ⍝ pad and recentre parent label if it's less wide
+            t⍪⍨←rp                                   ⍝ add parent label
+            r[⍺]←⊂t                                  ⍝ record result
+            ⍬
+        }
+        _←p[i]F⌸r[i]
+        ⍬
+    }¨⌽1+⍳md    ⍝ bottom up accumulation
+    r/⍨p=⍳≢p    ⍝ return results at roots only
+}
+
+PPV←{⍺←'∘' ⋄ v p←⍺⍵ ⋄   ((≢p)⍴⍉⍤⍪⍤⍕¨'∘'@(0=≢¨)v)('─┌┬┐│┴├┼┤│'_pp_ 1)p}    ⍝ vertical
+PPH←{⍺←'∘' ⋄ v p←⍺⍵ ⋄ ⍉¨((≢p)⍴  ⍪⍤⍕¨'∘'@(0=≢¨)v)('│┌├└─┤┬┼┴─'_pp_ 0)p}    ⍝ horizontal
+```
+
+(You may also find [this essay](https://code.jsoftware.com/wiki/Essays/Tree_Display) by Roger Hui interesting.)
+
+We now have access to the `PPV` and `PPH` functions to visualise trees vertically and horizontally respectively. These functions take a parent vector as their right argument, and optionally a scalar label or vector of labels as their left argument. The left argument is reshaped to the length of the given parent vector, and matched up so that node $0$ used label $0$, node $1$ uses label $1$, and so on.
+
+```{code-cell}
+PPV p    ⍝ visualise vertically
+```
+
+```{code-cell}
+PPH p    ⍝ visualise horizontally
+```
+
+```{code-cell}
+'*' PPV p    ⍝ change the label
+```
+
+```{code-cell}
+(⍳≢p) PPV p    ⍝ label each node by its index
+```
+
+This lets us check the results of the tree transformations we've done on this page:
+
+```{code-cell}
+⍝ children of nodes 1 and 6
+i←1 6
+(p∊i) PPV p
+```
+
+```{code-cell}
+⍝ leaf nodes
+(~(⍳≢p)∊p) PPV p
+```
+
+```{code-cell}
+⍝ trimming branches
+i←6
+p[i]←i
+(⍳≢p) PPV p
+```
+
+Note that the output of PPV is a vector of character matrices, one for each tree represented in the parent vector.
+
+```{code-cell}
+⍝ finding roots
+(p I⍣≡p) PPV p
+```
+
+```{code-cell}
+⍝ selecting sub-trees
+p←parent
+i←1 6
+(i∊⍨p I@{~⍵∊i}⍣≡⍳≢p) PPV p
+```
+
+```{code-cell}
+⍝ mirroring
+(⌽⍳≢p) PPV (¯1+≢-⌽)p
+```
