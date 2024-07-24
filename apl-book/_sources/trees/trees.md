@@ -11,20 +11,17 @@
         - on paper, draw a simple tree and write down the nested representation, depth vector, path matrix, and parent vector for the tree
         - use an interpreter to check your answers
 - [ ] parent vector representation
-    - [ ] this is super great
-    - [ ] basic operations
-        - [ ] find children:    `⍸p∊i`
-        - [ ] find leaves:      `p~⍨⍳≢p`
-        - [ ] find roots:       `I⍣≡⍨p`
+    - [x] this is super great
+    - [x] basic operations
+        - [x] find children:    `⍸p∊i`
+        - [x] find leaves:      `p~⍨⍳≢p`
+        - [x] find roots:       `I⍣≡⍨p`
             - note forests are possible
-        - [ ] select sub-trees: `I@{...}⍣≡⍨p`
-        - [ ] snip:             `i@i⊢p`
+        - [x] select sub-trees: `I@{...}⍣≡⍨p`
+        - [x] snip:             `i@i⊢p`
     - [ ] ordering
         - don't need to maintain dfpt order
         - need to maintain sibling order if it matters for your operation
-    - [ ] `_pp_ PPV PPH`
-        - we will explain the general approach later
-        - for now feel free to copy and use these for noodling
 - [ ] relationship to depth vector
     - [ ] construction from depth vector
     - [ ] finding depths

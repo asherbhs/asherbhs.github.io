@@ -214,5 +214,33 @@ This can be easily extended to work with multiple nodes as roots, for example if
 
 ## Favourite Children (Ordering Siblings)
 
+Before we go any further, it's work making a note of the ordering requirements for a parent vector. We know that one of the big advantages of the representation is that it's not constrained by the DFPT order, you can place parents and children in any order you like so long as each node points to its correct parent.
+
+Sometimes, the order of siblings in a tree matters. Without any extra information, the only way to store the order of siblings in a tree is by their order in the parent vector. Throughout this tutorial, we're going to use operations which maintain sibling ordering in the vast majority of cases, and we'll be explicit where we don't. The good news is, if your use of trees doesn't require maintaining the order of siblings, you don't have to worry about this at all!
+
+### Inverting
+
+Because it doesn't really fit anywhere else in the tutorial, let's look at a neat way to reverse the order of all siblings in a tree - in other words, mirroring the tree. On our example tree, this looks like:
+
+```{figure} media/IntroTreeInvert_ManimCE_v0.18.1.gif
+:alt: The tree moving to mirror itself horizontally.
+
+Mirroring the tree.
+```
+
+Our first step is to simply reverse the parent vector.
+
+```{code-cell}
+⌽p
+```
+
+Since the whole vector has been reversed, the order between siblings is reversed as well. Sadly, we're not done. If a node `i`'s parent was `j` in the original `p`, that parent will now be in place `¯1+(≢p)-j` - in our $10$ element vector, node $9$ goes to place $0$, $8$ goes to $1$, and so on. Therefore, after reversing the parent vector, we can correct the parent pointers like so:
+
+```{code-cell}
+¯1+(≢p)-⌽p    ⍝ explicitly
+(¯1+≢-⌽)p     ⍝ tacitly
+```
+
 ## Pretty Printing
 
+We're now looking at some sufficiently complicated tree operations that you might like to play around with other examples in the APL session yourself. It can be extremely frustrating to try an expression and be met just with a list of numbers and no way of visualising the resulting tree. For this reason, we're going to include here some definitions that will let you pretty-print trees in character matrices, which you can copy and use right away. If you're so inclined, you can have a crack at reading the code right away, but the general technique it employs is explained on the page for [bottom-up aggregation](bottom-up-aggregation.md).
