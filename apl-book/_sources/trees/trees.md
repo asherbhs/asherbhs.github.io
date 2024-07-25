@@ -6,7 +6,7 @@
         - [ ] construction from depth vector
         - [ ] distances between nodes?
         - [x] oh no it's O(nd)
-    - [ ] parent vector
+    - [x] parent vector
     - [ ] challenge:
         - on paper, draw a simple tree and write down the nested representation, depth vector, path matrix, and parent vector for the tree
         - use an interpreter to check your answers
@@ -19,9 +19,10 @@
             - note forests are possible
         - [x] select sub-trees: `I@{...}⍣≡⍨p`
         - [x] snip:             `i@i⊢p`
-    - [ ] ordering
-        - don't need to maintain dfpt order
-        - need to maintain sibling order if it matters for your operation
+    - [x] ordering
+        - [x] don't need to maintain dfpt order
+        - [x] need to maintain sibling order if it matters for your operation
+        - [x] invert
 - [ ] relationship to depth vector
     - [ ] construction from depth vector
     - [ ] finding depths
