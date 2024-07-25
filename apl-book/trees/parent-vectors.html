@@ -433,7 +433,7 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="parent-vectors">
 <h1>Parent Vectors<a class="headerlink" href="#parent-vectors" title="Link to this heading">#</a></h1>
-<p>At the end of the previous section we settled on the parent vector representation as the main representation of trees we will be using in this tutorial. To reiterate, to represent a tree on <span class="math notranslate nohighlight">\(n\)</span> nodes, we associate each node with an index in <code class="docutils literal notranslate"><span class="pre">⍳n</span></code>, and create an <span class="math notranslate nohighlight">\(n\)</span>-element vector <code class="docutils literal notranslate"><span class="pre">parent</span></code> such that if a node <code class="docutils literal notranslate"><span class="pre">i</span></code> is a child of a node <code class="docutils literal notranslate"><span class="pre">j</span></code>, then <code class="docutils literal notranslate"><span class="pre">parent[i]=j</span></code>.</p>
+<p>At the end of the previous section we settled on the parent vector representation as the main representation of trees we will be using in this tutorial. To reiterate, to represent a tree of <span class="math notranslate nohighlight">\(n\)</span> nodes, we associate each node with an index in <code class="docutils literal notranslate"><span class="pre">⍳n</span></code>, and create an <span class="math notranslate nohighlight">\(n\)</span>-element vector <code class="docutils literal notranslate"><span class="pre">parent</span></code> such that if a node <code class="docutils literal notranslate"><span class="pre">i</span></code> is a child of a node <code class="docutils literal notranslate"><span class="pre">j</span></code>, then <code class="docutils literal notranslate"><span class="pre">parent[i]=j</span></code>.</p>
 <p>We’re going to use a slightly larger tree for the examples in this section:</p>
 <figure class="align-default" id="id1">
 <img alt="A diagram of a new tree." src="../_images/PV_ManimCE_v0.18.1.png" />
@@ -489,7 +489,7 @@ parent: 0 0 1 2 2 1 0 6 7 7 7 0
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">i</span><span class="kd">←</span><span class="m">1</span><span class="w"> </span><span class="m">6</span>
-<span class="nv">p</span><span class="o">∊</span><span class="nv">i</span><span class="w">    </span><span class="c1">⍝ additionally, nodes 7 is a child of node 6</span>
+<span class="nv">p</span><span class="o">∊</span><span class="nv">i</span><span class="w">    </span><span class="c1">⍝ additionally, node 7 is a child of node 6</span>
 </pre></div>
 </div>
 </div>
@@ -734,7 +734,7 @@ parent: 0 0 1 2 2 1 6 6 7 7 7 0
 </section>
 <section id="favourite-children-ordering-siblings">
 <h2>Favourite Children (Ordering Siblings)<a class="headerlink" href="#favourite-children-ordering-siblings" title="Link to this heading">#</a></h2>
-<p>Before we go any further, it’s work making a note of the ordering requirements for a parent vector. We know that one of the big advantages of the representation is that it’s not constrained by the DFPT order, you can place parents and children in any order you like so long as each node points to its correct parent.</p>
+<p>Before we go any further, it’s worth making a note of the ordering requirements for a parent vector. We know that one of the big advantages of the representation is that it’s not constrained by the DFPT order, you can place parents and children in any order you like so long as each node points to its correct parent.</p>
 <p>Sometimes, the order of siblings in a tree matters. Without any extra information, the only way to store the order of siblings in a tree is by their order in the parent vector. Throughout this tutorial, we’re going to use operations which maintain sibling ordering in the vast majority of cases, and we’ll be explicit where we don’t. The good news is, if your use of trees doesn’t require maintaining the order of siblings, you don’t have to worry about this at all!</p>
 <section id="inverting">
 <h3>Inverting<a class="headerlink" href="#inverting" title="Link to this heading">#</a></h3>
@@ -840,7 +840,7 @@ parent: 0 0 1 2 2 1 6 6 7 7 7 0
 </details>
 </div>
 <p>(You may also find <a class="reference external" href="https://code.jsoftware.com/wiki/Essays/Tree_Display">this essay</a> by Roger Hui interesting.)</p>
-<p>We now have access to the <code class="docutils literal notranslate"><span class="pre">PPV</span></code> and <code class="docutils literal notranslate"><span class="pre">PPH</span></code> functions to visualise trees vertically and horizontally respectively. These functions take a parent vector as their right argument, and optionally a scalar label or vector of labels as their left argument. The left argument is reshaped to the length of the given parent vector, and matched up so that node <span class="math notranslate nohighlight">\(0\)</span> used label <span class="math notranslate nohighlight">\(0\)</span>, node <span class="math notranslate nohighlight">\(1\)</span> uses label <span class="math notranslate nohighlight">\(1\)</span>, and so on.</p>
+<p>We now have access to the <code class="docutils literal notranslate"><span class="pre">PPV</span></code> and <code class="docutils literal notranslate"><span class="pre">PPH</span></code> functions to visualise trees both vertically and horizontally. These functions take a parent vector as their right argument, and optionally a scalar label or vector of labels as their left argument. The left argument is reshaped to the length of the given parent vector, and matched up so that node <span class="math notranslate nohighlight">\(0\)</span> used label <span class="math notranslate nohighlight">\(0\)</span>, node <span class="math notranslate nohighlight">\(1\)</span> uses label <span class="math notranslate nohighlight">\(1\)</span>, and so on.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">PPV</span><span class="w"> </span><span class="nv">p</span><span class="w">    </span><span class="c1">⍝ visualise vertically</span>

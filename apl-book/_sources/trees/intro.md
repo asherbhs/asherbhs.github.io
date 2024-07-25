@@ -14,7 +14,7 @@ kernelspec:
 
 # Introduction
 
-APL is fantastic for working with linear data. If you can organise your data in an array, you have dozens of primitives and years of collective wisdom to lead you to success. Sadly, in the wild, there are many problems which have a fundamentally non-linear structure. These present an issue for the brave APL programmer, whose array primitives are little help.
+APL is fantastic for working with linear data. If you can organise your data in an array, you have dozens of primitives and years of collective wisdom to lead you to success. Sadly, in the wild, there are many problems which have a fundamentally non-linear structure. These present an issue for the brave APL programmer, whose array primitives struggle to cope.
 
 One of the most common cases of this is dealing with hierarchical data, where pieces of data are variously 'contained in' or 'belonging to' others. Data like this are examples of a general structure called a *tree*.
 

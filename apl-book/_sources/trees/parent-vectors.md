@@ -22,7 +22,7 @@ I←{⍺[⍵]}
 
 # Parent Vectors
 
-At the end of the previous section we settled on the parent vector representation as the main representation of trees we will be using in this tutorial. To reiterate, to represent a tree on $n$ nodes, we associate each node with an index in `⍳n`, and create an $n$-element vector `parent` such that if a node `i` is a child of a node `j`, then `parent[i]=j`.
+At the end of the previous section we settled on the parent vector representation as the main representation of trees we will be using in this tutorial. To reiterate, to represent a tree of $n$ nodes, we associate each node with an index in `⍳n`, and create an $n$-element vector `parent` such that if a node `i` is a child of a node `j`, then `parent[i]=j`.
 
 We're going to use a slightly larger tree for the examples in this section:
 
@@ -70,7 +70,7 @@ If we have multiple nodes which we want to find the children of, we can simply m
 
 ```{code-cell}
 i←1 6
-p∊i    ⍝ additionally, nodes 7 is a child of node 6
+p∊i    ⍝ additionally, node 7 is a child of node 6
 ```
 
 Applying `⍸` gives us the nodes which this mask selects.
@@ -232,7 +232,7 @@ This can be easily extended to work with multiple nodes as roots, for example if
 
 ## Favourite Children (Ordering Siblings)
 
-Before we go any further, it's work making a note of the ordering requirements for a parent vector. We know that one of the big advantages of the representation is that it's not constrained by the DFPT order, you can place parents and children in any order you like so long as each node points to its correct parent.
+Before we go any further, it's worth making a note of the ordering requirements for a parent vector. We know that one of the big advantages of the representation is that it's not constrained by the DFPT order, you can place parents and children in any order you like so long as each node points to its correct parent.
 
 Sometimes, the order of siblings in a tree matters. Without any extra information, the only way to store the order of siblings in a tree is by their order in the parent vector. Throughout this tutorial, we're going to use operations which maintain sibling ordering in the vast majority of cases, and we'll be explicit where we don't. The good news is, if your use of trees doesn't require maintaining the order of siblings, you don't have to worry about this at all!
 
@@ -318,7 +318,7 @@ PPH←{⍺←'∘' ⋄ v p←⍺⍵ ⋄ ⍉¨((≢p)⍴  ⍪⍤⍕¨'∘'@(0=≢
 
 (You may also find [this essay](https://code.jsoftware.com/wiki/Essays/Tree_Display) by Roger Hui interesting.)
 
-We now have access to the `PPV` and `PPH` functions to visualise trees vertically and horizontally respectively. These functions take a parent vector as their right argument, and optionally a scalar label or vector of labels as their left argument. The left argument is reshaped to the length of the given parent vector, and matched up so that node $0$ used label $0$, node $1$ uses label $1$, and so on.
+We now have access to the `PPV` and `PPH` functions to visualise trees both vertically and horizontally. These functions take a parent vector as their right argument, and optionally a scalar label or vector of labels as their left argument. The left argument is reshaped to the length of the given parent vector, and matched up so that node $0$ used label $0$, node $1$ uses label $1$, and so on.
 
 ```{code-cell}
 PPV p    ⍝ visualise vertically

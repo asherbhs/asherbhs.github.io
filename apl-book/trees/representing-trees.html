@@ -596,7 +596,7 @@ depth: 0 1 2 2 1 2 3 3 3 1
     parent of i ─┘   i   └─ start of next sub-tree
 </pre></div>
 </div>
-<p>The depth vector representation is therefore useful in some situations, indeed we’ll find it useful in the sections on <a class="reference internal" href="working-with-json.html"><span class="std std-doc">working with ⎕JSON</span></a> and <a class="reference internal" href="parsing.html"><span class="std std-doc">parsing</span></a>. But it is not the representation that we would like to settle on for most of our operations.</p>
+<p>The depth vector representation is therefore only useful in some situations. Indeed, we’ll find it very handy in the sections on <a class="reference external" href="https://asherbhs.github.io/apl-book/trees/working-with-json.html">working with ⎕JSON</a> and <a class="reference external" href="https://asherbhs.github.io/apl-book/trees/parsing.html">parsing</a>, but it is not the representation that we would like to settle on for most of our operations.</p>
 </section>
 <section id="the-path-matrix-representation">
 <h2>The Path Matrix Representation<a class="headerlink" href="#the-path-matrix-representation" title="Link to this heading">#</a></h2>
@@ -713,8 +713,8 @@ parent: 0 0 1 1 0 4 5 5 5 0
 </pre></div>
 </div>
 <p>Following these pointers from any starting node will trace out the path to that node from the root, as found in the path matrix.</p>
-<p>Notice that node <span class="math notranslate nohighlight">\(0\)</span>, as the root, has no parent. We could use some kind of sentinal value like <span class="math notranslate nohighlight">\(-1\)</span> to indicate that a node has no parent, but for reasons which will become clear as we work with this representation more, we instead have the root <span class="math notranslate nohighlight">\(0\)</span> point to itself.</p>
-<p>Like the depth vector, the parent vector is extremely space efficient, and like the path matrix, it is not heavily constrained by ordering requirements. The nodes can be shuffled arbitrarily, so long as we update the parents in each place to reflect the suffling.</p>
+<p>Notice that node <span class="math notranslate nohighlight">\(0\)</span>, as the root, has no parent. We could use some kind of sentinal value like <span class="math notranslate nohighlight">\(-1\)</span> to indicate that a node has no parent, but for reasons which will become clear as we work with this representation more, we instead have the root, node <span class="math notranslate nohighlight">\(0\)</span>, point to itself.</p>
+<p>Like the depth vector, the parent vector is extremely space efficient. Like the path matrix, it is not heavily constrained by ordering requirements. The nodes can be shuffled arbitrarily, so long as we update the parents in each place to reflect the suffling.</p>
 <p>This representation is suitable for most of our purposes, and it is the one we will focus on for the rest of the tutorial.</p>
 </section>
 </section>

@@ -144,7 +144,7 @@ depth: 0 1 2 2 1 2 3 3 3 1
     parent of i ─┘   i   └─ start of next sub-tree
 ```
 
-The depth vector representation is therefore useful in some situations, indeed we'll find it useful in the sections on [working with ⎕JSON](working-with-json.md) and [parsing](parsing.md). But it is not the representation that we would like to settle on for most of our operations.
+The depth vector representation is therefore only useful in some situations. Indeed, we’ll find it very handy in the sections on [working with ⎕JSON](https://asherbhs.github.io/apl-book/trees/working-with-json.html) and [parsing](https://asherbhs.github.io/apl-book/trees/parsing.html), but it is not the representation that we would like to settle on for most of our operations.
 
 ## The Path Matrix Representation
 
@@ -210,8 +210,8 @@ parent: 0 0 1 1 0 4 5 5 5 0
 
 Following these pointers from any starting node will trace out the path to that node from the root, as found in the path matrix.
 
-Notice that node $0$, as the root, has no parent. We could use some kind of sentinal value like $-1$ to indicate that a node has no parent, but for reasons which will become clear as we work with this representation more, we instead have the root $0$ point to itself.
+Notice that node $0$, as the root, has no parent. We could use some kind of sentinal value like $-1$ to indicate that a node has no parent, but for reasons which will become clear as we work with this representation more, we instead have the root, node $0$, point to itself.
 
-Like the depth vector, the parent vector is extremely space efficient, and like the path matrix, it is not heavily constrained by ordering requirements. The nodes can be shuffled arbitrarily, so long as we update the parents in each place to reflect the suffling.
+Like the depth vector, the parent vector is extremely space efficient. Like the path matrix, it is not heavily constrained by ordering requirements. The nodes can be shuffled arbitrarily, so long as we update the parents in each place to reflect the suffling.
 
 This representation is suitable for most of our purposes, and it is the one we will focus on for the rest of the tutorial.
