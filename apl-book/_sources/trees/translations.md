@@ -14,7 +14,7 @@ kernelspec:
 
 # Appendix: Translations
 
-While this tutorial is primarily targeted at intemediate APL users, this section includes translations of various code snippets into BQN, J, and K (K6) for the convenience of users of those languages.
+While this tutorial is primarily targeted at intemediate APL users, this section includes translations of various code snippets into BQN, J, and K (K6) for the convenience of users of those languages. I do not use these languages nearly as frequently as APL, so there are more likely to be places for improvement, do let me know!
 
 ## Basic Operations
 
@@ -41,7 +41,7 @@ I.p e.i
 **K:**
 
 ```
-&+/p=/:i
+&~^i?p
 ```
 
 ### Finding Leaves
@@ -49,22 +49,128 @@ I.p e.i
 **APL:**
 
 ```
-~(⍳≢p)∊p
+~p∊⍨⍳≢p
 ```
 
 **BQN:**
 
 ```
-¬(↕≠p)∊p
+¬p∊˜↕≠p
 ```
 
 **J:**
 
 ```
--.(i.#p)e.p
+-.p e.~i.#p
 ```
 
 **K:**
+
 ```
-~|/(!#p)=/:p
+^p?!#p
+```
+
+### Trimming Branches
+
+**APL:**
+
+```
+i@i⊢p
+p[i]←i
+```
+
+**BQN:**
+
+```
+i⌾(i⊸⊏)p
+```
+
+**J:**
+
+```
+i i}p
+```
+
+**K:**
+
+```
+@[p;i;:;i]
+```
+
+### Finding Roots
+
+**APL:**
+
+```
+I⍣≡⍨p
+```
+
+**BQN:**
+
+```
+{𝕊⍟(𝕩⊸≢)𝕩⊏p}p
+```
+
+**J:**
+
+```
+{^:_~p
+```
+
+**K:**
+
+```
+(p@)/p
+```
+
+### Selecting Sub-Trees
+
+**APL:**
+
+```
+i∊⍨p I@{~⍵∊i}⍣≡⍳≢p
+```
+
+**BQN:**
+
+```
+i∊˜{𝕊⍟(𝕩⊸≢)⊏⟜p⌾((¬𝕩∊i)⊸/)𝕩}↕≠p
+```
+
+**J:**
+
+```
+i e.~{{y j}~p{~y{~j=.I.-.y e.i}}^:_ i.#p
+```
+
+**K:**
+
+```
+~^i?{@[x;&^i?x;p@]}/!#p
+```
+
+### Mirrorring
+
+**APL:**
+
+```
+(¯1+≢-⌽)p
+```
+
+**BQN:**
+
+```
+(¯1+≠-⌽)p
+```
+
+**J:**
+
+```
+(_1+#-|.)p
+```
+
+**K:**
+
+```
+-1+(#p)-|p
 ```

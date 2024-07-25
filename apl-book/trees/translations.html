@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=87e54e7c" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=bfa96906" />
@@ -408,6 +408,10 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-operations">Basic Operations</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#finding-children">Finding Children</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#finding-leaves">Finding Leaves</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trimming-branches">Trimming Branches</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#finding-roots">Finding Roots</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#selecting-sub-trees">Selecting Sub-Trees</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mirrorring">Mirrorring</a></li>
 </ul>
 </li>
 </ul>
@@ -423,7 +427,7 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="appendix-translations">
 <h1>Appendix: Translations<a class="headerlink" href="#appendix-translations" title="Link to this heading">#</a></h1>
-<p>While this tutorial is primarily targeted at intemediate APL users, this section includes translations of various code snippets into BQN, J, and K (K6) for the convenience of users of those languages.</p>
+<p>While this tutorial is primarily targeted at intemediate APL users, this section includes translations of various code snippets into BQN, J, and K (K6) for the convenience of users of those languages. I do not use these languages nearly as frequently as APL, so there are more likely to be places for improvement, do let me know!</p>
 <section id="basic-operations">
 <h2>Basic Operations<a class="headerlink" href="#basic-operations" title="Link to this heading">#</a></h2>
 <section id="finding-children">
@@ -441,26 +445,103 @@ document.write(`
 </pre></div>
 </div>
 <p><strong>K:</strong></p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&amp;+/</span><span class="n">p</span><span class="o">=/</span><span class="p">:</span><span class="n">i</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>&amp;~^i?p
 </pre></div>
 </div>
 </section>
 <section id="finding-leaves">
 <h3>Finding Leaves<a class="headerlink" href="#finding-leaves" title="Link to this heading">#</a></h3>
 <p><strong>APL:</strong></p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>~(⍳≢p)∊p
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>~p∊⍨⍳≢p
 </pre></div>
 </div>
 <p><strong>BQN:</strong></p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>¬(↕≠p)∊p
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>¬p∊˜↕≠p
 </pre></div>
 </div>
 <p><strong>J:</strong></p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-.</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="c1">#p)e.p</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-.</span><span class="n">p</span> <span class="n">e</span><span class="o">.~</span><span class="n">i</span><span class="o">.</span><span class="c1">#p</span>
 </pre></div>
 </div>
 <p><strong>K:</strong></p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>~|/(!#p)=/:p
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>^p?!#p
+</pre></div>
+</div>
+</section>
+<section id="trimming-branches">
+<h3>Trimming Branches<a class="headerlink" href="#trimming-branches" title="Link to this heading">#</a></h3>
+<p><strong>APL:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>i@i⊢p
+p[i]←i
+</pre></div>
+</div>
+<p><strong>BQN:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>i⌾(i⊸⊏)p
+</pre></div>
+</div>
+<p><strong>J:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">i</span> <span class="n">i</span><span class="p">}</span><span class="n">p</span>
+</pre></div>
+</div>
+<p><strong>K:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">@</span><span class="p">[</span><span class="n">p</span><span class="p">;</span><span class="n">i</span><span class="p">;:;</span><span class="n">i</span><span class="p">]</span>
+</pre></div>
+</div>
+</section>
+<section id="finding-roots">
+<h3>Finding Roots<a class="headerlink" href="#finding-roots" title="Link to this heading">#</a></h3>
+<p><strong>APL:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>I⍣≡⍨p
+</pre></div>
+</div>
+<p><strong>BQN:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>{𝕊⍟(𝕩⊸≢)𝕩⊏p}p
+</pre></div>
+</div>
+<p><strong>J:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="o">^</span><span class="p">:</span><span class="n">_</span><span class="o">~</span><span class="n">p</span>
+</pre></div>
+</div>
+<p><strong>K:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">p</span><span class="o">@</span><span class="p">)</span><span class="o">/</span><span class="n">p</span>
+</pre></div>
+</div>
+</section>
+<section id="selecting-sub-trees">
+<h3>Selecting Sub-Trees<a class="headerlink" href="#selecting-sub-trees" title="Link to this heading">#</a></h3>
+<p><strong>APL:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>i∊⍨p I@{~⍵∊i}⍣≡⍳≢p
+</pre></div>
+</div>
+<p><strong>BQN:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>i∊˜{𝕊⍟(𝕩⊸≢)⊏⟜p⌾((¬𝕩∊i)⊸/)𝕩}↕≠p
+</pre></div>
+</div>
+<p><strong>J:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">i</span> <span class="n">e</span><span class="o">.~</span><span class="p">{{</span><span class="n">y</span> <span class="n">j</span><span class="p">}</span><span class="o">~</span><span class="n">p</span><span class="p">{</span><span class="o">~</span><span class="n">y</span><span class="p">{</span><span class="o">~</span><span class="n">j</span><span class="o">=.</span><span class="n">I</span><span class="o">.-.</span><span class="n">y</span> <span class="n">e</span><span class="o">.</span><span class="n">i</span><span class="p">}}</span><span class="o">^</span><span class="p">:</span><span class="n">_</span> <span class="n">i</span><span class="o">.</span><span class="c1">#p</span>
+</pre></div>
+</div>
+<p><strong>K:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>~^i?{@[x;&amp;^i?x;p@]}/!#p
+</pre></div>
+</div>
+</section>
+<section id="mirrorring">
+<h3>Mirrorring<a class="headerlink" href="#mirrorring" title="Link to this heading">#</a></h3>
+<p><strong>APL:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>(¯1+≢-⌽)p
+</pre></div>
+</div>
+<p><strong>BQN:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>(¯1+≠-⌽)p
+</pre></div>
+</div>
+<p><strong>J:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">_1</span><span class="o">+</span><span class="c1">#-|.)p</span>
+</pre></div>
+</div>
+<p><strong>K:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span><span class="mi">1</span><span class="o">+</span><span class="p">(</span><span class="c1">#p)-|p</span>
 </pre></div>
 </div>
 </section>
@@ -534,6 +615,10 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-operations">Basic Operations</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#finding-children">Finding Children</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#finding-leaves">Finding Leaves</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trimming-branches">Trimming Branches</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#finding-roots">Finding Roots</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#selecting-sub-trees">Selecting Sub-Trees</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mirrorring">Mirrorring</a></li>
 </ul>
 </li>
 </ul>
