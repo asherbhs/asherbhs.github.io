@@ -149,7 +149,7 @@ i e.~{{y j}~p{~y{~j=.I.-.y e.i}}^:_ i.#p
 ~^i?{@[x;&^i?x;p@]}/!#p
 ```
 
-### Mirrorring
+### Mirroring
 
 **APL:**
 

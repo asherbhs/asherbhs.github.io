@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=87e54e7c" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=bfa96906" />
@@ -581,15 +581,21 @@ document.write(`
 </figcaption>
 </figure>
 <p>So the depth vector representation orders nodes exactly in a DFPT ordering. This presents a problem for manipulating trees in this format, as we are required to maintain this ordering exactly whenever we change the structure of the tree, which can be fairly inconvenient and costly. Especially, we would like to be able to append data to the end of the depth vector when adding nodes, as this is implemented more efficiently in the Dyalog interpreter than splicing into the middle of the vector, but the ordering requirements forbid us from doing this in most cases.</p>
-<p>Additionally, we often want to find parents or siblings of a node for various reasons. Given the index <code class="docutils literal notranslate"><span class="pre">i</span></code> of a node, we know that the node and its siblings are at depth <code class="docutils literal notranslate"><span class="pre">depth[i]</span></code>, and it parent is at depth <code class="docutils literal notranslate"><span class="pre">depth[i]-1</span></code>. If we find the rightmost <code class="docutils literal notranslate"><span class="pre">j</span></code> less than <code class="docutils literal notranslate"><span class="pre">i</span></code> such that <code class="docutils literal notranslate"><span class="pre">depth[j]=depth[i]-1</span></code>, then <code class="docutils literal notranslate"><span class="pre">j</span></code> must be the parent of <code class="docutils literal notranslate"><span class="pre">i</span></code>. Then, the leftmost <code class="docutils literal notranslate"><span class="pre">k</span></code> after <code class="docutils literal notranslate"><span class="pre">i</span></code> with <code class="docutils literal notranslate"><span class="pre">depth[k]≤depth[j]</span></code> will indicate the first node after <code class="docutils literal notranslate"><span class="pre">i</span></code> which is not a descendant of <code class="docutils literal notranslate"><span class="pre">j</span></code>. All nodes between <code class="docutils literal notranslate"><span class="pre">j</span></code> and <code class="docutils literal notranslate"><span class="pre">k</span></code> with a depth of <code class="docutils literal notranslate"><span class="pre">depth[i]</span></code> will therefore be siblings of <code class="docutils literal notranslate"><span class="pre">i</span></code>.</p>
+<p>Additionally, we often want to find parents or siblings of a node for various reasons. In the depth vector, sub-trees are stored contiguously.</p>
+<figure class="align-default" id="id5">
+<img alt="An animation of the tree with depth labels flattening into the depth vector. A sub-tree is highlighted." src="../_images/IntroTreeFlatten_ManimCE_v0.18.1.gif" />
+<figcaption>
+<p><span class="caption-number">Fig. 6 </span><span class="caption-text">The location of a sub-tree in the depth vector.</span><a class="headerlink" href="#id5" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>This structure means that, given a node <code class="docutils literal notranslate"><span class="pre">i</span></code>, finding the parent and siblings of <code class="docutils literal notranslate"><span class="pre">i</span></code> requires linearly scanning through the depth vector forwards and backwards from <code class="docutils literal notranslate"><span class="pre">i</span></code> to find places with the correct depth, which can become extremely costly on large vectors when sub-trees take up lots of space.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>               siblings of i
                    ┌─┴─┐
 depth: 0 1 2 2 1 2 3 3 3 1
                  ↑   ↑   ↑
-                 j   i   k
+    parent of i ─┘   i   └─ start of next sub-tree
 </pre></div>
 </div>
-<p>Unfortunately, finding <code class="docutils literal notranslate"><span class="pre">j</span></code> and <code class="docutils literal notranslate"><span class="pre">k</span></code> requires stepping through the vector one element at a time, or a combination of masking operations over the whole vector. As well as being cumbersome, for large trees this becomes computationally very expensive.</p>
 <p>The depth vector representation is therefore useful in some situations, indeed we’ll find it useful in the sections on <a class="reference internal" href="working-with-json.html"><span class="std std-doc">working with ⎕JSON</span></a> and <a class="reference internal" href="parsing.html"><span class="std std-doc">parsing</span></a>. But it is not the representation that we would like to settle on for most of our operations.</p>
 </section>
 <section id="the-path-matrix-representation">
@@ -668,10 +674,10 @@ depth: 0 1 2 2 1 2 3 3 3 1
 </pre></div></div>
 </div>
 <p>This path matrix represents exactly the same tree structure, with the node identifiers permuted:</p>
-<figure class="align-default" id="id5">
+<figure class="align-default" id="id6">
 <img alt="The same tree as previous examples, with labels permuted by the given permutation." src="../_images/IntroTreePerm_ManimCE_v0.18.1.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 6 </span><span class="caption-text">Our tree with labels permuted.</span><a class="headerlink" href="#id5" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 7 </span><span class="caption-text">Our tree with labels permuted.</span><a class="headerlink" href="#id6" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p>These nice properties and others would make the path matrix representation ideal to work with, if it were not for one major downside: the space usage. Given a tree with <span class="math notranslate nohighlight">\(n\)</span> nodes and a maximum depth of <span class="math notranslate nohighlight">\(d\)</span>, to fully encode the structure of this tree the depth vector representation only requires enough memory to store <span class="math notranslate nohighlight">\(n\)</span> depth numbers. The path matrix, on the other hand, requires <span class="math notranslate nohighlight">\(n×d\)</span> numbers, encoding the entire path for each node in the tree. For large trees, especially deep trees, this will use large amounts of memory and slow everything down.</p>
@@ -680,10 +686,10 @@ depth: 0 1 2 2 1 2 3 3 3 1
 <section id="the-parent-vector-representation">
 <h2>The Parent Vector Representation<a class="headerlink" href="#the-parent-vector-representation" title="Link to this heading">#</a></h2>
 <p>By focusing on the ancestry of nodes, the path matrix representation is more flexible than the depth vector representation, but by encoding more information implicity, the depth vector representation is more space efficient. The compromise between these two approaches is the <em>parent vector</em> representation. For each node, instead of storing the entire path from the root as the path matrix does, the parent vector stores only the node’s immediate parent. For an example, take the same tree we’ve been examining throughout this section, identified once again with DFPT indices:</p>
-<figure class="align-default" id="id6">
+<figure class="align-default" id="id7">
 <img alt="The same tree, labelled in DFPT order." src="../_images/IntroTreeDFPT_ManimCE_v0.18.1.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 7 </span><span class="caption-text">Our favourite tree, back again.</span><a class="headerlink" href="#id6" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 8 </span><span class="caption-text">Our favourite tree, back again.</span><a class="headerlink" href="#id7" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p>The parent vector for this tree is:</p>

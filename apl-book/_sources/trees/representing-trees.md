@@ -126,17 +126,23 @@ The depth-first, pre-order traversal in action.
 
 So the depth vector representation orders nodes exactly in a DFPT ordering. This presents a problem for manipulating trees in this format, as we are required to maintain this ordering exactly whenever we change the structure of the tree, which can be fairly inconvenient and costly. Especially, we would like to be able to append data to the end of the depth vector when adding nodes, as this is implemented more efficiently in the Dyalog interpreter than splicing into the middle of the vector, but the ordering requirements forbid us from doing this in most cases.
 
-Additionally, we often want to find parents or siblings of a node for various reasons. Given the index `i` of a node, we know that the node and its siblings are at depth `depth[i]`, and it parent is at depth `depth[i]-1`. If we find the rightmost `j` less than `i` such that `depth[j]=depth[i]-1`, then `j` must be the parent of `i`. Then, the leftmost `k` after `i` with `depth[k]≤depth[j]` will indicate the first node after `i` which is not a descendant of `j`. All nodes between `j` and `k` with a depth of `depth[i]` will therefore be siblings of `i`.
+Additionally, we often want to find parents or siblings of a node for various reasons. In the depth vector, sub-trees are stored contiguously.
+
+```{figure} media/IntroTreeFlatten_ManimCE_v0.18.1.gif
+:alt: An animation of the tree with depth labels flattening into the depth vector. A sub-tree is highlighted.
+
+The location of a sub-tree in the depth vector.
+```
+
+This structure means that, given a node `i`, finding the parent and siblings of `i` requires linearly scanning through the depth vector forwards and backwards from `i` to find places with the correct depth, which can become extremely costly on large vectors when sub-trees take up lots of space.
 
 ```
                siblings of i
                    ┌─┴─┐
 depth: 0 1 2 2 1 2 3 3 3 1
                  ↑   ↑   ↑
-                 j   i   k
+    parent of i ─┘   i   └─ start of next sub-tree
 ```
-
-Unfortunately, finding `j` and `k` requires stepping through the vector one element at a time, or a combination of masking operations over the whole vector. As well as being cumbersome, for large trees this becomes computationally very expensive.
 
 The depth vector representation is therefore useful in some situations, indeed we'll find it useful in the sections on [working with ⎕JSON](working-with-json.md) and [parsing](parsing.md). But it is not the representation that we would like to settle on for most of our operations.
 

@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=87e54e7c" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=bfa96906" />
@@ -438,7 +438,7 @@ document.write(`
 <figure class="align-default" id="id1">
 <img alt="A diagram of a new tree." src="../_images/PV_ManimCE_v0.18.1.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 8 </span><span class="caption-text">The tree we’re going to work with in this section.</span><a class="headerlink" href="#id1" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 9 </span><span class="caption-text">The tree we’re going to work with in this section.</span><a class="headerlink" href="#id1" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p>and the parent vector representing this tree:</p>
@@ -551,7 +551,7 @@ parent: 0 0 1 2 2 1 0 6 7 7 7 0
 <figure class="align-default" id="id2">
 <img alt="The same tree, with the edge between nodes 0 and 6 fading away, while the tree rearranges itself." src="../_images/PVSnip_ManimCE_v0.18.1.gif" />
 <figcaption>
-<p><span class="caption-number">Fig. 9 </span><span class="caption-text">Trimming the branch between nodes <span class="math notranslate nohighlight">\(0\)</span> and <span class="math notranslate nohighlight">\(6\)</span>.</span><a class="headerlink" href="#id2" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 10 </span><span class="caption-text">Trimming the branch between nodes <span class="math notranslate nohighlight">\(0\)</span> and <span class="math notranslate nohighlight">\(6\)</span>.</span><a class="headerlink" href="#id2" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p>Recall that a root node (a node with no parent) is indicated by a self-loop in the parent vector - it is considered its own parent. Because of this, it’s easy to trim a node from its parent by setting its parent to itself.</p>
@@ -579,7 +579,7 @@ parent: 0 0 1 2 2 1 0 6 7 7 7 0
 <figure class="align-default" id="id3">
 <img alt="The two trees resulting from the snipping operation shown previously." src="../_images/PVSnipped_ManimCE_v0.18.1.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 10 </span><span class="caption-text">Our two trees after snipping the branch between nodes <span class="math notranslate nohighlight">\(0\)</span> and <span class="math notranslate nohighlight">\(6\)</span>.</span><a class="headerlink" href="#id3" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 11 </span><span class="caption-text">Our two trees after snipping the branch between nodes <span class="math notranslate nohighlight">\(0\)</span> and <span class="math notranslate nohighlight">\(6\)</span>.</span><a class="headerlink" href="#id3" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p>and they are represented by the parent vector:</p>
@@ -657,7 +657,7 @@ parent: 0 0 1 2 2 1 6 6 7 7 7 0
 <figure class="align-default" id="id4">
 <img alt="The tree diagram from the previous section." src="../_images/PV_ManimCE_v0.18.1.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 11 </span><span class="caption-text">Node <span class="math notranslate nohighlight">\(6\)</span> has been kindly reattached.</span><a class="headerlink" href="#id4" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 12 </span><span class="caption-text">Node <span class="math notranslate nohighlight">\(6\)</span> has been kindly reattached.</span><a class="headerlink" href="#id4" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p>Let’s reset <code class="docutils literal notranslate"><span class="pre">p</span></code> to this tree.</p>
@@ -742,7 +742,7 @@ parent: 0 0 1 2 2 1 6 6 7 7 7 0
 <figure class="align-default" id="id5">
 <img alt="The tree moving to mirror itself horizontally." src="../_images/PVInvert_ManimCE_v0.18.1.gif" />
 <figcaption>
-<p><span class="caption-number">Fig. 12 </span><span class="caption-text">Mirroring the tree.</span><a class="headerlink" href="#id5" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 13 </span><span class="caption-text">Mirroring the tree.</span><a class="headerlink" href="#id5" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p>Our first step is to simply reverse the parent vector.</p>
@@ -832,6 +832,11 @@ parent: 0 0 1 2 2 1 6 6 7 7 7 0
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INTERRUPT
+</pre></div>
+</div>
+</div>
 </details>
 </div>
 <p>(You may also find <a class="reference external" href="https://code.jsoftware.com/wiki/Essays/Tree_Display">this essay</a> by Roger Hui interesting.)</p>
@@ -842,17 +847,6 @@ parent: 0 0 1 2 2 1 6 6 7 7 7 0
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_html"><pre class="language-APL">┌─────────────┐
-│      ∘      │
-│  ┌───┴─┬───┐│
-│  ∘     ∘   ∘│
-│ ┌┴─┐   │    │
-│ ∘  ∘   ∘    │
-│┌┴┐   ┌─┼─┐  │
-│∘ ∘   ∘ ∘ ∘  │
-└─────────────┘
-</pre></div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -860,17 +854,6 @@ parent: 0 0 1 2 2 1 6 6 7 7 7 0
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_html"><pre class="language-APL">┌───────┐
-│   ┌∘┬∘│
-│ ┌∘┤ └∘│
-│ │ └∘  │
-│∘┤   ┌∘│
-│ ├∘─∘┼∘│
-│ │   └∘│
-│ └∘    │
-└───────┘
-</pre></div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -878,17 +861,6 @@ parent: 0 0 1 2 2 1 6 6 7 7 7 0
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_html"><pre class="language-APL">┌─────────────┐
-│      *      │
-│  ┌───┴─┬───┐│
-│  *     *   *│
-│ ┌┴─┐   │    │
-│ *  *   *    │
-│┌┴┐   ┌─┼─┐  │
-│* *   * * *  │
-└─────────────┘
-</pre></div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -896,17 +868,6 @@ parent: 0 0 1 2 2 1 6 6 7 7 7 0
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_html"><pre class="language-APL">┌───────────────┐
-│       0       │
-│  ┌────┴┬────┐ │
-│  1     6    11│
-│ ┌┴─┐   │      │
-│ 2  5   7      │
-│┌┴┐   ┌─┼─┐    │
-│3 4   8 9 10   │
-└───────────────┘
-</pre></div></div>
 </div>
 <p>This lets us check the results of the tree transformations we’ve done on this page:</p>
 <div class="cell docutils container">
@@ -917,17 +878,6 @@ parent: 0 0 1 2 2 1 6 6 7 7 7 0
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_html"><pre class="language-APL">┌─────────────┐
-│      0      │
-│  ┌───┴─┬───┐│
-│  0     0   0│
-│ ┌┴─┐   │    │
-│ 1  1   1    │
-│┌┴┐   ┌─┼─┐  │
-│0 0   0 0 0  │
-└─────────────┘
-</pre></div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -936,17 +886,6 @@ parent: 0 0 1 2 2 1 6 6 7 7 7 0
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_html"><pre class="language-APL">┌─────────────┐
-│      0      │
-│  ┌───┴─┬───┐│
-│  0     0   1│
-│ ┌┴─┐   │    │
-│ 0  1   0    │
-│┌┴┐   ┌─┼─┐  │
-│1 1   1 1 1  │
-└─────────────┘
-</pre></div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -957,17 +896,6 @@ parent: 0 0 1 2 2 1 6 6 7 7 7 0
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_html"><pre class="language-APL">┌────────┬──────┐
-│   0    │  6   │
-│  ┌┴──┐ │  │   │
-│  1   11│  7   │
-│ ┌┴─┐   │┌─┼─┐ │
-│ 2  5   │8 9 10│
-│┌┴┐     │      │
-│3 4     │      │
-└────────┴──────┘
-</pre></div></div>
 </div>
 <p>Note that the output of PPV is a vector of character matrices, one for each tree represented in the parent vector.</p>
 <div class="cell docutils container">
@@ -977,17 +905,6 @@ parent: 0 0 1 2 2 1 6 6 7 7 7 0
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_html"><pre class="language-APL">┌───────┬─────┐
-│   0   │  6  │
-│  ┌┴──┐│  │  │
-│  0   0│  6  │
-│ ┌┴─┐  │┌─┼─┐│
-│ 0  0  │6 6 6│
-│┌┴┐    │     │
-│0 0    │     │
-└───────┴─────┘
-</pre></div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -998,17 +915,6 @@ parent: 0 0 1 2 2 1 6 6 7 7 7 0
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_html"><pre class="language-APL">┌─────────────┐
-│      0      │
-│  ┌───┴─┬───┐│
-│  1     1   0│
-│ ┌┴─┐   │    │
-│ 1  1   1    │
-│┌┴┐   ┌─┼─┐  │
-│1 1   1 1 1  │
-└─────────────┘
-</pre></div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1017,17 +923,6 @@ parent: 0 0 1 2 2 1 6 6 7 7 7 0
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_html"><pre class="language-APL">┌───────────────┐
-│       0       │
-│┌────┬─┴────┐  │
-│11   6      1  │
-│     │    ┌─┴┐ │
-│     7    5  2 │
-│   ┌─┴┬─┐   ┌┴┐│
-│   10 9 8   4 3│
-└───────────────┘
-</pre></div></div>
 </div>
 </section>
 </section>
