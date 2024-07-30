@@ -58,6 +58,8 @@
     <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'trees/relating-depth-and-parent-vectors';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -190,7 +192,7 @@
 <li class="toctree-l1"><a class="reference internal" href="deleting-nodes.html">Deleting Nodes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="bottom-up-aggregation.html">Bottom-Up Accumulation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="top-down-construction.html">Top-Down Construction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="working-with-json.html">Working with ⎕JSON</a></li>
+<li class="toctree-l1"><a class="reference internal" href="working-with-json.html">Working with <code class="docutils literal notranslate"><span class="pre">⎕JSON</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="parsing.html">Parsing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="translations.html">Appendix: Translations</a></li>
 </ul>
@@ -382,7 +384,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
 </div></div>
       
     </div>
@@ -398,6 +402,16 @@ document.write(`
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#constructing-the-parent-vector">Constructing the Parent Vector</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#recovering-depths">Recovering Depths</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#depth-vector-ordering">Depth Vector Ordering</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -409,6 +423,299 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="relating-the-depth-and-parent-vectors">
 <h1>Relating the Depth and Parent Vectors<a class="headerlink" href="#relating-the-depth-and-parent-vectors" title="Link to this heading">#</a></h1>
+<p>While we are focusing on the parent vector representation, the depth vector is still very useful, and in many applications we will begin with a depth vector and later construct a parent vector. This page covers constructing a parent vector from a depth vector, finding the depths of nodes in a parent vector, and ordering a parent vector in the same way as the corresponding depth vector.</p>
+<section id="constructing-the-parent-vector">
+<h2>Constructing the Parent Vector<a class="headerlink" href="#constructing-the-parent-vector" title="Link to this heading">#</a></h2>
+<p>The first thing we’ll look at is constructing a parent vector, given a depth vector. In both the page on <a class="reference internal" href="working-with-json.html"><span class="std std-doc">working with <code class="docutils literal notranslate"><span class="pre">⎕JSON</span></code></span></a> and the page on <a class="reference internal" href="parsing.html"><span class="std std-doc">parsing</span></a>, we will begin with a depth vector, and construct a parent vector in order to do more complicated operations. So it’s important for us to be able to make this conversion.</p>
+<p>Let’s look at the same tree we worked with in the page on <a class="reference internal" href="representing-trees.html"><span class="std std-doc">representing trees</span></a>.</p>
+<figure class="align-default" id="id1">
+<img alt="A simple tree with nodes labelled in DFPT order." src="../_images/IntroTreeDFPT_ManimCE_v0.18.1.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 16 </span><span class="caption-text">Our simple tree.</span><a class="headerlink" href="#id1" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>The depth vector for this tree is:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">d</span><span class="kd">←</span><span class="m">0</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="m">1</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>For each node <code class="docutils literal notranslate"><span class="pre">i</span></code> in this tree, we want to find the index <code class="docutils literal notranslate"><span class="pre">j</span></code> of the node which is the parent of <code class="docutils literal notranslate"><span class="pre">i</span></code>. Recall that the nodes in any sub-tree are necessarily adjacent in the depth vector. Also notice that the root of a sub-tree appears immediately before all of its descendents.</p>
+<figure class="align-default" id="id2">
+<img alt="An animation of the tree with depth labels flattening into the depth vector. A sub-tree is highlighted." src="../_images/IntroTreeFlatten_ManimCE_v0.18.1.gif" />
+<figcaption>
+<p><span class="caption-number">Fig. 17 </span><span class="caption-text">The location of a sub-tree in the depth vector.</span><a class="headerlink" href="#id2" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>Finally, if <code class="docutils literal notranslate"><span class="pre">j</span></code> is the parent of <code class="docutils literal notranslate"><span class="pre">i</span></code>, we know that <code class="docutils literal notranslate"><span class="pre">j</span></code> must have a depth one less than the depth of <code class="docutils literal notranslate"><span class="pre">i</span></code>, i.e. <code class="docutils literal notranslate"><span class="pre">d[j]=d[i]-1</span></code>. All of this information together leads to a neat method for constructing a parent vector from a depth vector.</p>
+<p>Firstly, we want to group the nodes in the depth vector by their given depth. <code class="docutils literal notranslate"><span class="pre">⌸</span></code> is the perfect primitive for this:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="o">⊂</span><span class="na">⍤</span><span class="o">⊢</span><span class="na">⌸</span><span class="nv">d</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">┌─┬─────┬─────┬─────┐
+│0│1 4 9│2 3 5│6 7 8│
+└─┴─────┴─────┴─────┘
+</pre></div></div>
+</div>
+<p>Here, we have grouped the nodes in the tree by their depth. <code class="docutils literal notranslate"><span class="pre">⌸</span></code> orders the groups it creates by the order the values appear in its right argument. The ordering of the depth vector ensures that this is exactly the all the possible depths of the tree in ascending order. So, the <span class="math notranslate nohighlight">\(0\)</span>th place has all nodes with a depth of <span class="math notranslate nohighlight">\(0\)</span> (in our case just the single root), the <span class="math notranslate nohighlight">\(1\)</span>st place has all those with a depth of <span class="math notranslate nohighlight">\(1\)</span>, and so on.</p>
+<p>Any non-root node <code class="docutils literal notranslate"><span class="pre">i</span></code> will appear after its parent <code class="docutils literal notranslate"><span class="pre">j</span></code> in the depth vector, and before the next node at the same depth as its parent. It is not possible for there to be another node with the same depth as <code class="docutils literal notranslate"><span class="pre">j</span></code> which appears between <code class="docutils literal notranslate"><span class="pre">i</span></code> and <code class="docutils literal notranslate"><span class="pre">j</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   no 1s here
+      ┌┴┐
+d: 0 1 2 2 1 2 3 3 3 1
+     ↑   ↑
+     j   i
+</pre></div>
+</div>
+<p>Look again at our nodes grouped by their depth:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="o">⊂</span><span class="na">⍤</span><span class="o">⊢</span><span class="na">⌸</span><span class="nv">d</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">┌─┬─────┬─────┬─────┐
+│0│1 4 9│2 3 5│6 7 8│
+└─┴─────┴─────┴─────┘
+</pre></div></div>
+</div>
+<p>Since the parent of <code class="docutils literal notranslate"><span class="pre">i</span></code> has depth one less than <code class="docutils literal notranslate"><span class="pre">i</span></code>, it must appear in the group immediately preceding the group that contains <code class="docutils literal notranslate"><span class="pre">i</span></code>. Within that group, the parent of <code class="docutils literal notranslate"><span class="pre">i</span></code> must be the leftmost node (i.e. node with the largest index) that is not later than (has a greater index than) <code class="docutils literal notranslate"><span class="pre">i</span></code>. In this sense, the groups define intervals of the indexes of the depth vector, splitting it up into sub-trees. We can use this to find the parent of each node using <code class="docutils literal notranslate"><span class="pre">⍸</span></code> (Interval Index).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">i</span><span class="kd">←</span><span class="m">3</span><span class="w">               </span><span class="c1">⍝ let&#39;s find the parent of node 3</span>
+<span class="m">1</span><span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="m">9</span><span class="o">⍸</span><span class="nv">i</span><span class="w">           </span><span class="c1">⍝ where in the group is the parent of node 3</span>
+<span class="m">1</span><span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="m">9</span><span class="sr">[</span><span class="m">1</span><span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="m">9</span><span class="o">⍸</span><span class="nv">i</span><span class="sr">]</span><span class="w">    </span><span class="c1">⍝ which node is the parent of node 3</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">0
+</pre></div><div class="output text_html"><pre class="language-APL">1
+</pre></div></div>
+</div>
+<p>Of course, this works for finding the parents of the whole group of nodes at a certain depth.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">i</span><span class="kd">←</span><span class="m">2</span><span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="m">5</span><span class="w">           </span><span class="c1">⍝ all nodes at depth 2</span>
+<span class="m">1</span><span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="m">9</span><span class="o">⍸</span><span class="nv">i</span>
+<span class="m">1</span><span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="m">9</span><span class="sr">[</span><span class="m">1</span><span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="m">9</span><span class="o">⍸</span><span class="nv">i</span><span class="sr">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">0 0 1
+</pre></div><div class="output text_html"><pre class="language-APL">1 1 4
+</pre></div></div>
+</div>
+<p>We can use this trick to finally construct the parent vector corresponding to the tree. First we initialise the parent vector so that all nodes are roots. We will update all non-roots with their parents.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="o">⊢</span><span class="nv">p</span><span class="kd">←</span><span class="o">⍳≢</span><span class="nv">d</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">0 1 2 3 4 5 6 7 8 9
+</pre></div></div>
+</div>
+<p>We then want to look at each adjacent pair of groups and update <code class="docutils literal notranslate"><span class="pre">p</span></code> accordingly, which we can do with a windowed reduction:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="c1">⍝  ┌──┬─ {⍺⍵} is executed with ⍺ as the left group and ⍵ as the right group</span>
+<span class="w">  </span><span class="m">2</span><span class="kt">{</span><span class="bp">⍺⍵</span><span class="kt">}</span><span class="na">/</span><span class="o">⊂</span><span class="na">⍤</span><span class="o">⊢</span><span class="na">⌸</span><span class="nv">d</span>
+<span class="w">  </span><span class="m">2</span><span class="kt">{</span><span class="nv">p</span><span class="sr">[</span><span class="bp">⍵</span><span class="sr">]</span><span class="kd">←</span><span class="bp">⍺</span><span class="sr">[</span><span class="bp">⍺</span><span class="o">⍸</span><span class="bp">⍵</span><span class="sr">]</span><span class="kt">}</span><span class="na">/</span><span class="o">⊂</span><span class="na">⍤</span><span class="o">⊢</span><span class="na">⌸</span><span class="nv">d</span>
+<span class="c1">⍝  └───────────┴─ instead, we can use our method to update p</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">┌─────────┬─────────────┬─────────────┐
+│┌─┬─────┐│┌─────┬─────┐│┌─────┬─────┐│
+││0│1 4 9│││1 4 9│2 3 5│││2 3 5│6 7 8││
+│└─┴─────┘│└─────┴─────┘│└─────┴─────┘│
+└─────────┴─────────────┴─────────────┘
+</pre></div></div>
+</div>
+<p>After this operation, we have successfully created the parent vector corresponding to <code class="docutils literal notranslate"><span class="pre">d</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">p</span>
+<span class="nv">d</span><span class="w"> </span><span class="nv">PPV</span><span class="w"> </span><span class="nv">p</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">0 0 1 1 0 4 5 5 5 0
+</pre></div><div class="output text_html"><pre class="language-APL">┌───────────┐
+│     0     │
+│ ┌───┴┬───┐│
+│ 1    1   1│
+│┌┴┐   │    │
+│2 2   2    │
+│    ┌─┼─┐  │
+│    3 3 3  │
+└───────────┘
+</pre></div></div>
+</div>
+<p>Putting it all together:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">DepthToParent</span><span class="kd">←</span><span class="kt">{</span><span class="nv">d</span><span class="kd">←</span><span class="bp">⍵</span>
+<span class="w">    </span><span class="nv">p</span><span class="kd">←</span><span class="o">⍳≢</span><span class="nv">d</span>
+<span class="w">    </span><span class="nv">_</span><span class="kd">←</span><span class="m">2</span><span class="kt">{</span><span class="nv">p</span><span class="sr">[</span><span class="bp">⍵</span><span class="sr">]</span><span class="kd">←</span><span class="bp">⍺</span><span class="sr">[</span><span class="bp">⍺</span><span class="o">⍸</span><span class="bp">⍵</span><span class="sr">]</span><span class="kt">}</span><span class="na">/</span><span class="o">⊂</span><span class="na">⍤</span><span class="o">⊢</span><span class="na">⌸</span><span class="nv">d</span>
+<span class="w">    </span><span class="c1">⍝ │ │   ││    │ │└───┴─── indices of each level</span>
+<span class="w">    </span><span class="c1">⍝ └─│───││────│─┴──────── pairwise between levels</span>
+<span class="w">    </span><span class="c1">⍝   │   │└────┴────────── leftmost node at previous level - the parent</span>
+<span class="w">    </span><span class="c1">⍝   └───┴──────────────── make this the parent</span>
+<span class="w">    </span><span class="nv">p</span>
+<span class="kt">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now that we can convert depth vectors to parent vectors, a natural next question is converting parent vectors back into depth vectors. There are two stages to this: firstly of which is finding the depths of each node, and secondly imposing the DFPT ordering on the nodes.</p>
+</section>
+<section id="recovering-depths">
+<h2>Recovering Depths<a class="headerlink" href="#recovering-depths" title="Link to this heading">#</a></h2>
+<p>We will look at finding the depths of each node in a parent vector first. Our method will be roughly to see how many jumps to parents it takes to reach a root.</p>
+<p>Take our current tree:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">⍳≢</span><span class="nv">p</span><span class="p">)</span><span class="w"> </span><span class="nv">PPV</span><span class="w"> </span><span class="nv">p</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">┌───────────┐
+│     0     │
+│ ┌───┴┬───┐│
+│ 1    4   9│
+│┌┴┐   │    │
+│2 3   5    │
+│    ┌─┼─┐  │
+│    6 7 8  │
+└───────────┘
+</pre></div></div>
+</div>
+<p>Since we constructed this parent vector from a depth vector, it is already in DFPT order. To emphasise that the parent vector need not be in this order (and to give us something to do when we get the order back), we’re going to shuffle it.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">perm</span><span class="kd">←</span><span class="m">1</span><span class="w"> </span><span class="m">9</span><span class="w"> </span><span class="m">8</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="m">6</span><span class="w"> </span><span class="m">7</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="m">5</span><span class="w">    </span><span class="c1">⍝ an arbitrary permutation of the nodes</span>
+<span class="nv">p</span><span class="kd">←</span><span class="nv">perm</span><span class="o">⍳</span><span class="nv">p</span><span class="sr">[</span><span class="nv">perm</span><span class="sr">]</span><span class="w">              </span><span class="c1">⍝ permute the nodes</span>
+<span class="p">(</span><span class="o">⍳≢</span><span class="nv">p</span><span class="p">)</span><span class="w"> </span><span class="nv">PPV</span><span class="w"> </span><span class="nv">p</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">┌───────────┐
+│     7     │
+│ ┌──┬┴──┐  │
+│ 0  1   4  │
+│┌┴┐     │  │
+│3 8     9  │
+│      ┌─┼─┐│
+│      2 5 6│
+└───────────┘
+</pre></div></div>
+</div>
+<p>To find the depth of each of these nodes, we will repeatedly follow parent pointers until we reach a root. Once we do reach a root, the number of jumps it took to get there will be the depth of the node.</p>
+<p>Let’s use node <span class="math notranslate nohighlight">\(5\)</span> as an example. This node has depth <span class="math notranslate nohighlight">\(2\)</span>, which we can be sure of as two parental jumps reaches a root.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">p</span><span class="sr">[</span><span class="m">5</span><span class="sr">]</span><span class="w">          </span><span class="c1">⍝ depth ≥ 1 since 5 is not a root</span>
+<span class="nv">p</span><span class="sr">[</span><span class="nv">p</span><span class="sr">[</span><span class="m">5</span><span class="sr">]]</span><span class="w">       </span><span class="c1">⍝ depth ≥ 2 since p[5] is not a root</span>
+<span class="nv">p</span><span class="sr">[</span><span class="nv">p</span><span class="sr">[</span><span class="nv">p</span><span class="sr">[</span><span class="m">5</span><span class="sr">]]]</span><span class="w">    </span><span class="c1">⍝ depth = 2 since p[p[5]] is a root</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">9
+</pre></div><div class="output text_html"><pre class="language-APL">4
+</pre></div><div class="output text_html"><pre class="language-APL">7
+</pre></div></div>
+</div>
+<p>Since we’re traversing the tree until the parent does not change, <code class="docutils literal notranslate"><span class="pre">⍣≡</span></code> is be very helpful.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">depth</span><span class="kd">←</span><span class="m">0</span><span class="w">           </span><span class="c1">⍝ seed value</span>
+<span class="nv">_</span><span class="kd">←</span><span class="kt">{</span>
+<span class="w">    </span><span class="nv">q</span><span class="kd">←</span><span class="nv">p</span><span class="sr">[</span><span class="bp">⍵</span><span class="sr">]</span><span class="w">        </span><span class="c1">⍝ parent of current node</span>
+<span class="w">    </span><span class="nv">depth</span><span class="o">+</span><span class="kd">←</span><span class="bp">⍵</span><span class="o">≠</span><span class="nv">q</span><span class="w">    </span><span class="c1">⍝ increment depth if not a root</span>
+<span class="w">    </span><span class="nv">q</span><span class="w">             </span><span class="c1">⍝╶┬╴continue until p[⍵]≡⍵</span>
+<span class="kt">}</span><span class="na">⍣</span><span class="o">≡</span><span class="m">5</span><span class="w">              </span><span class="c1">⍝╶┘</span>
+<span class="nv">depth</span><span class="w">             </span><span class="c1">⍝ node 5 has depth 2</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">3
+</pre></div></div>
+</div>
+<p>This method can be easily extended to find the depths of all nodes at once.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">depths</span><span class="kd">←</span><span class="p">(</span><span class="o">≢</span><span class="nv">p</span><span class="p">)</span><span class="o">⍴</span><span class="m">0</span><span class="w">      </span><span class="c1">⍝ seed for all nodes</span>
+<span class="nv">_</span><span class="kd">←</span><span class="kt">{</span>
+<span class="w">    </span><span class="nv">q</span><span class="kd">←</span><span class="nv">p</span><span class="sr">[</span><span class="bp">⍵</span><span class="sr">]</span>
+<span class="w">    </span><span class="nv">depths</span><span class="o">+</span><span class="kd">←</span><span class="bp">⍵</span><span class="o">≠</span><span class="nv">q</span><span class="w">    </span><span class="c1">⍝ increment for each path which has not hit a root</span>
+<span class="w">    </span><span class="nv">q</span>
+<span class="kt">}</span><span class="na">⍣</span><span class="o">≡⍳≢</span><span class="nv">p</span><span class="w">             </span><span class="c1">⍝ all nodes this time</span>
+<span class="nv">depths</span>
+<span class="nv">depths</span><span class="w"> </span><span class="nv">PPV</span><span class="w"> </span><span class="nv">p</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">1 1 3 2 1 3 3 0 2 2
+</pre></div><div class="output text_html"><pre class="language-APL">┌───────────┐
+│     0     │
+│ ┌──┬┴──┐  │
+│ 1  1   1  │
+│┌┴┐     │  │
+│2 2     2  │
+│      ┌─┼─┐│
+│      3 3 3│
+└───────────┘
+</pre></div></div>
+</div>
+<p>Wrapping it all up in a dfn:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">Depths</span><span class="kd">←</span><span class="kt">{</span><span class="nv">p</span><span class="kd">←</span><span class="bp">⍵</span>
+<span class="w">    </span><span class="nv">depths</span><span class="kd">←</span><span class="p">(</span><span class="o">≢</span><span class="nv">p</span><span class="p">)</span><span class="o">⍴</span><span class="m">0</span>
+<span class="w">    </span><span class="nv">_</span><span class="kd">←</span><span class="kt">{</span>
+<span class="w">        </span><span class="nv">q</span><span class="kd">←</span><span class="nv">p</span><span class="sr">[</span><span class="bp">⍵</span><span class="sr">]</span>
+<span class="w">        </span><span class="nv">depths</span><span class="o">+</span><span class="kd">←</span><span class="bp">⍵</span><span class="o">≠</span><span class="nv">q</span>
+<span class="w">        </span><span class="nv">q</span>
+<span class="w">    </span><span class="kt">}</span><span class="na">⍣</span><span class="o">≡⍳≢</span><span class="nv">p</span>
+<span class="w">    </span><span class="nv">depths</span>
+<span class="kt">}</span>
+<span class="p">(</span><span class="nv">Depths</span><span class="w"> </span><span class="nv">p</span><span class="p">)</span><span class="w"> </span><span class="nv">PPV</span><span class="w"> </span><span class="nv">p</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">┌───────────┐
+│     0     │
+│ ┌──┬┴──┐  │
+│ 1  1   1  │
+│┌┴┐     │  │
+│2 2     2  │
+│      ┌─┼─┐│
+│      3 3 3│
+└───────────┘
+</pre></div></div>
+</div>
+</section>
+<section id="depth-vector-ordering">
+<h2>Depth Vector Ordering<a class="headerlink" href="#depth-vector-ordering" title="Link to this heading">#</a></h2>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -465,6 +772,23 @@ document.write(`
             </div>
             
             
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#constructing-the-parent-vector">Constructing the Parent Vector</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#recovering-depths">Recovering Depths</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#depth-vector-ordering">Depth Vector Ordering</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>

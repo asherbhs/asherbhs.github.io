@@ -192,7 +192,7 @@
 <li class="toctree-l1"><a class="reference internal" href="deleting-nodes.html">Deleting Nodes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="bottom-up-aggregation.html">Bottom-Up Accumulation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="top-down-construction.html">Top-Down Construction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="working-with-json.html">Working with ⎕JSON</a></li>
+<li class="toctree-l1"><a class="reference internal" href="working-with-json.html">Working with <code class="docutils literal notranslate"><span class="pre">⎕JSON</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="parsing.html">Parsing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="translations.html">Appendix: Translations</a></li>
 </ul>
@@ -413,6 +413,7 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trimming-branches">Trimming Branches</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#finding-roots">Finding Roots</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#selecting-sub-trees">Selecting Sub-Trees</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#shuffling-nodes">Shuffling Nodes</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#favourite-children-ordering-siblings">Favourite Children (Ordering Siblings)</a><ul class="nav section-nav flex-column">
@@ -731,6 +732,92 @@ parent: 0 0 1 2 2 1 6 6 7 7 7 0
 </pre></div></div>
 </div>
 </section>
+<section id="shuffling-nodes">
+<h3>Shuffling Nodes<a class="headerlink" href="#shuffling-nodes" title="Link to this heading">#</a></h3>
+<p>On the <a class="reference internal" href="representing-trees.html"><span class="std std-doc">previous page</span></a>, we used a little trick to properly correct the parent references in a path matrix after permuting the nodes. We’re going to use the same trick to permute parent vectors, and we’re going to actually show how it works.</p>
+<p>There are several reasons we may want to shuffle order of a parent vector. For instance, on the next page we’re going to take an arbitrarily ordered parent vector and impose the DFPT ordering on it.</p>
+<p>Importantly, when we shuffle a parent vector and correct the indices, the tree we’re representing doesn’t change at all. We take careful effort to make sure that when we’re finished, our new parent vector represents the same tree.</p>
+<p>Say we have some arbitrary permutation vector which we want to use to shuffle the nodes of our tree.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">perm</span><span class="kd">←</span><span class="m">8</span><span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="m">11</span><span class="w"> </span><span class="m">7</span><span class="w"> </span><span class="m">6</span><span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="m">9</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">1</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We want to use this permutation vector to shuffle the parent vector, while maintaining the structure of the tree. If we just permute the parent vector without any kind of correction, the structure of the tree is messed up.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">p</span><span class="sr">[</span><span class="nv">perm</span><span class="sr">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">7 2 7 0 6 0 1 2 7 1 0 0
+</pre></div></div>
+</div>
+<figure class="align-default" id="id5">
+<img alt="The edges in the tree shuffling after our incomplete permutation of the parent vector." src="../_images/PVPermute_ManimCE_v0.18.1.gif" />
+<figcaption>
+<p><span class="caption-number">Fig. 13 </span><span class="caption-text">The result of shuffling the parent vector.</span><a class="headerlink" href="#id5" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>To fix this tangle of branches, we need to find where each parent was sent by the permutation, and correct the parent vector accordingly.</p>
+<p>Take the node <span class="math notranslate nohighlight">\(4\)</span>. This node’s parent was originally at index <span class="math notranslate nohighlight">\(2\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">p</span><span class="sr">[</span><span class="m">4</span><span class="sr">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">2
+</pre></div></div>
+</div>
+<p>After shuffling, this node still has index <span class="math notranslate nohighlight">\(2\)</span> recorded as its parent, even though the node has moved from index <span class="math notranslate nohighlight">\(2\)</span> to elsewhere.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">perm</span><span class="o">⍳</span><span class="m">4</span><span class="w">        </span><span class="c1">⍝ the node at index 4 is sent to index 7</span>
+<span class="nv">p</span><span class="sr">[</span><span class="nv">perm</span><span class="sr">][</span><span class="m">7</span><span class="sr">]</span><span class="w">    </span><span class="c1">⍝ the parent of the node is still set (incorrectly) to 2</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">7
+</pre></div><div class="output text_html"><pre class="language-APL">2
+</pre></div></div>
+</div>
+<p>The new index of the node’s parent will be where the node at index <span class="math notranslate nohighlight">\(2\)</span> is sent by the permutation.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">perm</span><span class="o">⍳</span><span class="m">2</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">9
+</pre></div></div>
+</div>
+<p>So <span class="math notranslate nohighlight">\(9\)</span> is the corrected index of the parent of the node formerly at index <span class="math notranslate nohighlight">\(4\)</span>, now at index <span class="math notranslate nohighlight">\(7\)</span>.</p>
+<p>If we apply this method to each parent in the permuted parent vector, not just the parent recorded at index <span class="math notranslate nohighlight">\(7\)</span>, we correct the whole vector.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="o">⊢</span><span class="nv">p</span><span class="kd">←</span><span class="nv">perm</span><span class="o">⍳</span><span class="nv">p</span><span class="sr">[</span><span class="nv">perm</span><span class="sr">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">4 9 4 10 5 10 11 9 4 11 10 10
+</pre></div></div>
+</div>
+<figure class="align-default" id="id6">
+<img alt="The edges in the tree shuffling back to normal." src="../_images/PVPermuteFix_ManimCE_v0.18.1.gif" />
+<figcaption>
+<p><span class="caption-number">Fig. 14 </span><span class="caption-text">Fixing the parent pointers.</span><a class="headerlink" href="#id6" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>The result of this is a shuffled parent vector, with parent pointers set so as to represent exactly the same tree we started with.</p>
+</section>
 </section>
 <section id="favourite-children-ordering-siblings">
 <h2>Favourite Children (Ordering Siblings)<a class="headerlink" href="#favourite-children-ordering-siblings" title="Link to this heading">#</a></h2>
@@ -738,14 +825,26 @@ parent: 0 0 1 2 2 1 6 6 7 7 7 0
 <p>Sometimes, the order of siblings in a tree matters. Without any extra information, the only way to store the order of siblings in a tree is by their order in the parent vector. Throughout this tutorial, we’re going to use operations which maintain sibling ordering in the vast majority of cases, and we’ll be explicit where we don’t. The good news is, if your use of trees doesn’t require maintaining the order of siblings, you don’t have to worry about this at all!</p>
 <section id="inverting">
 <h3>Inverting<a class="headerlink" href="#inverting" title="Link to this heading">#</a></h3>
-<p>Because it doesn’t really fit anywhere else in the tutorial, let’s look at a neat way to reverse the order of all siblings in a tree - in other words, mirroring the tree. On our example tree, this looks like:</p>
-<figure class="align-default" id="id5">
+<p>Because it doesn’t really fit anywhere else in the tutorial, let’s look at a neat way to reverse the order of all siblings in a tree - in other words, mirroring the tree.</p>
+<p>We will again reset our tree.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="o">⊢</span><span class="nv">p</span><span class="kd">←</span><span class="nv">parent</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">0 0 1 2 2 1 0 6 7 7 7 0
+</pre></div></div>
+</div>
+<p>On our example tree, inverting looks like this:</p>
+<figure class="align-default" id="id7">
 <img alt="The tree moving to mirror itself horizontally." src="../_images/PVInvert_ManimCE_v0.18.1.gif" />
 <figcaption>
-<p><span class="caption-number">Fig. 13 </span><span class="caption-text">Mirroring the tree.</span><a class="headerlink" href="#id5" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 15 </span><span class="caption-text">Mirroring the tree.</span><a class="headerlink" href="#id7" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<p>Our first step is to simply reverse the parent vector.</p>
+<p>Our first step is to invert the parent vector is simply reverse it.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="o">⌽</span><span class="nv">p</span>
@@ -1102,6 +1201,7 @@ parent: 0 0 1 2 2 1 6 6 7 7 7 0
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trimming-branches">Trimming Branches</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#finding-roots">Finding Roots</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#selecting-sub-trees">Selecting Sub-Trees</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#shuffling-nodes">Shuffling Nodes</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#favourite-children-ordering-siblings">Favourite Children (Ordering Siblings)</a><ul class="nav section-nav flex-column">

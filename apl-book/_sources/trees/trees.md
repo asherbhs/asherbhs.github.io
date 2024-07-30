@@ -7,10 +7,10 @@
         - [ ] distances between nodes?
         - [x] oh no it's O(nd)
     - [x] parent vector
-    - [ ] challenge:
+    - [x] challenge:
         - on paper, draw a simple tree and write down the nested representation, depth vector, path matrix, and parent vector for the tree
         - use an interpreter to check your answers
-- [ ] parent vector representation
+- [x] parent vector representation
     - [x] this is super great
     - [x] basic operations
         - [x] find children:    `⍸p∊i`

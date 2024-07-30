@@ -106,7 +106,7 @@ The `data` vector is indexed by the same indices as the `depths` vector, so that
 ↑(⊂¨'index:' 'depths:' 'data:'),¨(⍳≢depths) depths data
 ```
 
-At this point it's helpful to make a small mental shift. We are drawing a one-to-one correspondence between node and indices into these vectors, using the indices as unique identifiers. We will use this so frequently that making the distinction explit becomes tiring, so from now on, we will often refer to 'the node associated with index `i`' simply as 'node `i`'.
+At this point it's helpful to make a small mental shift. We are drawing a one-to-one correspondence between node and indices into these vectors, using the indices as unique identifiers. We will use this so frequently that making the distinction explicit becomes tiring, so from now on, we will often refer to 'the node associated with index `i`' simply as 'node `i`'.
 
 Labelling each node of our tree with its corresponding index reveals an interesting pattern.
 
@@ -215,3 +215,7 @@ Notice that node $0$, as the root, has no parent. We could use some kind of sent
 Like the depth vector, the parent vector is extremely space efficient. Like the path matrix, it is not heavily constrained by ordering requirements. The nodes can be shuffled arbitrarily, so long as we update the parents in each place to reflect the suffling.
 
 This representation is suitable for most of our purposes, and it is the one we will focus on for the rest of the tutorial.
+
+## Check Your Understanding
+
+To make sure you really understand each of these representations, draw yourself a small tree on paper, and then write out the depth vector, path matrix, and parent vector for that tree. As you figure these out, you will get an idea of what the APL interpreter is spending its time doing when working with these representations.

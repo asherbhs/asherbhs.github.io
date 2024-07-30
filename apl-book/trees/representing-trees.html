@@ -192,7 +192,7 @@
 <li class="toctree-l1"><a class="reference internal" href="deleting-nodes.html">Deleting Nodes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="bottom-up-aggregation.html">Bottom-Up Accumulation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="top-down-construction.html">Top-Down Construction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="working-with-json.html">Working with ⎕JSON</a></li>
+<li class="toctree-l1"><a class="reference internal" href="working-with-json.html">Working with <code class="docutils literal notranslate"><span class="pre">⎕JSON</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="parsing.html">Parsing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="translations.html">Appendix: Translations</a></li>
 </ul>
@@ -412,6 +412,7 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-depth-vector-representation">The Depth Vector Representation</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-path-matrix-representation">The Path Matrix Representation</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-parent-vector-representation">The Parent Vector Representation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#check-your-understanding">Check Your Understanding</a></li>
 </ul>
             </nav>
         </div>
@@ -565,7 +566,7 @@ document.write(`
 └───────┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┘
 </pre></div></div>
 </div>
-<p>At this point it’s helpful to make a small mental shift. We are drawing a one-to-one correspondence between node and indices into these vectors, using the indices as unique identifiers. We will use this so frequently that making the distinction explit becomes tiring, so from now on, we will often refer to ‘the node associated with index <code class="docutils literal notranslate"><span class="pre">i</span></code>’ simply as ‘node <code class="docutils literal notranslate"><span class="pre">i</span></code>’.</p>
+<p>At this point it’s helpful to make a small mental shift. We are drawing a one-to-one correspondence between node and indices into these vectors, using the indices as unique identifiers. We will use this so frequently that making the distinction explicit becomes tiring, so from now on, we will often refer to ‘the node associated with index <code class="docutils literal notranslate"><span class="pre">i</span></code>’ simply as ‘node <code class="docutils literal notranslate"><span class="pre">i</span></code>’.</p>
 <p>Labelling each node of our tree with its corresponding index reveals an interesting pattern.</p>
 <figure class="align-default" id="id3">
 <img alt="Nodes labelled with their index into the `depth` and `data` vectors." src="../_images/IntroTreeDFPT_ManimCE_v0.18.1.png" />
@@ -717,6 +718,10 @@ parent: 0 0 1 1 0 4 5 5 5 0
 <p>Like the depth vector, the parent vector is extremely space efficient. Like the path matrix, it is not heavily constrained by ordering requirements. The nodes can be shuffled arbitrarily, so long as we update the parents in each place to reflect the suffling.</p>
 <p>This representation is suitable for most of our purposes, and it is the one we will focus on for the rest of the tutorial.</p>
 </section>
+<section id="check-your-understanding">
+<h2>Check Your Understanding<a class="headerlink" href="#check-your-understanding" title="Link to this heading">#</a></h2>
+<p>To make sure you really understand each of these representations, draw yourself a small tree on paper, and then write out the depth vector, path matrix, and parent vector for that tree. As you figure these out, you will get an idea of what the APL interpreter is spending its time doing when working with these representations.</p>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -788,6 +793,7 @@ parent: 0 0 1 1 0 4 5 5 5 0
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-depth-vector-representation">The Depth Vector Representation</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-path-matrix-representation">The Path Matrix Representation</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-parent-vector-representation">The Parent Vector Representation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#check-your-understanding">Check Your Understanding</a></li>
 </ul>
   </nav></div>
 

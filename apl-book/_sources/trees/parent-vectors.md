@@ -230,6 +230,69 @@ This can be easily extended to work with multiple nodes as roots, for example if
 ⍝ └───┴──────────── find those which hit 1 or 6
 ```
 
+### Shuffling Nodes
+
+On the [previous page](representing-trees.md), we used a little trick to properly correct the parent references in a path matrix after permuting the nodes. We're going to use the same trick to permute parent vectors, and we're going to actually show how it works.
+
+There are several reasons we may want to shuffle order of a parent vector. For instance, on the next page we're going to take an arbitrarily ordered parent vector and impose the DFPT ordering on it.
+
+Importantly, when we shuffle a parent vector and correct the indices, the tree we're representing doesn't change at all. We take careful effort to make sure that when we're finished, our new parent vector represents the same tree.
+
+Say we have some arbitrary permutation vector which we want to use to shuffle the nodes of our tree.
+
+```{code-cell}
+perm←8 3 10 11 7 6 5 4 9 2 0 1
+```
+
+We want to use this permutation vector to shuffle the parent vector, while maintaining the structure of the tree. If we just permute the parent vector without any kind of correction, the structure of the tree is messed up.
+
+```{code-cell}
+p[perm]
+```
+
+```{figure} media/PVPermute_ManimCE_v0.18.1.gif
+:alt: The edges in the tree shuffling after our incomplete permutation of the parent vector.
+
+The result of shuffling the parent vector.
+```
+
+To fix this tangle of branches, we need to find where each parent was sent by the permutation, and correct the parent vector accordingly.
+
+Take the node $4$. This node's parent was originally at index $2$.
+
+```{code-cell}
+p[4]
+```
+
+After shuffling, this node still has index $2$ recorded as its parent, even though the node has moved from index $2$ to elsewhere.
+
+```{code-cell}
+perm⍳4        ⍝ the node at index 4 is sent to index 7
+p[perm][7]    ⍝ the parent of the node is still set (incorrectly) to 2
+```
+
+The new index of the node's parent will be where the node at index $2$ is sent by the permutation.
+
+```{code-cell}
+perm⍳2
+```
+
+So $9$ is the corrected index of the parent of the node formerly at index $4$, now at index $7$.
+
+If we apply this method to each parent in the permuted parent vector, not just the parent recorded at index $7$, we correct the whole vector.
+
+```{code-cell}
+⊢p←perm⍳p[perm]
+```
+
+```{figure} media/PVPermuteFix_ManimCE_v0.18.1.gif
+:alt: The edges in the tree shuffling back to normal.
+
+Fixing the parent pointers.
+```
+
+The result of this is a shuffled parent vector, with parent pointers set so as to represent exactly the same tree we started with.
+
 ## Favourite Children (Ordering Siblings)
 
 Before we go any further, it's worth making a note of the ordering requirements for a parent vector. We know that one of the big advantages of the representation is that it's not constrained by the DFPT order, you can place parents and children in any order you like so long as each node points to its correct parent.
@@ -238,7 +301,15 @@ Sometimes, the order of siblings in a tree matters. Without any extra informatio
 
 ### Inverting
 
-Because it doesn't really fit anywhere else in the tutorial, let's look at a neat way to reverse the order of all siblings in a tree - in other words, mirroring the tree. On our example tree, this looks like:
+Because it doesn't really fit anywhere else in the tutorial, let's look at a neat way to reverse the order of all siblings in a tree - in other words, mirroring the tree.
+
+We will again reset our tree.
+
+```{code-cell}
+⊢p←parent
+```
+
+On our example tree, inverting looks like this:
 
 ```{figure} media/PVInvert_ManimCE_v0.18.1.gif
 :alt: The tree moving to mirror itself horizontally.
@@ -246,7 +317,7 @@ Because it doesn't really fit anywhere else in the tutorial, let's look at a nea
 Mirroring the tree.
 ```
 
-Our first step is to simply reverse the parent vector.
+Our first step is to invert the parent vector is simply reverse it.
 
 ```{code-cell}
 ⌽p
