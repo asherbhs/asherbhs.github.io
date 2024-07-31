@@ -607,7 +607,7 @@ d: 0 1 2 2 1 2 3 3 3 1
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">perm</span><span class="kd">←</span><span class="m">1</span><span class="w"> </span><span class="m">9</span><span class="w"> </span><span class="m">8</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="m">6</span><span class="w"> </span><span class="m">7</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="m">5</span><span class="w">    </span><span class="c1">⍝ an arbitrary permutation of the nodes</span>
-<span class="nv">p</span><span class="kd">←</span><span class="nv">perm</span><span class="o">⍳</span><span class="nv">p</span><span class="sr">[</span><span class="nv">perm</span><span class="sr">]</span><span class="w">              </span><span class="c1">⍝ permute the nodes</span>
+<span class="nv">p</span><span class="kd">←</span><span class="nv">perm</span><span class="o">⍳</span><span class="nv">p</span><span class="sr">[</span><span class="nv">perm</span><span class="sr">]</span>
 <span class="p">(</span><span class="o">⍳≢</span><span class="nv">p</span><span class="p">)</span><span class="w"> </span><span class="nv">PPV</span><span class="w"> </span><span class="nv">p</span>
 </pre></div>
 </div>
@@ -640,7 +640,7 @@ d: 0 1 2 2 1 2 3 3 3 1
 </pre></div><div class="output text_html"><pre class="language-APL">7
 </pre></div></div>
 </div>
-<p>Since we’re traversing the tree until the parent does not change, <code class="docutils literal notranslate"><span class="pre">⍣≡</span></code> is be very helpful.</p>
+<p>Since we’re traversing the tree until the parent does not change, we can automate this repetition with <code class="docutils literal notranslate"><span class="pre">⍣≡</span></code> to find the depth of any particular node.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">depth</span><span class="kd">←</span><span class="m">0</span><span class="w">           </span><span class="c1">⍝ seed value</span>
@@ -712,6 +712,7 @@ d: 0 1 2 2 1 2 3 3 3 1
 └───────────┘
 </pre></div></div>
 </div>
+<p>Remember: <code class="docutils literal notranslate"><span class="pre">depths</span></code> is not in DFPT order! Our next task will be to put it back in that order to fully recover the depth vector.</p>
 </section>
 <section id="depth-vector-ordering">
 <h2>Depth Vector Ordering<a class="headerlink" href="#depth-vector-ordering" title="Link to this heading">#</a></h2>

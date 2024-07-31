@@ -193,7 +193,7 @@ Since we constructed this parent vector from a depth vector, it is already in DF
 
 ```{code-cell}
 perm←1 9 8 2 4 6 7 0 3 5    ⍝ an arbitrary permutation of the nodes
-p←perm⍳p[perm]              ⍝ permute the nodes
+p←perm⍳p[perm]
 (⍳≢p) PPV p
 ```
 
@@ -207,7 +207,7 @@ p[p[5]]       ⍝ depth ≥ 2 since p[5] is not a root
 p[p[p[5]]]    ⍝ depth = 2 since p[p[5]] is a root
 ```
 
-Since we're traversing the tree until the parent does not change, `⍣≡` is be very helpful.
+Since we're traversing the tree until the parent does not change, we can automate this repetition with `⍣≡` to find the depth of any particular node.
 
 ```{code-cell}
 depth←0           ⍝ seed value
@@ -247,4 +247,8 @@ Depths←{p←⍵
 (Depths p) PPV p
 ```
 
+Remember: `depths` is not in DFPT order! Our next task will be to put it back in that order to fully recover the depth vector.
+
 ## Depth Vector Ordering
+
+
