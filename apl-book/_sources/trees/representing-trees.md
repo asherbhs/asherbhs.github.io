@@ -216,6 +216,6 @@ Like the depth vector, the parent vector is extremely space efficient. Like the 
 
 This representation is suitable for most of our purposes, and it is the one we will focus on for the rest of the tutorial.
 
-## Check Your Understanding
-
+```{admonition} Challenge
 To make sure you really understand each of these representations, draw yourself a small tree on paper, and then write out the depth vector, path matrix, and parent vector for that tree. As you figure these out, you will get an idea of what the APL interpreter is spending its time doing when working with these representations.
+```

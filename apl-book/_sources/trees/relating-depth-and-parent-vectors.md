@@ -249,6 +249,29 @@ Depths←{p←⍵
 
 Remember: `depths` is not in DFPT order! Our next task will be to put it back in that order to fully recover the depth vector.
 
+````{admonition} Challenge
+Can you change the initial conditions of our method so that we can skip the first iteration?
+
+```
+:tags: [hidden-cell]
+
+depths←p≠⍳≢p    ⍝ start with 1 depth for non-roots
+_←{
+    q←p[⍵]
+    depths+←⍵≠q
+    q
+}⍣≡p            ⍝ start at parent immediately
+```
+````
+
 ## Depth Vector Ordering
 
+Having recovered the depths of each node, the next step fully reconstructing the depth vector for a tree is imposing the DFPT ordering. To do this, we're going to augment our method for find depths to build up the path matrix for the tree as we go. We can then use the paths to find the DFPT ordering.
 
+To begin with, let's initialise an empty path matrix.
+
+```{code-cell}
+⊢paths←(⍳≢p)0⍴⍬
+```
+
+Now, as we traverse the tree as normal, we also record the ancestors found at each iteration and record these in the path matrix.

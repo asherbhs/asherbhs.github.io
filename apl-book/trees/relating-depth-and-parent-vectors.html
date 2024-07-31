@@ -713,9 +713,40 @@ d: 0 1 2 2 1 2 3 3 3 1
 </pre></div></div>
 </div>
 <p>Remember: <code class="docutils literal notranslate"><span class="pre">depths</span></code> is not in DFPT order! Our next task will be to put it back in that order to fully recover the depth vector.</p>
+<div class="admonition-challenge admonition">
+<p class="admonition-title">Challenge</p>
+<p>Can you change the initial conditions of our method so that we can skip the first iteration?</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>:tags: [hidden-cell]
+
+depths←p≠⍳≢p    ⍝ start with 1 depth for non-roots
+_←{
+    q←p[⍵]
+    depths+←⍵≠q
+    q
+}⍣≡p            ⍝ start at parent immediately
+</pre></div>
+</div>
+</div>
 </section>
 <section id="depth-vector-ordering">
 <h2>Depth Vector Ordering<a class="headerlink" href="#depth-vector-ordering" title="Link to this heading">#</a></h2>
+<p>Having recovered the depths of each node, the next step fully reconstructing the depth vector for a tree is imposing the DFPT ordering. To do this, we’re going to augment our method for find depths to build up the path matrix for the tree as we go. We can then use the paths to find the DFPT ordering.</p>
+<p>To begin with, let’s initialise an empty path matrix.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="o">⊢</span><span class="nv">paths</span><span class="kd">←</span><span class="p">(</span><span class="o">⍳≢</span><span class="nv">p</span><span class="p">)</span><span class="m">0</span><span class="o">⍴</span><span class="no">⍬</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DOMAIN ERROR
+      ⊢paths←(⍳≢p)0⍴⍬
+                   ∧
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now, as we traverse the tree as normal, we also record the ancestors found at each iteration and record these in the path matrix.</p>
 </section>
 </section>
 
