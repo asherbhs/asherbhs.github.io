@@ -58,6 +58,8 @@
     <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'trees/forests';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -382,7 +384,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
 </div></div>
       
     </div>
@@ -398,6 +402,16 @@ document.write(`
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#planting-forests">Planting Forests</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deforestation">Deforestation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#challenge">Challenge</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -409,6 +423,303 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="forests">
 <h1>Forests<a class="headerlink" href="#forests" title="Link to this heading">#</a></h1>
+<p>We saw <a class="reference internal" href="parent-vectors.html#trimming-branches"><span class="std std-ref">previously</span></a> that the parent vector representation can actually represent multiple trees at once. We call such a parent vector with multiple trees a <em>forest</em>. Forests are a delight to work with using the parent representation, and we’ll see examples of that on this page.</p>
+<section id="planting-forests">
+<h2>Planting Forests<a class="headerlink" href="#planting-forests" title="Link to this heading">#</a></h2>
+<p>Given multiple parent vectors, each representing a tree, how can we put all these trees into one parent vector?</p>
+<p>Let’s start with some simple trees:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">trees</span><span class="kd">←</span><span class="p">(</span><span class="m">0</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">2</span><span class="p">)(</span><span class="m">0</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">0</span><span class="p">)(</span><span class="m">0</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">4</span><span class="p">)(</span><span class="m">0</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">1</span><span class="p">)</span>
+<span class="nv">PPV</span><span class="na">¨</span><span class="nv">trees</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">┌───────┬─────┬───────┬─────┐
+│┌─────┐│┌───┐│┌─────┐│┌───┐│
+││  ∘  │││ ∘ │││  ∘  │││ ∘ ││
+││┌─┴┐ │││┌┴┐│││┌─┼─┐│││ │ ││
+││∘  ∘ │││∘ ∘│││∘ ∘ ∘│││ ∘ ││
+││  ┌┴┐││└───┘││  │ ││││┌┴┐││
+││  ∘ ∘││     ││  ∘ ∘│││∘ ∘││
+│└─────┘│     │└─────┘│└───┘│
+└───────┴─────┴───────┴─────┘
+</pre></div></div>
+</div>
+<p>We want one parent vector which represents the forest of all these trees. It would be nice if we could simply catenate all these vectors together and be done, but sadly it’s not that simple.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">PPV</span><span class="o">⊃,</span><span class="na">/</span><span class="nv">trees</span><span class="w">    </span><span class="c1">⍝ not what we want</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">┌───────────────────────────┐
+│             ∘             │
+│ ┌────┬───┬─┬┴┬─┬─┬─┬─┬─┬─┐│
+│ ∘    ∘   ∘ ∘ ∘ ∘ ∘ ∘ ∘ ∘ ∘│
+│┌┴┐ ┌─┼─┐                  │
+│∘ ∘ ∘ ∘ ∘                  │
+│      │                    │
+│      ∘                    │
+└───────────────────────────┘
+</pre></div></div>
+</div>
+<p>When we catenate the vectors, the indices in the later parent vectors are suddenly innacurate, as they have been shifted futher along the index space. We therefore need to correct for this. For instance, we need to correct the parent vector <code class="docutils literal notranslate"><span class="pre">0</span> <span class="pre">0</span> <span class="pre">0</span></code> to <code class="docutils literal notranslate"><span class="pre">5</span> <span class="pre">5</span> <span class="pre">5</span></code> before we catenate it, since there are <span class="math notranslate nohighlight">\(5\)</span> nodes in the preceding parent vector <code class="docutils literal notranslate"><span class="pre">0</span> <span class="pre">0</span> <span class="pre">0</span> <span class="pre">2</span> <span class="pre">2</span></code>. This way, the nodes preserve their connections in the catenated result, rather than all pointing to the node <span class="math notranslate nohighlight">\(0\)</span> in the first vector. Similarly, we need to add <span class="math notranslate nohighlight">\(8\)</span> to the third parent vector, and <span class="math notranslate nohighlight">\(14\)</span> to the fourth. It’s easy to calculate these offsets with a scan.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="m">0</span><span class="o">,+</span><span class="na">\</span><span class="m">¯1</span><span class="o">↓≢</span><span class="na">¨</span><span class="nv">trees</span><span class="w">    </span><span class="c1">⍝ offsets for each vector</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">0 5 8 14
+</pre></div></div>
+</div>
+<p>We can then use these offsets to correct the parent vectors before we catenate them, giving us the correct result vector for the forest of them all.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="w">      </span><span class="nv">trees</span><span class="o">+</span><span class="m">0</span><span class="o">,+</span><span class="na">\</span><span class="m">¯1</span><span class="o">↓≢</span><span class="na">¨</span><span class="nv">trees</span><span class="w">    </span><span class="c1">⍝ correctly offset vectors</span>
+<span class="w">   </span><span class="o">⊃,</span><span class="na">/</span><span class="nv">trees</span><span class="o">+</span><span class="m">0</span><span class="o">,+</span><span class="na">\</span><span class="m">¯1</span><span class="o">↓≢</span><span class="na">¨</span><span class="nv">trees</span><span class="w">    </span><span class="c1">⍝ parent vector for forest</span>
+<span class="nv">PPV</span><span class="o">⊃,</span><span class="na">/</span><span class="nv">trees</span><span class="o">+</span><span class="m">0</span><span class="o">,+</span><span class="na">\</span><span class="m">¯1</span><span class="o">↓≢</span><span class="na">¨</span><span class="nv">trees</span><span class="w">    </span><span class="c1">⍝ this gives us the correct forest</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">┌─────────┬─────┬─────────────┬───────────┐
+│0 0 0 2 2│5 5 5│8 8 8 10 8 12│14 14 15 15│
+└─────────┴─────┴─────────────┴───────────┘
+</pre></div><div class="output text_html"><pre class="language-APL">0 0 0 2 2 5 5 5 8 8 8 10 8 12 14 14 15 15
+</pre></div><div class="output text_html"><pre class="language-APL">┌─────┬───┬─────┬───┐
+│  ∘  │ ∘ │  ∘  │ ∘ │
+│┌─┴┐ │┌┴┐│┌─┼─┐│ │ │
+│∘  ∘ │∘ ∘│∘ ∘ ∘│ ∘ │
+│  ┌┴┐│   │  │ ││┌┴┐│
+│  ∘ ∘│   │  ∘ ∘│∘ ∘│
+└─────┴───┴─────┴───┘
+</pre></div></div>
+</div>
+<p>Perfect! This construction has a couple of nice properties. If our original vectors were in DFPT order, then our forest vector will be as well. Additionally, if we have any associated data with our original vectors, we can simply catenate these together and we will have a vector associated with our forest in exactly the same way.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">data</span><span class="kd">←</span><span class="s1">&#39;abcde&#39;</span><span class="w"> </span><span class="s1">&#39;fgh&#39;</span><span class="w"> </span><span class="s1">&#39;ijklmn&#39;</span><span class="w"> </span><span class="s1">&#39;opqr&#39;</span><span class="w">    </span><span class="c1">⍝ some additional data associated with our vectors</span>
+<span class="nv">data</span><span class="w"> </span><span class="nv">PPV</span><span class="na">¨</span><span class="nv">trees</span>
+<span class="nv">forest</span><span class="kd">←</span><span class="o">⊃,</span><span class="na">/</span><span class="nv">trees</span><span class="o">+</span><span class="m">0</span><span class="o">,+</span><span class="na">\</span><span class="m">¯1</span><span class="o">↓≢</span><span class="na">¨</span><span class="nv">trees</span><span class="w">        </span><span class="c1">⍝ make the forest vector</span>
+<span class="nv">data</span><span class="kd">←</span><span class="o">⊃,</span><span class="na">/</span><span class="nv">data</span><span class="w">                          </span><span class="c1">⍝ just catenate the data</span>
+<span class="nv">data</span><span class="w"> </span><span class="nv">PPV</span><span class="w"> </span><span class="nv">forest</span><span class="w">                       </span><span class="c1">⍝ the forest is labelled correctly</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">┌───────┬─────┬───────┬─────┐
+│┌─────┐│┌───┐│┌─────┐│┌───┐│
+││  a  │││ f │││  i  │││ o ││
+││┌─┴┐ │││┌┴┐│││┌─┼─┐│││ │ ││
+││b  c │││g h│││j k m│││ p ││
+││  ┌┴┐││└───┘││  │ ││││┌┴┐││
+││  d e││     ││  l n│││q r││
+│└─────┘│     │└─────┘│└───┘│
+└───────┴─────┴───────┴─────┘
+</pre></div><div class="output text_html"><pre class="language-APL">┌─────┬───┬─────┬───┐
+│  a  │ f │  i  │ o │
+│┌─┴┐ │┌┴┐│┌─┼─┐│ │ │
+│b  c │g h│j k m│ p │
+│  ┌┴┐│   │  │ ││┌┴┐│
+│  d e│   │  l n│q r│
+└─────┴───┴─────┴───┘
+</pre></div></div>
+</div>
+</section>
+<section id="deforestation">
+<h2>Deforestation<a class="headerlink" href="#deforestation" title="Link to this heading">#</a></h2>
+<p>What if we have the reverse problem? Say we have a parent vector representing a forest, and we want to extract the individual trees from it.</p>
+<p>Importantly, the forest vector could arrive with any tangled order of nodes, so we can’t rely on the nice consecute arrangement of trees we have in the <code class="docutils literal notranslate"><span class="pre">forest</span></code> vector right now. To emphasise this, let’s shuffle <code class="docutils literal notranslate"><span class="pre">forest</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">perm</span><span class="kd">←</span><span class="m">6</span><span class="w"> </span><span class="m">7</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">9</span><span class="w"> </span><span class="m">11</span><span class="w"> </span><span class="m">13</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="m">16</span><span class="w"> </span><span class="m">17</span><span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="m">8</span><span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="m">14</span><span class="w"> </span><span class="m">15</span><span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="m">12</span>
+<span class="o">⊢</span><span class="nv">forest</span><span class="kd">←</span><span class="nv">perm</span><span class="o">⍳</span><span class="nv">forest</span><span class="sr">[</span><span class="nv">perm</span><span class="sr">]</span><span class="w">    </span><span class="c1">⍝ shuffle forest and correct parents</span>
+<span class="o">⊢</span><span class="nv">data</span><span class="kd">←</span><span class="nv">data</span><span class="sr">[</span><span class="nv">perm</span><span class="sr">]</span><span class="w">             </span><span class="c1">⍝ shuffle data as well</span>
+<span class="nv">data</span><span class="w"> </span><span class="nv">PPV</span><span class="w"> </span><span class="nv">forest</span><span class="w">              </span><span class="c1">⍝ still represents the same forest</span>
+<span class="p">(</span><span class="o">⍳≢</span><span class="nv">forest</span><span class="p">)</span><span class="w"> </span><span class="nv">PPV</span><span class="w"> </span><span class="nv">forest</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">8 8 2 12 16 17 2 2 8 15 15 7 12 7 14 14 12 12
+</pre></div><div class="output text_html"><pre class="language-APL">ghajlnbcfqrdieopkm
+</pre></div><div class="output text_html"><pre class="language-APL">┌─────┬───┬─────┬───┐
+│  a  │ f │  i  │ o │
+│┌─┴┐ │┌┴┐│┌─┼─┐│ │ │
+│b  c │g h│j k m│ p │
+│  ┌┴┐│   │  │ ││┌┴┐│
+│  d e│   │  l n│q r│
+└─────┴───┴─────┴───┘
+</pre></div><div class="output text_html"><pre class="language-APL">┌───────┬───┬───────┬────┐
+│   2   │ 8 │   12  │ 14 │
+│┌──┴┐  │┌┴┐│┌─┬┴─┐ │ │  │
+│6   7  │0 1│3 16 17│ 15 │
+│  ┌─┴┐ │   │  │  │ │┌┴┐ │
+│  11 13│   │  4  5 │9 10│
+└───────┴───┴───────┴────┘
+</pre></div></div>
+</div>
+<p>The first step to extracting the trees from the forest will be identifying which nodes belong to which tree. Each tree can be uniquely identified by its root, so by finding the roots of each node, we can see which tree they belong to.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="o">⊢</span><span class="nv">roots</span><span class="kd">←</span><span class="nv">I</span><span class="na">⍣</span><span class="o">≡</span><span class="na">⍨</span><span class="nv">forest</span><span class="w">    </span><span class="c1">⍝ we have seen I⍣≡⍨ previously</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">8 8 2 12 12 12 2 2 8 14 14 2 12 2 14 14 12 12
+</pre></div></div>
+</div>
+<p>We can then use this to group the nodes in the parent vector by which tree they belong to.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">roots</span><span class="kt">{</span><span class="o">⊂</span><span class="bp">⍵</span><span class="kt">}</span><span class="na">⌸</span><span class="nv">forest</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">┌─────┬─────────┬─────────────────┬───────────┐
+│8 8 8│2 2 2 7 7│12 16 17 12 12 12│15 15 14 14│
+└─────┴─────────┴─────────────────┴───────────┘
+</pre></div></div>
+</div>
+<p>The trouble with this is that the vectors we have are pointing to their parent in the <code class="docutils literal notranslate"><span class="pre">forest</span></code> vector. We need to correct the parent pointers so that they are appropriate to just the lone tree.</p>
+<p>Each of the parents pointers are too large (in rare cases they are just right, but in general they are not correct) as they are offset by all the nodes in the <code class="docutils literal notranslate"><span class="pre">forest</span></code> vector which appeared before it, but are not present in the lone tree.</p>
+<p>For each group, we can find these offsets by counting how many nodes from a different tree appear before each place, with a scan. Then, we can subtract this count from the parent pointer for each node in the group, to correct them.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="w"> </span><span class="nv">roots</span><span class="kt">{</span><span class="w">      </span><span class="o">~</span><span class="nv">forest</span><span class="o">∊</span><span class="bp">⍵</span><span class="w">    </span><span class="kt">}</span><span class="na">⌸</span><span class="nv">forest</span><span class="w">    </span><span class="c1">⍝ mask of nodes not in each group</span>
+<span class="w"> </span><span class="nv">roots</span><span class="kt">{</span><span class="w">    </span><span class="o">+</span><span class="na">\</span><span class="o">~</span><span class="nv">forest</span><span class="o">∊</span><span class="bp">⍵</span><span class="w">    </span><span class="kt">}</span><span class="na">⌸</span><span class="nv">forest</span><span class="w">    </span><span class="c1">⍝ how many nodes outside the tree appear before each parent</span>
+<span class="o">⍪</span><span class="nv">roots</span><span class="kt">{</span><span class="o">⊂</span><span class="w">  </span><span class="p">(</span><span class="o">+</span><span class="na">\</span><span class="o">~</span><span class="nv">forest</span><span class="o">∊</span><span class="bp">⍵</span><span class="p">)</span><span class="sr">[</span><span class="bp">⍵</span><span class="sr">]</span><span class="kt">}</span><span class="na">⌸</span><span class="nv">forest</span><span class="w">    </span><span class="c1">⍝ restricted only to this tree</span>
+<span class="o">⍪</span><span class="nv">roots</span><span class="kt">{</span><span class="o">⊂</span><span class="bp">⍵</span><span class="o">-</span><span class="p">(</span><span class="o">+</span><span class="na">\</span><span class="o">~</span><span class="nv">forest</span><span class="o">∊</span><span class="bp">⍵</span><span class="p">)</span><span class="sr">[</span><span class="bp">⍵</span><span class="sr">]</span><span class="kt">}</span><span class="na">⌸</span><span class="nv">forest</span><span class="w">    </span><span class="c1">⍝ correct the parent pointers</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">0 0 1 1 1 1 1 1 0 1 1 1 1 1 1 1 1 1
+1 1 0 1 1 1 0 0 1 1 1 0 1 0 1 1 1 1
+1 1 1 0 0 0 1 1 1 1 1 1 0 1 1 1 0 0
+1 1 1 1 1 1 1 1 1 0 0 1 1 1 0 0 1 1
+</pre></div><div class="output text_html"><pre class="language-APL">0 0 1 2 3 4 5 6 6 7 8  9 10 11 12 13 14 15
+1 2 2 3 4 5 5 5 6 7 8  8  9  9 10 11 12 13
+1 2 3 3 3 3 4 5 6 7 8  9  9 10 11 12 12 12
+1 2 3 4 5 6 7 8 9 9 9 10 11 12 12 12 13 14
+</pre></div><div class="output text_html"><pre class="language-APL">┌─────────────┐
+│6 6 6        │
+├─────────────┤
+│2 2 2 5 5    │
+├─────────────┤
+│9 12 12 9 9 9│
+├─────────────┤
+│12 12 12 12  │
+└─────────────┘
+</pre></div><div class="output text_html"><pre class="language-APL">┌───────────┐
+│2 2 2      │
+├───────────┤
+│0 0 0 2 2  │
+├───────────┤
+│3 4 5 3 3 3│
+├───────────┤
+│3 3 2 2    │
+└───────────┘
+</pre></div></div>
+</div>
+<p>This gives us exactly the trees we packed into the forest originally.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">trees</span><span class="kd">←</span><span class="nv">roots</span><span class="kt">{</span><span class="o">⊂</span><span class="bp">⍵</span><span class="o">-</span><span class="p">(</span><span class="o">+</span><span class="na">\</span><span class="o">~</span><span class="nv">forest</span><span class="o">∊</span><span class="bp">⍵</span><span class="p">)</span><span class="sr">[</span><span class="bp">⍵</span><span class="sr">]</span><span class="kt">}</span><span class="na">⌸</span><span class="nv">forest</span>
+<span class="nv">PPV</span><span class="na">¨</span><span class="nv">trees</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">┌─────┬───────┬───────┬─────┐
+│┌───┐│┌─────┐│┌─────┐│┌───┐│
+││ ∘ │││  ∘  │││  ∘  │││ ∘ ││
+││┌┴┐│││┌─┴┐ │││┌─┼─┐│││ │ ││
+││∘ ∘│││∘  ∘ │││∘ ∘ ∘│││ ∘ ││
+│└───┘││  ┌┴┐│││  │ ││││┌┴┐││
+│     ││  ∘ ∘│││  ∘ ∘│││∘ ∘││
+│     │└─────┘│└─────┘│└───┘│
+└─────┴───────┴───────┴─────┘
+</pre></div></div>
+</div>
+<p>We can use the same grouping method to extract the data for each tree. Thankfully there’s no complicated parent vector correction needed here.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">data</span><span class="kd">←</span><span class="nv">roots</span><span class="kt">{</span><span class="o">⊂</span><span class="bp">⍵</span><span class="kt">}</span><span class="na">⌸</span><span class="nv">data</span>
+<span class="nv">data</span><span class="w"> </span><span class="nv">PPV</span><span class="na">¨</span><span class="nv">trees</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">┌─────┬───────┬───────┬─────┐
+│┌───┐│┌─────┐│┌─────┐│┌───┐│
+││ f │││  a  │││  i  │││ o ││
+││┌┴┐│││┌─┴┐ │││┌─┼─┐│││ │ ││
+││g h│││b  c │││j k m│││ p ││
+│└───┘││  ┌┴┐│││  │ ││││┌┴┐││
+│     ││  d e│││  l n│││q r││
+│     │└─────┘│└─────┘│└───┘│
+└─────┴───────┴───────┴─────┘
+</pre></div></div>
+</div>
+<p>Notice that we’ve extracted the trees in a different order to the order we see when we render the forest. This is because <code class="docutils literal notranslate"><span class="pre">PPV</span></code> looks at the order that the root nodes appear in a forest when rendering, while <code class="docutils literal notranslate"><span class="pre">⌸</span></code> looks at the first appearance of a group indicator in the <code class="docutils literal notranslate"><span class="pre">roots</span></code> vector. Luckily, it’s easy to correct this if you need to.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="o">∪</span><span class="nv">roots</span><span class="w">                   </span><span class="c1">⍝ the order ⌸ sees</span>
+<span class="o">⊢</span><span class="nv">trees</span><span class="kd">←</span><span class="nv">trees</span><span class="sr">[</span><span class="o">⍋∪</span><span class="nv">roots</span><span class="sr">]</span><span class="w">    </span><span class="c1">⍝ correct order of trees</span>
+<span class="o">⊢</span><span class="nv">data</span><span class="w"> </span><span class="kd">←</span><span class="nv">data</span><span class="w"> </span><span class="sr">[</span><span class="o">⍋∪</span><span class="nv">roots</span><span class="sr">]</span><span class="w">    </span><span class="c1">⍝ correct order of data</span>
+<span class="nv">data</span><span class="w"> </span><span class="nv">PPV</span><span class="na">¨</span><span class="nv">trees</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">8 2 12 14
+</pre></div><div class="output text_html"><pre class="language-APL">┌─────────┬─────┬───────────┬───────┐
+│0 0 0 2 2│2 2 2│3 4 5 3 3 3│3 3 2 2│
+└─────────┴─────┴───────────┴───────┘
+</pre></div><div class="output text_html"><pre class="language-APL">┌─────┬───┬──────┬────┐
+│abcde│ghf│jlnikm│qrop│
+└─────┴───┴──────┴────┘
+</pre></div><div class="output text_html"><pre class="language-APL">┌───────┬─────┬───────┬─────┐
+│┌─────┐│┌───┐│┌─────┐│┌───┐│
+││  a  │││ f │││  i  │││ o ││
+││┌─┴┐ │││┌┴┐│││┌─┼─┐│││ │ ││
+││b  c │││g h│││j k m│││ p ││
+││  ┌┴┐││└───┘││  │ ││││┌┴┐││
+││  d e││     ││  l n│││q r││
+│└─────┘│     │└─────┘│└───┘│
+└───────┴─────┴───────┴─────┘
+</pre></div></div>
+</div>
+</section>
+<section id="challenge">
+<h2>Challenge<a class="headerlink" href="#challenge" title="Link to this heading">#</a></h2>
+<p><strong>Challenge:</strong> Write a function that, given a parent vector representing a forest, joins each tree in the forest under one new root node.</p>
+<p><strong>Solution:</strong></p>
+<div class="cell tag_hide-cell tag_remove-output docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell content</span>
+<span class="expanded">Hide code cell content</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="w"> </span><span class="kt">{</span><span class="m">0</span><span class="o">,</span><span class="p">(</span><span class="bp">⍵</span><span class="o">≠⍳≢</span><span class="bp">⍵</span><span class="p">)</span><span class="o">×</span><span class="m">1</span><span class="o">+</span><span class="bp">⍵</span><span class="kt">}</span>
+<span class="c1">⍝ │││      │└─┴─ offset to adjust for new root</span>
+<span class="c1">⍝ ││└──────┴──── set old roots to point to 0 (which we&#39;re about to add)</span>
+<span class="c1">⍝ └┴──────────── add new root the old roots now point to</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -420,16 +731,16 @@ document.write(`
         },
         codeMirrorConfig: {
             theme: "abcdef",
-            mode: "python"
+            mode: "dyalog_apl"
         },
         kernelOptions: {
-            name: "python3",
+            name: "dyalog_apl",
             path: "./trees"
         },
         predefinedOutput: true
     }
     </script>
-    <script>kernelName = 'python3'</script>
+    <script>kernelName = 'dyalog_apl'</script>
 
                 </article>
               
@@ -465,6 +776,23 @@ document.write(`
             </div>
             
             
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#planting-forests">Planting Forests</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deforestation">Deforestation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#challenge">Challenge</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>

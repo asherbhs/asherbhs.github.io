@@ -676,11 +676,13 @@ parent: 0 0 1 2 2 1 6 6 7 7 7 0
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">p</span><span class="w"> </span><span class="nv">I</span><span class="na">⍣</span><span class="o">≡</span><span class="nv">p</span>
+<span class="nv">I</span><span class="na">⍣</span><span class="o">≡</span><span class="na">⍨</span><span class="nv">p</span><span class="w">     </span><span class="c1">⍝ cute but a little less clear</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output text_html"><pre class="language-APL">0 0 0 0 0 0 0 0 0 0 0 0
+</pre></div><div class="output text_html"><pre class="language-APL">0 0 0 0 0 0 0 0 0 0 0 0
 </pre></div></div>
 </div>
 <p>Let’s say we want to find all the nodes which are a descendant of node <span class="math notranslate nohighlight">\(6\)</span>. We can use the same process as in the above code, and use the <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> operator to prevent the indexing from going above node <span class="math notranslate nohighlight">\(6\)</span> each time:</p>
@@ -1072,7 +1074,7 @@ parent: 0 0 1 2 2 1 6 6 7 7 7 0
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="c1">⍝ finding roots</span>
-<span class="p">(</span><span class="nv">p</span><span class="w"> </span><span class="nv">I</span><span class="na">⍣</span><span class="o">≡</span><span class="nv">p</span><span class="p">)</span><span class="w"> </span><span class="nv">PPV</span><span class="w"> </span><span class="nv">p</span>
+<span class="p">(</span><span class="nv">I</span><span class="na">⍣</span><span class="o">≡</span><span class="na">⍨</span><span class="nv">p</span><span class="p">)</span><span class="w"> </span><span class="nv">PPV</span><span class="w"> </span><span class="nv">p</span>
 </pre></div>
 </div>
 </div>

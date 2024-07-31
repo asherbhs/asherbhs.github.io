@@ -251,9 +251,22 @@ Depths←{p←⍵
 
 Remember: `depths` is not in DFPT order! Our next task will be to put it back in that order to fully recover the depth vector.
 
-````{admonition} Challenge
-Can you change the initial conditions of our method so that we can skip the first iteration?
-````
+**Challenge:** Can you change the initial conditions of our method so that we can skip the first iteration?
+
+**Solution:**
+
+```{code-cell}
+:tags: [hide-cell, remove-output]
+Depths←{p←⍵
+    depths←p≠⍳≢p    ⍝ skip the first iteration by incrementing non-roots up-front
+    _←{
+        q←p[⍵]
+        depths+←⍵≠q
+        q
+    }⍣≡p            ⍝ we can now skip straight to p
+    depths
+}
+```
 
 ## Depth Vector Ordering
 

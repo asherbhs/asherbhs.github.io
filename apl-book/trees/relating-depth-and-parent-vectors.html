@@ -715,9 +715,28 @@ d: 0 1 2 2 1 2 3 3 3 1
 </pre></div></div>
 </div>
 <p>Remember: <code class="docutils literal notranslate"><span class="pre">depths</span></code> is not in DFPT order! Our next task will be to put it back in that order to fully recover the depth vector.</p>
-<div class="admonition-challenge admonition">
-<p class="admonition-title">Challenge</p>
-<p>Can you change the initial conditions of our method so that we can skip the first iteration?</p>
+<p><strong>Challenge:</strong> Can you change the initial conditions of our method so that we can skip the first iteration?</p>
+<p><strong>Solution:</strong></p>
+<div class="cell tag_hide-cell tag_remove-output docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell content</span>
+<span class="expanded">Hide code cell content</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">Depths</span><span class="kd">←</span><span class="kt">{</span><span class="nv">p</span><span class="kd">←</span><span class="bp">⍵</span>
+<span class="w">    </span><span class="nv">depths</span><span class="kd">←</span><span class="nv">p</span><span class="o">≠⍳≢</span><span class="nv">p</span><span class="w">    </span><span class="c1">⍝ skip the first iteration by incrementing non-roots up-front</span>
+<span class="w">    </span><span class="nv">_</span><span class="kd">←</span><span class="kt">{</span>
+<span class="w">        </span><span class="nv">q</span><span class="kd">←</span><span class="nv">p</span><span class="sr">[</span><span class="bp">⍵</span><span class="sr">]</span>
+<span class="w">        </span><span class="nv">depths</span><span class="o">+</span><span class="kd">←</span><span class="bp">⍵</span><span class="o">≠</span><span class="nv">q</span>
+<span class="w">        </span><span class="nv">q</span>
+<span class="w">    </span><span class="kt">}</span><span class="na">⍣</span><span class="o">≡</span><span class="nv">p</span><span class="w">            </span><span class="c1">⍝ we can now skip straight to p</span>
+<span class="w">    </span><span class="nv">depths</span>
+<span class="kt">}</span>
+</pre></div>
+</div>
+</div>
+</details>
 </div>
 </section>
 <section id="depth-vector-ordering">

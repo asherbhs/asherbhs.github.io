@@ -200,6 +200,7 @@ Since there is only one tree in this vector, all nodes have the same root - $0$.
 
 ```{code-cell}
 p I⍣≡p
+I⍣≡⍨p     ⍝ cute but a little less clear
 ```
 
 Let's say we want to find all the nodes which are a descendant of node $6$. We can use the same process as in the above code, and use the `@` operator to prevent the indexing from going above node $6$ each time:
@@ -431,7 +432,7 @@ Note that the output of PPV is a vector of character matrices, one for each tree
 
 ```{code-cell}
 ⍝ finding roots
-(p I⍣≡p) PPV p
+(I⍣≡⍨p) PPV p
 ```
 
 ```{code-cell}

@@ -412,6 +412,7 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-depth-vector-representation">The Depth Vector Representation</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-path-matrix-representation">The Path Matrix Representation</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-parent-vector-representation">The Parent Vector Representation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#challenge">Challenge</a></li>
 </ul>
             </nav>
         </div>
@@ -716,10 +717,10 @@ parent: 0 0 1 1 0 4 5 5 5 0
 <p>Notice that node <span class="math notranslate nohighlight">\(0\)</span>, as the root, has no parent. We could use some kind of sentinal value like <span class="math notranslate nohighlight">\(-1\)</span> to indicate that a node has no parent, but for reasons which will become clear as we work with this representation more, we instead have the root, node <span class="math notranslate nohighlight">\(0\)</span>, point to itself.</p>
 <p>Like the depth vector, the parent vector is extremely space efficient. Like the path matrix, it is not heavily constrained by ordering requirements. The nodes can be shuffled arbitrarily, so long as we update the parents in each place to reflect the suffling.</p>
 <p>This representation is suitable for most of our purposes, and it is the one we will focus on for the rest of the tutorial.</p>
-<div class="admonition-challenge admonition">
-<p class="admonition-title">Challenge</p>
-<p>To make sure you really understand each of these representations, draw yourself a small tree on paper, and then write out the depth vector, path matrix, and parent vector for that tree. As you figure these out, you will get an idea of what the APL interpreter is spending its time doing when working with these representations.</p>
-</div>
+</section>
+<section id="challenge">
+<h2>Challenge<a class="headerlink" href="#challenge" title="Link to this heading">#</a></h2>
+<p><strong>Challenge:</strong> To make sure you really understand each of these representations, draw yourself a small tree on paper, and then write out the depth vector, path matrix, and parent vector for that tree. As you figure these out, you will get an idea of what the APL interpreter is spending its time doing when working with these representations.</p>
 </section>
 </section>
 
@@ -792,6 +793,7 @@ parent: 0 0 1 1 0 4 5 5 5 0
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-depth-vector-representation">The Depth Vector Representation</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-path-matrix-representation">The Path Matrix Representation</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-parent-vector-representation">The Parent Vector Representation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#challenge">Challenge</a></li>
 </ul>
   </nav></div>
 

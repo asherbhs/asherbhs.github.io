@@ -23,12 +23,14 @@
         - [x] don't need to maintain dfpt order
         - [x] need to maintain sibling order if it matters for your operation
         - [x] invert
-- [ ] relationship to depth vector
-    - [ ] construction from depth vector
-    - [ ] finding depths
-    - [ ] imposing dfpt order
+- [x] relationship to depth vector
+    - [x] construction from depth vector
+    - [x] finding depths
+    - [x] imposing dfpt order
 - [ ] forests
     - [ ] join multiple into a forest
+        - join adjacently
+        - just concatenate extra data
     - [ ] split multiple into individual (deforest)
     - [ ] exercise: join all trees in a forest under 1 root: `{0,(⍵≠⍳≢⍵)×1+⍵}`
 - [ ] deletion

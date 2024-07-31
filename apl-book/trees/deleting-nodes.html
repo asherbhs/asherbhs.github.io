@@ -58,6 +58,8 @@
     <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'trees/deleting-nodes';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -409,6 +411,64 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="deleting-nodes">
 <h1>Deleting Nodes<a class="headerlink" href="#deleting-nodes" title="Link to this heading">#</a></h1>
+<p>One fundamental tree operation we haven’t covered yet is deleting nodes.</p>
+<p>We saw previously a way to select sub-trees of a tree with a mask. For instance given the following tree:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">p</span><span class="kd">←</span><span class="m">1</span><span class="w"> </span><span class="m">7</span><span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">7</span><span class="w"> </span><span class="m">6</span><span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="m">7</span><span class="w"> </span><span class="m">6</span><span class="w"> </span><span class="m">1</span>
+<span class="p">(</span><span class="o">⍳≢</span><span class="nv">p</span><span class="p">)</span><span class="w"> </span><span class="nv">PPV</span><span class="w"> </span><span class="nv">p</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">┌─────────┐
+│    7    │
+│   ┌┴───┐│
+│   1    4│
+│┌──┼──┐ ││
+│0  3  9 2│
+│   │     │
+│   6     │
+│  ┌┴┐    │
+│  5 8    │
+└─────────┘
+</pre></div></div>
+</div>
+<p>Say we want to delete node <span class="math notranslate nohighlight">\(3\)</span> and all of its descendants. We can mask all nodes which aren’t node <span class="math notranslate nohighlight">\(3\)</span> or one of its descendents using a method we’ve seen before.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="o">⊢</span><span class="nv">mask</span><span class="kd">←</span><span class="m">3</span><span class="o">≠</span><span class="nv">p</span><span class="w"> </span><span class="nv">I</span><span class="na">@</span><span class="kt">{</span><span class="bp">⍵</span><span class="o">≠</span><span class="m">3</span><span class="kt">}</span><span class="na">⍣</span><span class="o">≡⍳≢</span><span class="nv">p</span>
+<span class="nv">mask</span><span class="w"> </span><span class="nv">PPV</span><span class="w"> </span><span class="nv">p</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">1 1 1 0 1 0 0 1 0 1
+</pre></div><div class="output text_html"><pre class="language-APL">┌─────────┐
+│    1    │
+│   ┌┴───┐│
+│   1    1│
+│┌──┼──┐ ││
+│1  0  1 1│
+│   │     │
+│   0     │
+│  ┌┴┐    │
+│  0 0    │
+└─────────┘
+</pre></div></div>
+</div>
+<p>The first step will be to remove node <span class="math notranslate nohighlight">\(3\)</span> and its descendents from the parent vector using this mask.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">mask</span><span class="na">/</span><span class="nv">p</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">1 7 4 7 7 1
+</pre></div></div>
+</div>
+<p>Like so many times before, we’re now left with parent pointers which need correcting. The parent pointers we have now are pointing to nodes in the original <code class="docutils literal notranslate"><span class="pre">p</span></code>.</p>
 </section>
 
     <script type="text/x-thebe-config">
@@ -420,16 +480,16 @@ document.write(`
         },
         codeMirrorConfig: {
             theme: "abcdef",
-            mode: "python"
+            mode: "dyalog_apl"
         },
         kernelOptions: {
-            name: "python3",
+            name: "dyalog_apl",
             path: "./trees"
         },
         predefinedOutput: true
     }
     </script>
-    <script>kernelName = 'python3'</script>
+    <script>kernelName = 'dyalog_apl'</script>
 
                 </article>
               
