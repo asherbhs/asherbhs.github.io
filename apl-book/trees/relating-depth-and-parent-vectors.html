@@ -606,38 +606,40 @@ d: 0 1 2 2 1 2 3 3 3 1
 <p>Since we constructed this parent vector from a depth vector, it is already in DFPT order. To emphasise that the parent vector need not be in this order (and to give us something to do when we get the order back), we’re going to shuffle it.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">perm</span><span class="kd">←</span><span class="m">1</span><span class="w"> </span><span class="m">9</span><span class="w"> </span><span class="m">8</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="m">6</span><span class="w"> </span><span class="m">7</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="m">5</span><span class="w">    </span><span class="c1">⍝ an arbitrary permutation of the nodes</span>
-<span class="nv">p</span><span class="kd">←</span><span class="nv">perm</span><span class="o">⍳</span><span class="nv">p</span><span class="sr">[</span><span class="nv">perm</span><span class="sr">]</span>
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">perm</span><span class="kd">←</span><span class="m">3</span><span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">7</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">6</span><span class="w"> </span><span class="m">8</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="m">9</span><span class="w">    </span><span class="c1">⍝ an arbitrary(-ish) permutation of the nodes</span>
+<span class="o">⊢</span><span class="nv">p</span><span class="kd">←</span><span class="nv">perm</span><span class="o">⍳</span><span class="nv">p</span><span class="sr">[</span><span class="nv">perm</span><span class="sr">]</span>
 <span class="p">(</span><span class="o">⍳≢</span><span class="nv">p</span><span class="p">)</span><span class="w"> </span><span class="nv">PPV</span><span class="w"> </span><span class="nv">p</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><pre class="language-APL">┌───────────┐
-│     7     │
-│ ┌──┬┴──┐  │
-│ 0  1   4  │
-│┌┴┐     │  │
-│3 8     9  │
-│      ┌─┼─┐│
-│      2 5 6│
+<div class="output text_html"><pre class="language-APL">2 8 4 1 4 1 1 2 4 4
+</pre></div><div class="output text_html"><pre class="language-APL">┌───────────┐
+│     4     │
+│ ┌───┴┬───┐│
+│ 2    8   9│
+│┌┴┐   │    │
+│0 7   1    │
+│    ┌─┼─┐  │
+│    3 5 6  │
 └───────────┘
 </pre></div></div>
 </div>
+<p>Note that the particular shuffle we’ve chosen here preserves the order of siblings in the tree. If your use of trees depends on sibling order, you’ll want to make sure that any time your tree is re-ordered, the order of siblings is preserved.</p>
 <p>To find the depth of each of these nodes, we will repeatedly follow parent pointers until we reach a root. Once we do reach a root, the number of jumps it took to get there will be the depth of the node.</p>
-<p>Let’s use node <span class="math notranslate nohighlight">\(5\)</span> as an example. This node has depth <span class="math notranslate nohighlight">\(2\)</span>, which we can be sure of as two parental jumps reaches a root.</p>
+<p>Let’s use node <span class="math notranslate nohighlight">\(1\)</span> as an example. This node has depth <span class="math notranslate nohighlight">\(2\)</span>, which we can be sure of as two parental jumps reaches a root.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">p</span><span class="sr">[</span><span class="m">5</span><span class="sr">]</span><span class="w">          </span><span class="c1">⍝ depth ≥ 1 since 5 is not a root</span>
-<span class="nv">p</span><span class="sr">[</span><span class="nv">p</span><span class="sr">[</span><span class="m">5</span><span class="sr">]]</span><span class="w">       </span><span class="c1">⍝ depth ≥ 2 since p[5] is not a root</span>
-<span class="nv">p</span><span class="sr">[</span><span class="nv">p</span><span class="sr">[</span><span class="nv">p</span><span class="sr">[</span><span class="m">5</span><span class="sr">]]]</span><span class="w">    </span><span class="c1">⍝ depth = 2 since p[p[5]] is a root</span>
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">p</span><span class="sr">[</span><span class="m">1</span><span class="sr">]</span><span class="w">          </span><span class="c1">⍝ depth ≥ 1 since 1 is not a root</span>
+<span class="nv">p</span><span class="sr">[</span><span class="nv">p</span><span class="sr">[</span><span class="m">1</span><span class="sr">]]</span><span class="w">       </span><span class="c1">⍝ depth ≥ 2 since p[1] is not a root</span>
+<span class="nv">p</span><span class="sr">[</span><span class="nv">p</span><span class="sr">[</span><span class="nv">p</span><span class="sr">[</span><span class="m">1</span><span class="sr">]]]</span><span class="w">    </span><span class="c1">⍝ depth = 2 since p[p[4]] is a root</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><pre class="language-APL">9
+<div class="output text_html"><pre class="language-APL">8
 </pre></div><div class="output text_html"><pre class="language-APL">4
-</pre></div><div class="output text_html"><pre class="language-APL">7
+</pre></div><div class="output text_html"><pre class="language-APL">4
 </pre></div></div>
 </div>
 <p>Since we’re traversing the tree until the parent does not change, we can automate this repetition with <code class="docutils literal notranslate"><span class="pre">⍣≡</span></code> to find the depth of any particular node.</p>
@@ -648,13 +650,13 @@ d: 0 1 2 2 1 2 3 3 3 1
 <span class="w">    </span><span class="nv">q</span><span class="kd">←</span><span class="nv">p</span><span class="sr">[</span><span class="bp">⍵</span><span class="sr">]</span><span class="w">        </span><span class="c1">⍝ parent of current node</span>
 <span class="w">    </span><span class="nv">depth</span><span class="o">+</span><span class="kd">←</span><span class="bp">⍵</span><span class="o">≠</span><span class="nv">q</span><span class="w">    </span><span class="c1">⍝ increment depth if not a root</span>
 <span class="w">    </span><span class="nv">q</span><span class="w">             </span><span class="c1">⍝╶┬╴continue until p[⍵]≡⍵</span>
-<span class="kt">}</span><span class="na">⍣</span><span class="o">≡</span><span class="m">5</span><span class="w">              </span><span class="c1">⍝╶┘</span>
+<span class="kt">}</span><span class="na">⍣</span><span class="o">≡</span><span class="m">1</span><span class="w">              </span><span class="c1">⍝╶┘</span>
 <span class="nv">depth</span><span class="w">             </span><span class="c1">⍝ node 5 has depth 2</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><pre class="language-APL">3
+<div class="output text_html"><pre class="language-APL">2
 </pre></div></div>
 </div>
 <p>This method can be easily extended to find the depths of all nodes at once.</p>
@@ -672,15 +674,15 @@ d: 0 1 2 2 1 2 3 3 3 1
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><pre class="language-APL">1 1 3 2 1 3 3 0 2 2
+<div class="output text_html"><pre class="language-APL">2 2 1 3 0 3 3 2 1 1
 </pre></div><div class="output text_html"><pre class="language-APL">┌───────────┐
 │     0     │
-│ ┌──┬┴──┐  │
-│ 1  1   1  │
-│┌┴┐     │  │
-│2 2     2  │
-│      ┌─┼─┐│
-│      3 3 3│
+│ ┌───┴┬───┐│
+│ 1    1   1│
+│┌┴┐   │    │
+│2 2   2    │
+│    ┌─┼─┐  │
+│    3 3 3  │
 └───────────┘
 </pre></div></div>
 </div>
@@ -703,12 +705,12 @@ d: 0 1 2 2 1 2 3 3 3 1
 <div class="cell_output docutils container">
 <div class="output text_html"><pre class="language-APL">┌───────────┐
 │     0     │
-│ ┌──┬┴──┐  │
-│ 1  1   1  │
-│┌┴┐     │  │
-│2 2     2  │
-│      ┌─┼─┐│
-│      3 3 3│
+│ ┌───┴┬───┐│
+│ 1    1   1│
+│┌┴┐   │    │
+│2 2   2    │
+│    ┌─┼─┐  │
+│    3 3 3  │
 └───────────┘
 </pre></div></div>
 </div>
@@ -716,37 +718,176 @@ d: 0 1 2 2 1 2 3 3 3 1
 <div class="admonition-challenge admonition">
 <p class="admonition-title">Challenge</p>
 <p>Can you change the initial conditions of our method so that we can skip the first iteration?</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>:tags: [hidden-cell]
-
-depths←p≠⍳≢p    ⍝ start with 1 depth for non-roots
-_←{
-    q←p[⍵]
-    depths+←⍵≠q
-    q
-}⍣≡p            ⍝ start at parent immediately
-</pre></div>
-</div>
 </div>
 </section>
 <section id="depth-vector-ordering">
 <h2>Depth Vector Ordering<a class="headerlink" href="#depth-vector-ordering" title="Link to this heading">#</a></h2>
-<p>Having recovered the depths of each node, the next step fully reconstructing the depth vector for a tree is imposing the DFPT ordering. To do this, we’re going to augment our method for find depths to build up the path matrix for the tree as we go. We can then use the paths to find the DFPT ordering.</p>
-<p>To begin with, let’s initialise an empty path matrix.</p>
+<p>Having recovered the depths of each node, the next step fully reconstructing the depth vector for a tree is imposing the DFPT ordering. To do this, we’re going to augment our method for find depths to build up a kind of path matrix for the tree as we go. We can then use the paths to find the DFPT ordering.</p>
+<p>To begin with, let’s initialise an empty matrix.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="o">⊢</span><span class="nv">paths</span><span class="kd">←</span><span class="p">(</span><span class="o">⍳≢</span><span class="nv">p</span><span class="p">)</span><span class="m">0</span><span class="o">⍴</span><span class="no">⍬</span>
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">paths</span><span class="kd">←</span><span class="p">(</span><span class="o">≢</span><span class="nv">p</span><span class="p">)</span><span class="m">0</span><span class="o">⍴</span><span class="no">⍬</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now, as we traverse the tree to find depths, we can also record the ancestors found at each iteration into <code class="docutils literal notranslate"><span class="pre">paths</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">depths</span><span class="kd">←</span><span class="p">(</span><span class="o">≢</span><span class="nv">p</span><span class="p">)</span><span class="o">⍴</span><span class="m">0</span>
+<span class="nv">_</span><span class="kd">←</span><span class="kt">{</span>
+<span class="w">    </span><span class="nv">paths</span><span class="o">,</span><span class="kd">←</span><span class="bp">⍵</span><span class="w">       </span><span class="c1">⍝ record the nodes found at this iteration</span>
+<span class="w">    </span><span class="nv">q</span><span class="kd">←</span><span class="nv">p</span><span class="sr">[</span><span class="bp">⍵</span><span class="sr">]</span>
+<span class="w">    </span><span class="nv">depths</span><span class="o">+</span><span class="kd">←</span><span class="bp">⍵</span><span class="o">≠</span><span class="nv">q</span>
+<span class="w">    </span><span class="nv">q</span>
+<span class="kt">}</span><span class="na">⍣</span><span class="o">≡⍳≢</span><span class="nv">p</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now, if we look at <code class="docutils literal notranslate"><span class="pre">paths</span></code>, we can see that the first column is all the nodes in the tree, the second column is their parents, and so on.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">paths</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DOMAIN ERROR
-      ⊢paths←(⍳≢p)0⍴⍬
-                   ∧
+<div class="output text_html"><pre class="language-APL">0 2 4 4
+1 8 4 4
+2 4 4 4
+3 1 8 4
+4 4 4 4
+5 1 8 4
+6 1 8 4
+7 2 4 4
+8 4 4 4
+9 4 4 4
+</pre></div></div>
+</div>
+<p>Each row records a path from node to root, with padding at the end for shallow nodes. We a little effort, we can extract the paths from root to node, without padding.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="o">⍪</span><span class="nv">paths</span><span class="kd">←</span><span class="o">⌽</span><span class="na">¨</span><span class="p">(</span><span class="nv">depths</span><span class="o">+</span><span class="m">1</span><span class="p">)</span><span class="o">⊂</span><span class="na">⍤</span><span class="o">↑</span><span class="na">⍤</span><span class="m">¯1</span><span class="o">⊢</span><span class="nv">paths</span>
+<span class="c1">⍝      ││└───────────┴─ there are depths[i]+1 nodes on the path from i to the root</span>
+<span class="c1">⍝      └┴────────────── get root → node rather than node → root</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">┌───────┐
+│4 2 0  │
+├───────┤
+│4 8 1  │
+├───────┤
+│4 2    │
+├───────┤
+│4 8 1 3│
+├───────┤
+│4      │
+├───────┤
+│4 8 1 5│
+├───────┤
+│4 8 1 6│
+├───────┤
+│4 2 7  │
+├───────┤
+│4 8    │
+├───────┤
+│4 9    │
+└───────┘
+</pre></div></div>
+</div>
+<p>If we look again at our tree, and list out the first few paths in the DFPT of it, we notice an interesting pattern.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">⍳≢</span><span class="nv">p</span><span class="p">)</span><span class="w"> </span><span class="nv">PPV</span><span class="w"> </span><span class="nv">p</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">┌───────────┐
+│     4     │
+│ ┌───┴┬───┐│
+│ 2    8   9│
+│┌┴┐   │    │
+│0 7   1    │
+│    ┌─┼─┐  │
+│    3 5 6  │
+└───────────┘
+</pre></div></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>4
+4 → 2
+4 → 2 → 0
+4 → 2 → 7
+4 → 8
+4 → 8 → 1
+...
+</pre></div>
+</div>
+<p>In the DFPT, the paths are ordered first by the size of the index in each place (<span class="math notranslate nohighlight">\(0&lt;7\)</span>, <span class="math notranslate nohighlight">\(2&lt;8\)</span>, etc), and then by the length of the whole paths. This is exacly a <a class="reference external" href="https://en.wikipedia.org/wiki/Lexicographic_order">lexicographic ordering</a> of the paths. Fortunately for us, this is also the ordering which <code class="docutils literal notranslate"><span class="pre">⍋</span></code> uses to grade arrays. Therefore, finding the DFPT order of the nodes is as simple as <code class="docutils literal notranslate"><span class="pre">⍋</span></code>ing the paths.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="o">⍪</span><span class="nv">paths</span><span class="sr">[</span><span class="o">⍋</span><span class="nv">paths</span><span class="sr">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">┌───────┐
+│4      │
+├───────┤
+│4 2    │
+├───────┤
+│4 2 0  │
+├───────┤
+│4 2 7  │
+├───────┤
+│4 8    │
+├───────┤
+│4 8 1  │
+├───────┤
+│4 8 1 3│
+├───────┤
+│4 8 1 5│
+├───────┤
+│4 8 1 6│
+├───────┤
+│4 9    │
+└───────┘
+</pre></div></div>
+</div>
+<p>Using this order to rearrange the depths of the nodes gives us exactly the depth vector for our tree.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">depths</span><span class="sr">[</span><span class="o">⍋</span><span class="nv">paths</span><span class="sr">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">0 1 2 2 1 2 3 3 3 1
+</pre></div></div>
+</div>
+<p>Huzzah! This is the depth vector we started with at the top of the page.</p>
+<p>As we’ll see <a class="reference internal" href="working-with-json.html"><span class="std std-doc">later</span></a>, we often have other vectors of data associated with our trees. When we find the depth vector of a tree, we will also want to re-order this extra data so that it still lines up. Therefore, when we wrap this method up in a dfn, we will have it return the depths and the ordering separetely, allowing the caller to use the ordering to shuffle any extra data they like.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">ParentToDepth</span><span class="kd">←</span><span class="kt">{</span>
+<span class="w">    </span><span class="nv">paths</span><span class="kd">←</span><span class="p">(</span><span class="o">≢</span><span class="nv">p</span><span class="p">)</span><span class="m">0</span><span class="o">⍴</span><span class="no">⍬</span>
+<span class="w">    </span><span class="nv">depths</span><span class="kd">←</span><span class="p">(</span><span class="o">≢</span><span class="nv">p</span><span class="p">)</span><span class="o">⍴</span><span class="m">0</span>
+<span class="w">    </span><span class="nv">_</span><span class="kd">←</span><span class="kt">{</span>
+<span class="w">        </span><span class="nv">paths</span><span class="o">,</span><span class="kd">←</span><span class="bp">⍵</span>
+<span class="w">        </span><span class="nv">q</span><span class="kd">←</span><span class="nv">p</span><span class="sr">[</span><span class="bp">⍵</span><span class="sr">]</span>
+<span class="w">        </span><span class="nv">depths</span><span class="o">+</span><span class="kd">←</span><span class="bp">⍵</span><span class="o">≠</span><span class="nv">q</span>
+<span class="w">        </span><span class="nv">q</span>
+<span class="w">    </span><span class="kt">}</span><span class="na">⍣</span><span class="o">≡⍳≢</span><span class="nv">p</span>
+<span class="w">    </span><span class="nv">order</span><span class="kd">←</span><span class="o">⍋⌽</span><span class="na">¨</span><span class="p">(</span><span class="nv">depths</span><span class="o">+</span><span class="m">1</span><span class="p">)</span><span class="o">⊂</span><span class="na">⍤</span><span class="o">↑</span><span class="na">⍤</span><span class="m">¯1</span><span class="o">⊢</span><span class="nv">paths</span>
+<span class="w">    </span><span class="nv">depths</span><span class="w"> </span><span class="nv">order</span>
+<span class="kt">}</span>
 </pre></div>
 </div>
 </div>
 </div>
-<p>Now, as we traverse the tree as normal, we also record the ancestors found at each iteration and record these in the path matrix.</p>
 </section>
 </section>
 

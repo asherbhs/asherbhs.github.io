@@ -192,19 +192,21 @@ Take our current tree:
 Since we constructed this parent vector from a depth vector, it is already in DFPT order. To emphasise that the parent vector need not be in this order (and to give us something to do when we get the order back), we're going to shuffle it.
 
 ```{code-cell}
-perm←1 9 8 2 4 6 7 0 3 5    ⍝ an arbitrary permutation of the nodes
-p←perm⍳p[perm]
+perm←3 5 1 7 0 6 8 2 4 9    ⍝ an arbitrary(-ish) permutation of the nodes
+⊢p←perm⍳p[perm]
 (⍳≢p) PPV p
 ```
 
+Note that the particular shuffle we've chosen here preserves the order of siblings in the tree. If your use of trees depends on sibling order, you'll want to make sure that any time your tree is re-ordered, the order of siblings is preserved.
+
 To find the depth of each of these nodes, we will repeatedly follow parent pointers until we reach a root. Once we do reach a root, the number of jumps it took to get there will be the depth of the node.
 
-Let's use node $5$ as an example. This node has depth $2$, which we can be sure of as two parental jumps reaches a root.
+Let's use node $1$ as an example. This node has depth $2$, which we can be sure of as two parental jumps reaches a root.
 
 ```{code-cell}
-p[5]          ⍝ depth ≥ 1 since 5 is not a root
-p[p[5]]       ⍝ depth ≥ 2 since p[5] is not a root
-p[p[p[5]]]    ⍝ depth = 2 since p[p[5]] is a root
+p[1]          ⍝ depth ≥ 1 since 1 is not a root
+p[p[1]]       ⍝ depth ≥ 2 since p[1] is not a root
+p[p[p[1]]]    ⍝ depth = 2 since p[p[4]] is a root
 ```
 
 Since we're traversing the tree until the parent does not change, we can automate this repetition with `⍣≡` to find the depth of any particular node.
@@ -215,7 +217,7 @@ _←{
     q←p[⍵]        ⍝ parent of current node
     depth+←⍵≠q    ⍝ increment depth if not a root
     q             ⍝╶┬╴continue until p[⍵]≡⍵
-}⍣≡5              ⍝╶┘
+}⍣≡1              ⍝╶┘
 depth             ⍝ node 5 has depth 2
 ```
 
@@ -251,27 +253,87 @@ Remember: `depths` is not in DFPT order! Our next task will be to put it back in
 
 ````{admonition} Challenge
 Can you change the initial conditions of our method so that we can skip the first iteration?
-
-```
-:tags: [hidden-cell]
-
-depths←p≠⍳≢p    ⍝ start with 1 depth for non-roots
-_←{
-    q←p[⍵]
-    depths+←⍵≠q
-    q
-}⍣≡p            ⍝ start at parent immediately
-```
 ````
 
 ## Depth Vector Ordering
 
-Having recovered the depths of each node, the next step fully reconstructing the depth vector for a tree is imposing the DFPT ordering. To do this, we're going to augment our method for find depths to build up the path matrix for the tree as we go. We can then use the paths to find the DFPT ordering.
+Having recovered the depths of each node, the next step fully reconstructing the depth vector for a tree is imposing the DFPT ordering. To do this, we're going to augment our method for find depths to build up a kind of path matrix for the tree as we go. We can then use the paths to find the DFPT ordering.
 
-To begin with, let's initialise an empty path matrix.
+To begin with, let's initialise an empty matrix.
 
 ```{code-cell}
-⊢paths←(⍳≢p)0⍴⍬
+paths←(≢p)0⍴⍬
 ```
 
-Now, as we traverse the tree as normal, we also record the ancestors found at each iteration and record these in the path matrix.
+Now, as we traverse the tree to find depths, we can also record the ancestors found at each iteration into `paths`.
+
+```{code-cell}
+depths←(≢p)⍴0
+_←{
+    paths,←⍵       ⍝ record the nodes found at this iteration
+    q←p[⍵]
+    depths+←⍵≠q
+    q
+}⍣≡⍳≢p
+```
+
+Now, if we look at `paths`, we can see that the first column is all the nodes in the tree, the second column is their parents, and so on.
+
+```{code-cell}
+paths
+```
+
+Each row records a path from node to root, with padding at the end for shallow nodes. We a little effort, we can extract the paths from root to node, without padding.
+
+```{code-cell}
+⍪paths←⌽¨(depths+1)⊂⍤↑⍤¯1⊢paths
+⍝      ││└───────────┴─ there are depths[i]+1 nodes on the path from i to the root
+⍝      └┴────────────── get root → node rather than node → root
+```
+
+If we look again at our tree, and list out the first few paths in the DFPT of it, we notice an interesting pattern.
+
+```{code-cell}
+(⍳≢p) PPV p
+```
+
+```
+4
+4 → 2
+4 → 2 → 0
+4 → 2 → 7
+4 → 8
+4 → 8 → 1
+...
+```
+
+In the DFPT, the paths are ordered first by the size of the index in each place ($0<7$, $2<8$, etc), and then by the length of the whole paths. This is exacly a [lexicographic ordering](https://en.wikipedia.org/wiki/Lexicographic_order) of the paths. Fortunately for us, this is also the ordering which `⍋` uses to grade arrays. Therefore, finding the DFPT order of the nodes is as simple as `⍋`ing the paths.
+
+```{code-cell}
+⍪paths[⍋paths]
+```
+
+Using this order to rearrange the depths of the nodes gives us exactly the depth vector for our tree.
+
+```{code-cell}
+depths[⍋paths]
+```
+
+Huzzah! This is the depth vector we started with at the top of the page.
+
+As we'll see [later](working-with-json.md), we often have other vectors of data associated with our trees. When we find the depth vector of a tree, we will also want to re-order this extra data so that it still lines up. Therefore, when we wrap this method up in a dfn, we will have it return the depths and the ordering separetely, allowing the caller to use the ordering to shuffle any extra data they like.
+
+```{code-cell}
+ParentToDepth←{
+    paths←(≢p)0⍴⍬
+    depths←(≢p)⍴0
+    _←{
+        paths,←⍵
+        q←p[⍵]
+        depths+←⍵≠q
+        q
+    }⍣≡⍳≢p
+    order←⍋⌽¨(depths+1)⊂⍤↑⍤¯1⊢paths
+    depths order
+}
+```
