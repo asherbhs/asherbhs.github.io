@@ -509,7 +509,7 @@ mask:      0 0 0 1 0 1 1 0 1 0
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">q</span><span class="kd">←</span><span class="p">(</span><span class="o">~</span><span class="nv">mask</span><span class="p">)</span><span class="na">/</span><span class="nv">p</span><span class="w">          </span><span class="c1">⍝ delete unwanted nodes</span>
-<span class="m">1</span><span class="o">+</span><span class="p">(</span><span class="o">⍸</span><span class="nv">mask</span><span class="p">)</span><span class="o">⍸</span><span class="nv">q</span><span class="w">          </span><span class="c1">⍝ deleted nodes appearing before each parent</span>
+<span class="w">  </span><span class="m">1</span><span class="o">+</span><span class="p">(</span><span class="o">⍸</span><span class="nv">mask</span><span class="p">)</span><span class="o">⍸</span><span class="nv">q</span><span class="w">        </span><span class="c1">⍝ deleted nodes appearing before each parent</span>
 <span class="nv">q</span><span class="o">-</span><span class="m">1</span><span class="o">+</span><span class="p">(</span><span class="o">⍸</span><span class="nv">mask</span><span class="p">)</span><span class="o">⍸</span><span class="nv">q</span><span class="w">        </span><span class="c1">⍝ correcting the pointers</span>
 </pre></div>
 </div>
@@ -559,7 +559,7 @@ mask:      0 0 0 1 0 1 1 0 1 0
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="performance" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
-<p>Additionally, I ran some performance tests and found that the scan technique was faster for deforesting, while the technique described here was faster for the general task of deleting nodes.</p>
+<p>Additionally, I ran some performance tests and found that the scan technique was faster for deforesting, while the technique described here was faster for the general task of deleting sub-trees.</p>
 </aside>
 </aside>
 </section>

@@ -110,7 +110,7 @@ mask:      0 0 0 1 0 1 1 0 1 0
 
 We saw a similar situation when we were [extracting trees from forests](forests.md#deforestation), where parent pointers were offset too far. In that instance, we found the offsets to correct by with a `+\` on the mask of deleted nodes. We can use the same technique here, but for completeness, we're going to show another way[^performance].
 
-[^performance]: Additionally, I ran some performance tests and found that the scan technique was faster for deforesting, while the technique described here was faster for the general task of deleting nodes.
+[^performance]: Additionally, I ran some performance tests and found that the scan technique was faster for deforesting, while the technique described here was faster for the general task of deleting sub-trees.
 
 Firstly, let's find the indices of all the nodes being deleted.
 
@@ -130,7 +130,7 @@ This tells us exactly what to subtract in order to correct each parent pointer.
 
 ```{code-cell}
 q←(~mask)/p          ⍝ delete unwanted nodes
-1+(⍸mask)⍸q          ⍝ deleted nodes appearing before each parent
+  1+(⍸mask)⍸q        ⍝ deleted nodes appearing before each parent
 q-1+(⍸mask)⍸q        ⍝ correcting the pointers
 ```
 
