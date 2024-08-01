@@ -434,33 +434,33 @@ document.write(`
 └─────────┘
 </pre></div></div>
 </div>
-<p>Say we want to delete node <span class="math notranslate nohighlight">\(3\)</span> and all of its descendants. We can mask all nodes which aren’t node <span class="math notranslate nohighlight">\(3\)</span> or one of its descendents using a method we’ve seen before.</p>
+<p>Say we want to delete node <span class="math notranslate nohighlight">\(3\)</span> and all of its descendants. We can mask all nodes which are node <span class="math notranslate nohighlight">\(3\)</span> or one of its descendents using a method we’ve seen before.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="o">⊢</span><span class="nv">mask</span><span class="kd">←</span><span class="m">3</span><span class="o">≠</span><span class="nv">p</span><span class="w"> </span><span class="nv">I</span><span class="na">@</span><span class="kt">{</span><span class="bp">⍵</span><span class="o">≠</span><span class="m">3</span><span class="kt">}</span><span class="na">⍣</span><span class="o">≡⍳≢</span><span class="nv">p</span>
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="o">⊢</span><span class="nv">mask</span><span class="kd">←</span><span class="m">3</span><span class="o">=</span><span class="nv">p</span><span class="w"> </span><span class="nv">I</span><span class="na">@</span><span class="kt">{</span><span class="bp">⍵</span><span class="o">≠</span><span class="m">3</span><span class="kt">}</span><span class="na">⍣</span><span class="o">≡⍳≢</span><span class="nv">p</span>
 <span class="nv">mask</span><span class="w"> </span><span class="nv">PPV</span><span class="w"> </span><span class="nv">p</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><pre class="language-APL">1 1 1 0 1 0 0 1 0 1
+<div class="output text_html"><pre class="language-APL">0 0 0 1 0 1 1 0 1 0
 </pre></div><div class="output text_html"><pre class="language-APL">┌─────────┐
-│    1    │
+│    0    │
 │   ┌┴───┐│
-│   1    1│
+│   0    0│
 │┌──┼──┐ ││
-│1  0  1 1│
+│0  1  0 0│
 │   │     │
-│   0     │
+│   1     │
 │  ┌┴┐    │
-│  0 0    │
+│  1 1    │
 └─────────┘
 </pre></div></div>
 </div>
 <p>The first step will be to remove node <span class="math notranslate nohighlight">\(3\)</span> and its descendents from the parent vector using this mask.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">mask</span><span class="na">/</span><span class="nv">p</span>
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">~</span><span class="nv">mask</span><span class="p">)</span><span class="na">/</span><span class="nv">p</span>
 </pre></div>
 </div>
 </div>
@@ -468,7 +468,100 @@ document.write(`
 <div class="output text_html"><pre class="language-APL">1 7 4 7 7 1
 </pre></div></div>
 </div>
-<p>Like so many times before, we’re now left with parent pointers which need correcting. The parent pointers we have now are pointing to nodes in the original <code class="docutils literal notranslate"><span class="pre">p</span></code>.</p>
+<p>Like so many times before, we’re now left with parent pointers which need correcting. In the original <code class="docutils literal notranslate"><span class="pre">p</span></code>, a certain number of to-be-deleted nodes may have appeared before each node which was not deleted. After deleting the sub-tree, each node is therefore that many places farther back in the vector, and we need to correct the pointers to reflect that.</p>
+<p>For instance, there are <span class="math notranslate nohighlight">\(3\)</span> nodes which we will remove that appear before node <span class="math notranslate nohighlight">\(7\)</span> in <code class="docutils literal notranslate"><span class="pre">p</span></code>, so when the nodes are removed, node <span class="math notranslate nohighlight">\(7\)</span> will move to index <span class="math notranslate nohighlight">\(7-3=4\)</span>, and we need to update parent pointers accordingly.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>index:     0 1 2 3 4 5 6 7 8 9
+p:         1 7 4 1 7 6 3 7 6 1
+mask:      0 0 0 1 0 1 1 0 1 0
+                 ↑   ↑ ↑ ↑
+  to-be-deleted ─┴───┴─┘ │
+                   ┌─────┘
+                   ↓
+(~mask)/p: 1 7 4 7 7 1
+</pre></div>
+</div>
+<p>We saw a similar situation when we were <a class="reference internal" href="forests.html#deforestation"><span class="std std-ref">extracting trees from forests</span></a>, where parent pointers were offset too far. In that instance, we found the offsets to correct by with a <code class="docutils literal notranslate"><span class="pre">+\</span></code> on the mask of deleted nodes. We can use the same technique here, but for completeness, we’re going to show another way<a class="footnote-reference brackets" href="#performance" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>.</p>
+<p>Firstly, let’s find the indices of all the nodes being deleted.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="o">⍸</span><span class="nv">mask</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">3 5 6 8
+</pre></div></div>
+</div>
+<p>These indices define intervals, within which we know how many to-be-deleted nodes have appeared. For example, we know that <span class="math notranslate nohighlight">\(3\)</span> such nodes appear before node <span class="math notranslate nohighlight">\(7\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="m">1</span><span class="o">+</span><span class="p">(</span><span class="o">⍸</span><span class="nv">mask</span><span class="p">)</span><span class="o">⍸</span><span class="m">7</span><span class="w">    </span><span class="c1">⍝ 3 to-be-deleted nodes appear before node 7</span>
+<span class="c1">⍝ ││└───────┴───── in which interval does node 7 appear</span>
+<span class="c1">⍝ └┴────────────── using ⎕IO←0 means we have to make this adjustment</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">3
+</pre></div></div>
+</div>
+<p>This tells us exactly what to subtract in order to correct each parent pointer.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">q</span><span class="kd">←</span><span class="p">(</span><span class="o">~</span><span class="nv">mask</span><span class="p">)</span><span class="na">/</span><span class="nv">p</span><span class="w">          </span><span class="c1">⍝ delete unwanted nodes</span>
+<span class="m">1</span><span class="o">+</span><span class="p">(</span><span class="o">⍸</span><span class="nv">mask</span><span class="p">)</span><span class="o">⍸</span><span class="nv">q</span><span class="w">          </span><span class="c1">⍝ deleted nodes appearing before each parent</span>
+<span class="nv">q</span><span class="o">-</span><span class="m">1</span><span class="o">+</span><span class="p">(</span><span class="o">⍸</span><span class="nv">mask</span><span class="p">)</span><span class="o">⍸</span><span class="nv">q</span><span class="w">        </span><span class="c1">⍝ correcting the pointers</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">0 3 1 3 3 0
+</pre></div><div class="output text_html"><pre class="language-APL">1 4 3 4 4 1
+</pre></div></div>
+</div>
+<p>This correctly removes the whole sub-tree descending from node <span class="math notranslate nohighlight">\(3\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">PPV</span><span class="w"> </span><span class="nv">q</span><span class="o">-</span><span class="m">1</span><span class="o">+</span><span class="p">(</span><span class="o">⍸</span><span class="nv">mask</span><span class="p">)</span><span class="o">⍸</span><span class="nv">q</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">┌─────┐
+│  ∘  │
+│ ┌┴─┐│
+│ ∘  ∘│
+│┌┴┐ ││
+│∘ ∘ ∘│
+└─────┘
+</pre></div></div>
+</div>
+<p>We can put this all together into a tacit idiom we can easily reuse.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="w">    </span><span class="p">(</span><span class="o">⍸</span><span class="nv">mask</span><span class="p">)(</span><span class="o">⊢-</span><span class="m">1</span><span class="o">+⍸</span><span class="p">)(</span><span class="o">~</span><span class="nv">mask</span><span class="p">)</span><span class="na">/</span><span class="nv">p</span>
+<span class="nv">PPV</span><span class="w"> </span><span class="p">(</span><span class="o">⍸</span><span class="nv">mask</span><span class="p">)(</span><span class="o">⊢-</span><span class="m">1</span><span class="o">+⍸</span><span class="p">)(</span><span class="o">~</span><span class="nv">mask</span><span class="p">)</span><span class="na">/</span><span class="nv">p</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">1 4 3 4 4 1
+</pre></div><div class="output text_html"><pre class="language-APL">┌─────┐
+│  ∘  │
+│ ┌┴─┐│
+│ ∘  ∘│
+│┌┴┐ ││
+│∘ ∘ ∘│
+└─────┘
+</pre></div></div>
+</div>
+<hr class="footnotes docutils" />
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="performance" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>Additionally, I ran some performance tests and found that the scan technique was faster for deforesting, while the technique described here was faster for the general task of deleting nodes.</p>
+</aside>
+</aside>
 </section>
 
     <script type="text/x-thebe-config">

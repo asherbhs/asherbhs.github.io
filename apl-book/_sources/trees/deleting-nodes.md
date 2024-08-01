@@ -80,17 +80,69 @@ p←1 7 4 1 7 6 3 7 6 1
 (⍳≢p) PPV p
 ```
 
-Say we want to delete node $3$ and all of its descendants. We can mask all nodes which aren't node $3$ or one of its descendents using a method we've seen before.
+Say we want to delete node $3$ and all of its descendants. We can mask all nodes which are node $3$ or one of its descendents using a method we've seen before.
 
 ```{code-cell}
-⊢mask←3≠p I@{⍵≠3}⍣≡⍳≢p
+⊢mask←3=p I@{⍵≠3}⍣≡⍳≢p
 mask PPV p
 ```
 
 The first step will be to remove node $3$ and its descendents from the parent vector using this mask.
 
 ```{code-cell}
-mask/p
+(~mask)/p
 ```
 
-Like so many times before, we're now left with parent pointers which need correcting. The parent pointers we have now are pointing to nodes in the original `p`.
+Like so many times before, we're now left with parent pointers which need correcting. In the original `p`, a certain number of to-be-deleted nodes may have appeared before each node which was not deleted. After deleting the sub-tree, each node is therefore that many places farther back in the vector, and we need to correct the pointers to reflect that.
+
+For instance, there are $3$ nodes which we will remove that appear before node $7$ in `p`, so when the nodes are removed, node $7$ will move to index $7-3=4$, and we need to update parent pointers accordingly.
+
+```
+index:     0 1 2 3 4 5 6 7 8 9
+p:         1 7 4 1 7 6 3 7 6 1
+mask:      0 0 0 1 0 1 1 0 1 0
+                 ↑   ↑ ↑ ↑
+  to-be-deleted ─┴───┴─┘ │
+                   ┌─────┘
+                   ↓
+(~mask)/p: 1 7 4 7 7 1
+```
+
+We saw a similar situation when we were [extracting trees from forests](forests.md#deforestation), where parent pointers were offset too far. In that instance, we found the offsets to correct by with a `+\` on the mask of deleted nodes. We can use the same technique here, but for completeness, we're going to show another way[^performance].
+
+[^performance]: Additionally, I ran some performance tests and found that the scan technique was faster for deforesting, while the technique described here was faster for the general task of deleting nodes.
+
+Firstly, let's find the indices of all the nodes being deleted.
+
+```{code-cell}
+⍸mask
+```
+
+These indices define intervals, within which we know how many to-be-deleted nodes have appeared. For example, we know that $3$ such nodes appear before node $7$.
+
+```{code-cell}
+  1+(⍸mask)⍸7    ⍝ 3 to-be-deleted nodes appear before node 7
+⍝ ││└───────┴───── in which interval does node 7 appear
+⍝ └┴────────────── using ⎕IO←0 means we have to make this adjustment
+```
+
+This tells us exactly what to subtract in order to correct each parent pointer.
+
+```{code-cell}
+q←(~mask)/p          ⍝ delete unwanted nodes
+1+(⍸mask)⍸q          ⍝ deleted nodes appearing before each parent
+q-1+(⍸mask)⍸q        ⍝ correcting the pointers
+```
+
+This correctly removes the whole sub-tree descending from node $3$.
+
+```{code-cell}
+PPV q-1+(⍸mask)⍸q
+```
+
+We can put this all together into a tacit idiom we can easily reuse.
+
+```{code-cell}
+    (⍸mask)(⊢-1+⍸)(~mask)/p
+PPV (⍸mask)(⊢-1+⍸)(~mask)/p
+```

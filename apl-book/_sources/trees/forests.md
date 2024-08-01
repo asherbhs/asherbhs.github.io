@@ -144,13 +144,43 @@ The trouble with this is that the vectors we have are pointing to their parent i
 
 Each of the parents pointers are too large (in rare cases they are just right, but in general they are not correct) as they are offset by all the nodes in the `forest` vector which appeared before it, but are not present in the lone tree.
 
-For each group, we can find these offsets by counting how many nodes from a different tree appear before each place, with a scan. Then, we can subtract this count from the parent pointer for each node in the group, to correct them.
+Take the group `8 8 8`, in the `forest` vector, the parent pointers are set up like so:
+
+```
+        ┌──────────────────┐
+        │                  ↓
+forest: 8 8 2 12 12 12 2 2 8 14 14 2 12 2 14 14 12 12
+          │ └──6─nodes───┘ ↑
+          └────────────────┘
+```
+
+There are six nodes not in the tree which appear before the root node $8$ in the forest. Therefore, this node will appear at index $8-6=2$ in its own parent vector, and the parent pointers should be updated accordingly.
+
+```
+┌───┐
+│   ↓
+2 2 2
+  │ ↑
+  └─┘
+```
+
+For each tree, we can find the number of nodes outside the tree which appear before each node inside the tree with a scan. 
+
+```
+8 8 2 12 12 12 2 2 8 14 14 2 12  2 14 14 12 12    ⍝ original forest vector
+0 0 1  1  1  1 1 1 0  1  1 1  1  1  1  1  1  1    ⍝ nodes outside the tree
+0 0 1  2  3  4 5 6 6  7  8 9 10 11 12 13 14 15    ⍝ +\ of the above vector
+                   ↑
+        6 nodes before this place
+```
+
+We can use this correct the parent pointers for each group, and extract parent vectors for each tree in the forest.
 
 ```{code-cell}
- roots{      ~forest∊⍵    }⌸forest    ⍝ mask of nodes not in each group
+ roots{      ~forest∊⍵    }⌸forest    ⍝ mask of nodes outside the tree
  roots{    +\~forest∊⍵    }⌸forest    ⍝ how many nodes outside the tree appear before each parent
 ⍪roots{⊂  (+\~forest∊⍵)[⍵]}⌸forest    ⍝ restricted only to this tree
-⍪roots{⊂⍵-(+\~forest∊⍵)[⍵]}⌸forest    ⍝ correct the parent pointers
+⍪roots{⊂⍵-(+\~forest∊⍵)[⍵]}⌸forest    ⍝ use to correct the parent pointers
 ```
 
 This gives us exactly the trees we packed into the forest originally.

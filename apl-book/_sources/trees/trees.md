@@ -27,12 +27,12 @@
     - [x] construction from depth vector
     - [x] finding depths
     - [x] imposing dfpt order
-- [ ] forests
-    - [ ] join multiple into a forest
+- [x] forests
+    - [x] join multiple into a forest
         - join adjacently
         - just concatenate extra data
-    - [ ] split multiple into individual (deforest)
-    - [ ] exercise: join all trees in a forest under 1 root: `{0,(⍵≠⍳≢⍵)×1+⍵}`
+    - [x] split multiple into individual (deforest)
+    - [x] exercise: join all trees in a forest under 1 root: `{0,(⍵≠⍳≢⍵)×1+⍵}`
 - [ ] deletion
 - [ ] bottom-up acculumation
     - [ ] Lisp
@@ -56,6 +56,6 @@
 - [ ] small calculator as a larger example
     - point to co-dfns for more
 - [ ] leetcode problems
-    - [ ] [invert](https://leetcode.com/problems/invert-binary-tree/)
+    - [x] [invert](https://leetcode.com/problems/invert-binary-tree/)
     - [ ] [height balanced](https://leetcode.com/problems/balanced-binary-tree/)
     - [ ] [leaf similar](https://leetcode.com/problems/leaf-similar-trees/)
