@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=87e54e7c" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=bfa96906" />
@@ -191,10 +191,7 @@
 <li class="toctree-l1"><a class="reference internal" href="forests.html">Forests</a></li>
 <li class="toctree-l1"><a class="reference internal" href="deleting-nodes.html">Deleting Nodes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="bottom-up-aggregation.html">Bottom-Up Accumulation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="top-down-construction.html">Top-Down Construction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="working-with-json.html">Working with <code class="docutils literal notranslate"><span class="pre">⎕JSON</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="parsing.html">Parsing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="translations.html">Appendix: Translations</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Combinatorics</span></p>
 <ul class="nav bd-sidenav">
@@ -413,7 +410,7 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trimming-branches">Trimming Branches</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#finding-roots">Finding Roots</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#selecting-sub-trees">Selecting Sub-Trees</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#shuffling-nodes">Shuffling Nodes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#shuffling">Shuffling</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#favourite-children-ordering-siblings">Favourite Children (Ordering Siblings)</a><ul class="nav section-nav flex-column">
@@ -734,8 +731,8 @@ parent: 0 0 1 2 2 1 6 6 7 7 7 0
 </pre></div></div>
 </div>
 </section>
-<section id="shuffling-nodes">
-<h3>Shuffling Nodes<a class="headerlink" href="#shuffling-nodes" title="Link to this heading">#</a></h3>
+<section id="shuffling">
+<h3>Shuffling<a class="headerlink" href="#shuffling" title="Link to this heading">#</a></h3>
 <p>On the <a class="reference internal" href="representing-trees.html"><span class="std std-doc">previous page</span></a>, we used a little trick to properly correct the parent references in a path matrix after permuting the nodes. We’re going to use the same trick to permute parent vectors, and we’re going to actually show how it works.</p>
 <p>There are several reasons we may want to shuffle order of a parent vector. For instance, on the next page we’re going to take an arbitrarily ordered parent vector and impose the DFPT ordering on it.</p>
 <p>Importantly, when we shuffle a parent vector and correct the indices, the tree we’re representing doesn’t change at all. We take careful effort to make sure that when we’re finished, our new parent vector represents the same tree.</p>
@@ -1009,7 +1006,7 @@ parent: 0 0 1 2 2 1 6 6 7 7 7 0
 └───────────────┘
 </pre></div></div>
 </div>
-<p>This lets us check the results of the tree transformations we’ve done on this page:</p>
+<p>This let’s us check the results of the tree transformations we’ve done on this page:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="c1">⍝ children of nodes 1 and 6</span>
@@ -1203,7 +1200,7 @@ parent: 0 0 1 2 2 1 6 6 7 7 7 0
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trimming-branches">Trimming Branches</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#finding-roots">Finding Roots</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#selecting-sub-trees">Selecting Sub-Trees</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#shuffling-nodes">Shuffling Nodes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#shuffling">Shuffling</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#favourite-children-ordering-siblings">Favourite Children (Ordering Siblings)</a><ul class="nav section-nav flex-column">

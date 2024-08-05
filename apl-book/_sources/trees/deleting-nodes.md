@@ -137,7 +137,7 @@ q-1+(⍸mask)⍸q        ⍝ correcting the pointers
 This correctly removes the whole sub-tree descending from node $3$.
 
 ```{code-cell}
-PPV q-1+(⍸mask)⍸q
+((~mask)/⍳≢p) PPV q-1+(⍸mask)⍸q
 ```
 
 We can put this all together into a tacit idiom we can easily reuse.

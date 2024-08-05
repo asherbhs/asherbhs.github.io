@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=87e54e7c" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=bfa96906" />
@@ -191,10 +191,7 @@
 <li class="toctree-l1"><a class="reference internal" href="forests.html">Forests</a></li>
 <li class="toctree-l1"><a class="reference internal" href="deleting-nodes.html">Deleting Nodes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="bottom-up-aggregation.html">Bottom-Up Accumulation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="top-down-construction.html">Top-Down Construction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="working-with-json.html">Working with <code class="docutils literal notranslate"><span class="pre">⎕JSON</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="parsing.html">Parsing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="translations.html">Appendix: Translations</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Combinatorics</span></p>
 <ul class="nav bd-sidenav">
@@ -632,7 +629,7 @@ d: 0 1 2 2 1 2 3 3 3 1
 <div class="cell_input docutils container">
 <div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">p</span><span class="sr">[</span><span class="m">1</span><span class="sr">]</span><span class="w">          </span><span class="c1">⍝ depth ≥ 1 since 1 is not a root</span>
 <span class="nv">p</span><span class="sr">[</span><span class="nv">p</span><span class="sr">[</span><span class="m">1</span><span class="sr">]]</span><span class="w">       </span><span class="c1">⍝ depth ≥ 2 since p[1] is not a root</span>
-<span class="nv">p</span><span class="sr">[</span><span class="nv">p</span><span class="sr">[</span><span class="nv">p</span><span class="sr">[</span><span class="m">1</span><span class="sr">]]]</span><span class="w">    </span><span class="c1">⍝ depth = 2 since p[p[4]] is a root</span>
+<span class="nv">p</span><span class="sr">[</span><span class="nv">p</span><span class="sr">[</span><span class="nv">p</span><span class="sr">[</span><span class="m">1</span><span class="sr">]]]</span><span class="w">    </span><span class="c1">⍝ depth = 2 since p[p[1]] is a root</span>
 </pre></div>
 </div>
 </div>

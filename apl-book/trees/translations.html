@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=87e54e7c" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=bfa96906" />
@@ -61,8 +61,6 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'trees/translations';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Enumerative Combinatorics" href="../combinatorics/enumerative.html" />
-    <link rel="prev" title="Parsing" href="parsing.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -125,6 +123,8 @@
       
       
       
+        
+      
       <div class="bd-sidebar-primary bd-sidebar">
         
 
@@ -181,7 +181,7 @@
             </li>
         </ul>
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Trees</span></p>
-<ul class="current nav bd-sidenav">
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="representing-trees.html">Representing Trees</a></li>
 <li class="toctree-l1"><a class="reference internal" href="parent-vectors.html">Parent Vectors</a></li>
@@ -189,10 +189,7 @@
 <li class="toctree-l1"><a class="reference internal" href="forests.html">Forests</a></li>
 <li class="toctree-l1"><a class="reference internal" href="deleting-nodes.html">Deleting Nodes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="bottom-up-aggregation.html">Bottom-Up Accumulation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="top-down-construction.html">Top-Down Construction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="working-with-json.html">Working with <code class="docutils literal notranslate"><span class="pre">⎕JSON</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="parsing.html">Parsing</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Appendix: Translations</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Combinatorics</span></p>
 <ul class="nav bd-sidenav">
@@ -405,15 +402,20 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-operations">Basic Operations</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#finding-children">Finding Children</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#finding-leaves">Finding Leaves</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trimming-branches">Trimming Branches</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#finding-roots">Finding Roots</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#selecting-sub-trees">Selecting Sub-Trees</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mirroring">Mirroring</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#finding-children">Finding Children</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#finding-leaves">Finding Leaves</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#trimming-branches">Trimming Branches</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#finding-roots">Finding Roots</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#selecting-sub-trees">Selecting Sub-Trees</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#shuffling">Shuffling</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mirroring">Mirroring</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#depthtoparent">DepthToParent</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#depths">Depths</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parenttodepth">ParentToDepth</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#forest">Forest</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deforest">Deforest</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deleting">Deleting</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parenttonested">ParentToNested</a></li>
 </ul>
             </nav>
         </div>
@@ -428,10 +430,8 @@ document.write(`
   <section class="tex2jax_ignore mathjax_ignore" id="appendix-translations">
 <h1>Appendix: Translations<a class="headerlink" href="#appendix-translations" title="Link to this heading">#</a></h1>
 <p>While this tutorial is primarily targeted at intemediate APL users, this section includes translations of various code snippets into BQN, J, and K (K6) for the convenience of users of those languages. I do not use these languages nearly as frequently as APL, so there are more likely to be places for improvement, do let me know!</p>
-<section id="basic-operations">
-<h2>Basic Operations<a class="headerlink" href="#basic-operations" title="Link to this heading">#</a></h2>
 <section id="finding-children">
-<h3>Finding Children<a class="headerlink" href="#finding-children" title="Link to this heading">#</a></h3>
+<h2>Finding Children<a class="headerlink" href="#finding-children" title="Link to this heading">#</a></h2>
 <p><strong>APL:</strong></p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>⍸p∊i
 </pre></div>
@@ -450,7 +450,7 @@ document.write(`
 </div>
 </section>
 <section id="finding-leaves">
-<h3>Finding Leaves<a class="headerlink" href="#finding-leaves" title="Link to this heading">#</a></h3>
+<h2>Finding Leaves<a class="headerlink" href="#finding-leaves" title="Link to this heading">#</a></h2>
 <p><strong>APL:</strong></p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>~p∊⍨⍳≢p
 </pre></div>
@@ -469,7 +469,7 @@ document.write(`
 </div>
 </section>
 <section id="trimming-branches">
-<h3>Trimming Branches<a class="headerlink" href="#trimming-branches" title="Link to this heading">#</a></h3>
+<h2>Trimming Branches<a class="headerlink" href="#trimming-branches" title="Link to this heading">#</a></h2>
 <p><strong>APL:</strong></p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>i@i⊢p
 p[i]←i
@@ -489,7 +489,7 @@ p[i]←i
 </div>
 </section>
 <section id="finding-roots">
-<h3>Finding Roots<a class="headerlink" href="#finding-roots" title="Link to this heading">#</a></h3>
+<h2>Finding Roots<a class="headerlink" href="#finding-roots" title="Link to this heading">#</a></h2>
 <p><strong>APL:</strong></p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>I⍣≡⍨p
 </pre></div>
@@ -508,7 +508,7 @@ p[i]←i
 </div>
 </section>
 <section id="selecting-sub-trees">
-<h3>Selecting Sub-Trees<a class="headerlink" href="#selecting-sub-trees" title="Link to this heading">#</a></h3>
+<h2>Selecting Sub-Trees<a class="headerlink" href="#selecting-sub-trees" title="Link to this heading">#</a></h2>
 <p><strong>APL:</strong></p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>i∊⍨p I@{~⍵∊i}⍣≡⍳≢p
 </pre></div>
@@ -526,8 +526,27 @@ p[i]←i
 </pre></div>
 </div>
 </section>
+<section id="shuffling">
+<h2>Shuffling<a class="headerlink" href="#shuffling" title="Link to this heading">#</a></h2>
+<p><strong>APL:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>perm⍳p[perm]
+</pre></div>
+</div>
+<p><strong>BQN:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>perm⊐perm⊏p
+</pre></div>
+</div>
+<p><strong>J:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">perm</span> <span class="n">i</span><span class="o">.</span><span class="n">perm</span><span class="p">{</span><span class="n">p</span>
+</pre></div>
+</div>
+<p><strong>K:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>perm?p@perm
+</pre></div>
+</div>
+</section>
 <section id="mirroring">
-<h3>Mirroring<a class="headerlink" href="#mirroring" title="Link to this heading">#</a></h3>
+<h2>Mirroring<a class="headerlink" href="#mirroring" title="Link to this heading">#</a></h2>
 <p><strong>APL:</strong></p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>(¯1+≢-⌽)p
 </pre></div>
@@ -545,6 +564,57 @@ p[i]←i
 </pre></div>
 </div>
 </section>
+<section id="depthtoparent">
+<h2>DepthToParent<a class="headerlink" href="#depthtoparent" title="Link to this heading">#</a></h2>
+<p><strong>APL:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>DepthToParent←{d←⍵
+    p←⍳≢d
+    _←2{p[⍵]←⍺[⍺⍸⍵]}/⊂⍤⊢⌸d
+    p
+}
+</pre></div>
+</div>
+<p><strong>BQN:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>DepthToParent←{d←𝕩
+    p←↕≠d
+    {p(𝕨⊏˜¯1+𝕨⍋𝕩)⌾(𝕩⊸⊏)↩}´˘2↕d⊔↕≠d
+    p
+}
+</pre></div>
+</div>
+<p><strong>J:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">DepthToParent</span><span class="o">=</span><span class="p">:{{</span><span class="n">d</span><span class="o">=.</span><span class="n">y</span>
+    <span class="n">p</span><span class="o">=</span><span class="p">:</span><span class="n">i</span><span class="o">.</span><span class="c1">#d</span>
+    <span class="mi">2</span><span class="p">{{</span><span class="n">p</span><span class="o">=</span><span class="p">:</span><span class="n">p</span> <span class="n">y</span><span class="p">}</span><span class="o">~</span><span class="n">x</span><span class="p">{</span><span class="o">~</span><span class="n">_1</span><span class="o">+</span><span class="n">x</span> <span class="n">I</span><span class="o">.</span><span class="n">y</span><span class="p">}}</span><span class="o">&amp;&gt;/</span>\<span class="n">d</span><span class="o">&lt;@</span><span class="p">]</span><span class="o">/.</span><span class="n">i</span><span class="o">.</span><span class="c1">#d</span>
+    <span class="n">p</span>
+<span class="p">}}</span>
+</pre></div>
+</div>
+<p><strong>K:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>DepthToParent:{d:x
+    p::!#d
+    {p::@[p;y;:;x@x&#39;y]}/&#39;2&#39;:.=d
+    p}
+</pre></div>
+</div>
+</section>
+<section id="depths">
+<h2>Depths<a class="headerlink" href="#depths" title="Link to this heading">#</a></h2>
+</section>
+<section id="parenttodepth">
+<h2>ParentToDepth<a class="headerlink" href="#parenttodepth" title="Link to this heading">#</a></h2>
+</section>
+<section id="forest">
+<h2>Forest<a class="headerlink" href="#forest" title="Link to this heading">#</a></h2>
+</section>
+<section id="deforest">
+<h2>Deforest<a class="headerlink" href="#deforest" title="Link to this heading">#</a></h2>
+</section>
+<section id="deleting">
+<h2>Deleting<a class="headerlink" href="#deleting" title="Link to this heading">#</a></h2>
+</section>
+<section id="parenttonested">
+<h2>ParentToNested<a class="headerlink" href="#parenttonested" title="Link to this heading">#</a></h2>
 </section>
 </section>
 
@@ -578,24 +648,6 @@ p[i]←i
                 <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
-    <a class="left-prev"
-       href="parsing.html"
-       title="previous page">
-      <i class="fa-solid fa-angle-left"></i>
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Parsing</p>
-      </div>
-    </a>
-    <a class="right-next"
-       href="../combinatorics/enumerative.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Enumerative Combinatorics</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
-    </a>
 </div>
                 </footer>
               
@@ -612,15 +664,20 @@ p[i]←i
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-operations">Basic Operations</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#finding-children">Finding Children</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#finding-leaves">Finding Leaves</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trimming-branches">Trimming Branches</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#finding-roots">Finding Roots</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#selecting-sub-trees">Selecting Sub-Trees</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mirroring">Mirroring</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#finding-children">Finding Children</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#finding-leaves">Finding Leaves</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#trimming-branches">Trimming Branches</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#finding-roots">Finding Roots</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#selecting-sub-trees">Selecting Sub-Trees</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#shuffling">Shuffling</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mirroring">Mirroring</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#depthtoparent">DepthToParent</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#depths">Depths</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parenttodepth">ParentToDepth</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#forest">Forest</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deforest">Deforest</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deleting">Deleting</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parenttonested">ParentToNested</a></li>
 </ul>
   </nav></div>
 

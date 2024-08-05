@@ -22,7 +22,7 @@
     - [x] ordering
         - [x] don't need to maintain dfpt order
         - [x] need to maintain sibling order if it matters for your operation
-        - [x] invert
+        - [x] [invert](https://leetcode.com/problems/invert-binary-tree/)
 - [x] relationship to depth vector
     - [x] construction from depth vector
     - [x] finding depths
@@ -33,29 +33,28 @@
         - just concatenate extra data
     - [x] split multiple into individual (deforest)
     - [x] exercise: join all trees in a forest under 1 root: `{0,(⍵≠⍳≢⍵)×1+⍵}`
-- [ ] deletion
-- [ ] bottom-up acculumation
-    - [ ] Lisp
-        - using key
-        - without using key
-        - using a fold
-    - [ ] go back and look at `_pp_`
-    - [ ] challenges
-        - [ ] sum each tree in a forest
+- [x] deletion
+- [x] bottom-up acculumation
+    - [x] Lisp
+        - [x] using key
+        - [x] without using key
+        - [ ] using a fold
+    - [x] go back and look at `_pp_`
+    - [x] challenges
+        - [x] sum each tree in a forest
             - sanity check: sum of trees should equal sum of all values
             - bonus: find `(I⍣≡⍨p)+/⍤⊢⌸v`
-        - [ ] find height of every node in a tree
-- [ ] top-down construction
-    - [ ] Nary
-        - [ ] challenge: find Mary
-    - [ ] Collatz
-    - [ ] Leet as an example
+        - [x] find height of every node in a tree
 - [ ] manipulating json with matrix import ⎕json
     - grouping astronauts example
     - mention that ⎕xml uses a similar format
 - [ ] small calculator as a larger example
     - point to co-dfns for more
-- [ ] leetcode problems
-    - [x] [invert](https://leetcode.com/problems/invert-binary-tree/)
+- [ ] tidbits
+    - Mary
+    - Collatz
+    - Leet
     - [ ] [height balanced](https://leetcode.com/problems/balanced-binary-tree/)
     - [ ] [leaf similar](https://leetcode.com/problems/leaf-similar-trees/)
+- [ ] translations
+- [ ] leetcode problems

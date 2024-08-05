@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=87e54e7c" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=bfa96906" />
@@ -61,8 +61,8 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'trees/working-with-json';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Parsing" href="parsing.html" />
-    <link rel="prev" title="Top-Down Construction" href="top-down-construction.html" />
+    <link rel="next" title="Enumerative Combinatorics" href="../combinatorics/enumerative.html" />
+    <link rel="prev" title="Bottom-Up Accumulation" href="bottom-up-aggregation.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -189,10 +189,7 @@
 <li class="toctree-l1"><a class="reference internal" href="forests.html">Forests</a></li>
 <li class="toctree-l1"><a class="reference internal" href="deleting-nodes.html">Deleting Nodes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="bottom-up-aggregation.html">Bottom-Up Accumulation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="top-down-construction.html">Top-Down Construction</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Working with <code class="docutils literal notranslate"><span class="pre">⎕JSON</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="parsing.html">Parsing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="translations.html">Appendix: Translations</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Combinatorics</span></p>
 <ul class="nav bd-sidenav">
@@ -409,6 +406,668 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="working-with-json">
 <h1>Working with <code class="docutils literal notranslate"><span class="pre">⎕JSON</span></code><a class="headerlink" href="#working-with-json" title="Link to this heading">#</a></h1>
+<p>We’ve laboriously gone through many different ways to work with parent vectors, but we’re yet to do any ‘real work’ with them. This page will cover an interesting application of the techniques we’ve learned so far. We’re going to look at manipulating <a class="reference external" href="https://www.json.org/json-en.html">JSON</a>-formatted data, making use of Dyalog APL’s built-in <code class="docutils literal notranslate"><span class="pre">⎕JSON</span></code>.</p>
+<p>There’s a wonderful little API which returns some JSON describing every person currently in space.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="sr">]</span><span class="nv">load</span><span class="w"> </span><span class="nv">HttpCommand</span>
+<span class="nv">json</span><span class="kd">←</span><span class="p">(</span><span class="nv">HttpCommand</span><span class="na">.</span><span class="nv">Get</span><span class="w"> </span><span class="s1">&#39;http://api.open-notify.org/astros.json&#39;</span><span class="p">)</span><span class="na">.</span><span class="nv">Data</span>
+<span class="nf">⎕JSON⎕OPT</span><span class="s1">&#39;Compact&#39;</span><span class="w"> </span><span class="m">0</span><span class="nf">⎕JSON</span><span class="w"> </span><span class="nv">json</span><span class="w">    </span><span class="c1">⍝ prettify it</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">#.HttpCommand
+</pre></div><div class="output text_html"><pre class="language-APL">{
+  "message": "success",
+  "number": 12,
+  "people": [
+    {
+      "craft": "ISS",
+      "name": "Oleg Kononenko"
+    },
+    {
+      "craft": "ISS",
+      "name": "Nikolai Chub"
+    },
+    {
+      "craft": "ISS",
+      "name": "Tracy Caldwell Dyson"
+    },
+    {
+      "craft": "ISS",
+      "name": "Matthew Dominick"
+    },
+    {
+      "craft": "ISS",
+      "name": "Michael Barratt"
+    },
+    {
+      "craft": "ISS",
+      "name": "Jeanette Epps"
+    },
+    {
+      "craft": "ISS",
+      "name": "Alexander Grebenkin"
+    },
+    {
+      "craft": "ISS",
+      "name": "Butch Wilmore"
+    },
+    {
+      "craft": "ISS",
+      "name": "Sunita Williams"
+    },
+    {
+      "craft": "Tiangong",
+      "name": "Li Guangsu"
+    },
+    {
+      "craft": "Tiangong",
+      "name": "Li Cong"
+    },
+    {
+      "craft": "Tiangong",
+      "name": "Ye Guangfu"
+    }
+  ]
+}
+</pre></div></div>
+</div>
+<p>Let’s say we want to group the names of these astronauts by the craft they are on, and return this as JSON as well. We want a structure like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;ISS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Oleg Kononenko&quot;</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
+  <span class="s2">&quot;Tiangong&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Li Guangsu&quot;</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>with <code class="docutils literal notranslate"><span class="pre">...</span></code> replaced by the rest of the names of course.</p>
+<p>To accomlish this, we’re going to make use of a variant of <code class="docutils literal notranslate"><span class="pre">⎕JSON</span></code> which parses JSON and returns a matrix describing its structure (rather than parsing it into an APL namespace, as is the default).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nf">⎕JSON⎕OPT</span><span class="s1">&#39;Format&#39;</span><span class="w"> </span><span class="s1">&#39;M&#39;</span><span class="o">⊢</span><span class="nv">json</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">┌─┬───────┬────────────────────┬─┐
+│0│       │                    │1│
+├─┼───────┼────────────────────┼─┤
+│1│people │                    │2│
+├─┼───────┼────────────────────┼─┤
+│2│       │                    │1│
+├─┼───────┼────────────────────┼─┤
+│3│craft  │ISS                 │4│
+├─┼───────┼────────────────────┼─┤
+│3│name   │Oleg Kononenko      │4│
+├─┼───────┼────────────────────┼─┤
+│2│       │                    │1│
+├─┼───────┼────────────────────┼─┤
+│3│craft  │ISS                 │4│
+├─┼───────┼────────────────────┼─┤
+│3│name   │Nikolai Chub        │4│
+├─┼───────┼────────────────────┼─┤
+│2│       │                    │1│
+├─┼───────┼────────────────────┼─┤
+│3│craft  │ISS                 │4│
+├─┼───────┼────────────────────┼─┤
+│3│name   │Tracy Caldwell Dyson│4│
+├─┼───────┼────────────────────┼─┤
+│2│       │                    │1│
+├─┼───────┼────────────────────┼─┤
+│3│craft  │ISS                 │4│
+├─┼───────┼────────────────────┼─┤
+│3│name   │Matthew Dominick    │4│
+├─┼───────┼────────────────────┼─┤
+│2│       │                    │1│
+├─┼───────┼────────────────────┼─┤
+│3│craft  │ISS                 │4│
+├─┼───────┼────────────────────┼─┤
+│3│name   │Michael Barratt     │4│
+├─┼───────┼────────────────────┼─┤
+│2│       │                    │1│
+├─┼───────┼────────────────────┼─┤
+│3│craft  │ISS                 │4│
+├─┼───────┼────────────────────┼─┤
+│3│name   │Jeanette Epps       │4│
+├─┼───────┼────────────────────┼─┤
+│2│       │                    │1│
+├─┼───────┼────────────────────┼─┤
+│3│craft  │ISS                 │4│
+├─┼───────┼────────────────────┼─┤
+│3│name   │Alexander Grebenkin │4│
+├─┼───────┼────────────────────┼─┤
+│2│       │                    │1│
+├─┼───────┼────────────────────┼─┤
+│3│craft  │ISS                 │4│
+├─┼───────┼────────────────────┼─┤
+│3│name   │Butch Wilmore       │4│
+├─┼───────┼────────────────────┼─┤
+│2│       │                    │1│
+├─┼───────┼────────────────────┼─┤
+│3│craft  │ISS                 │4│
+├─┼───────┼────────────────────┼─┤
+│3│name   │Sunita Williams     │4│
+├─┼───────┼────────────────────┼─┤
+│2│       │                    │1│
+├─┼───────┼────────────────────┼─┤
+│3│craft  │Tiangong            │4│
+├─┼───────┼────────────────────┼─┤
+│3│name   │Li Guangsu          │4│
+├─┼───────┼────────────────────┼─┤
+│2│       │                    │1│
+├─┼───────┼────────────────────┼─┤
+│3│craft  │Tiangong            │4│
+├─┼───────┼────────────────────┼─┤
+│3│name   │Li Cong             │4│
+├─┼───────┼────────────────────┼─┤
+│2│       │                    │1│
+├─┼───────┼────────────────────┼─┤
+│3│craft  │Tiangong            │4│
+├─┼───────┼────────────────────┼─┤
+│3│name   │Ye Guangfu          │4│
+├─┼───────┼────────────────────┼─┤
+│1│number │12                  │3│
+├─┼───────┼────────────────────┼─┤
+│1│message│success             │4│
+└─┴───────┴────────────────────┴─┘
+</pre></div></div>
+</div>
+<p>The <a class="reference external" href="https://help.dyalog.com/latest/Content/Language/System%20Functions/json.htm"><code class="docutils literal notranslate"><span class="pre">⎕JSON</span></code> documentation</a> describes the format of this table in detail. For our purposes, the most important column is the first, which gives the nesting depth for each row. You may recognise this as a form of depth vector, just like those we have used to describe trees previously. We can use this to create a parent vector representing our JSON.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="o">⍪</span><span class="nv">d</span><span class="w"> </span><span class="nv">k</span><span class="w"> </span><span class="nv">v</span><span class="w"> </span><span class="nv">t</span><span class="kd">←</span><span class="o">↓⍉</span><span class="nf">⎕JSON⎕OPT</span><span class="s1">&#39;Format&#39;</span><span class="w"> </span><span class="s1">&#39;M&#39;</span><span class="o">⊢</span><span class="nv">json</span><span class="w">    </span><span class="c1">⍝ extract each column as a vector</span>
+<span class="o">⊢</span><span class="nv">p</span><span class="kd">←</span><span class="nv">DepthToParent</span><span class="w"> </span><span class="nv">d</span><span class="w">                       </span><span class="c1">⍝ create the parent vector</span>
+<span class="nv">PPH</span><span class="w"> </span><span class="nv">p</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">┌─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│0 1 2 3 3 2 3 3 2 3 3 2 3 3 2 3 3 2 3 3 2 3 3 2 3 3 2 3 3 2 3 3 2 3 3 2 3 3 1 1                                                                                                                                                                                          │
+├─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│┌┬──────┬┬─────┬────┬┬─────┬────┬┬─────┬────┬┬─────┬────┬┬─────┬────┬┬─────┬────┬┬─────┬────┬┬─────┬────┬┬─────┬────┬┬─────┬────┬┬─────┬────┬┬─────┬────┬──────┬───────┐                                                                                                 │
+│││people││craft│name││craft│name││craft│name││craft│name││craft│name││craft│name││craft│name││craft│name││craft│name││craft│name││craft│name││craft│name│number│message│                                                                                                 │
+│└┴──────┴┴─────┴────┴┴─────┴────┴┴─────┴────┴┴─────┴────┴┴─────┴────┴┴─────┴────┴┴─────┴────┴┴─────┴────┴┴─────┴────┴┴─────┴────┴┴─────┴────┴┴─────┴────┴──────┴───────┘                                                                                                 │
+├─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│┌┬┬┬───┬──────────────┬┬───┬────────────┬┬───┬────────────────────┬┬───┬────────────────┬┬───┬───────────────┬┬───┬─────────────┬┬───┬───────────────────┬┬───┬─────────────┬┬───┬───────────────┬┬────────┬──────────┬┬────────┬───────┬┬────────┬──────────┬──┬───────┐│
+│││││ISS│Oleg Kononenko││ISS│Nikolai Chub││ISS│Tracy Caldwell Dyson││ISS│Matthew Dominick││ISS│Michael Barratt││ISS│Jeanette Epps││ISS│Alexander Grebenkin││ISS│Butch Wilmore││ISS│Sunita Williams││Tiangong│Li Guangsu││Tiangong│Li Cong││Tiangong│Ye Guangfu│12│success││
+│└┴┴┴───┴──────────────┴┴───┴────────────┴┴───┴────────────────────┴┴───┴────────────────┴┴───┴───────────────┴┴───┴─────────────┴┴───┴───────────────────┴┴───┴─────────────┴┴───┴───────────────┴┴────────┴──────────┴┴────────┴───────┴┴────────┴──────────┴──┴───────┘│
+├─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│1 2 1 4 4 1 4 4 1 4 4 1 4 4 1 4 4 1 4 4 1 4 4 1 4 4 1 4 4 1 4 4 1 4 4 1 4 4 3 4                                                                                                                                                                                          │
+└─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</pre></div><div class="output text_html"><pre class="language-APL">0 0 1 2 2 1 5 5 1 8 8 1 11 11 1 14 14 1 17 17 1 20 20 1 23 23 1 26 26 1 29 29 1 32 32 1 35 35 0 0
+</pre></div><div class="output text_html"><pre class="language-APL">┌───────┐
+│   ┌∘┬∘│
+│   │ └∘│
+│   ├∘┬∘│
+│   │ └∘│
+│   ├∘┬∘│
+│   │ └∘│
+│   ├∘┬∘│
+│   │ └∘│
+│   ├∘┬∘│
+│   │ └∘│
+│   ├∘┬∘│
+│ ┌∘┤ └∘│
+│∘┤ ├∘┬∘│
+│ │ │ └∘│
+│ │ ├∘┬∘│
+│ │ │ └∘│
+│ │ ├∘┬∘│
+│ │ │ └∘│
+│ │ ├∘┬∘│
+│ │ │ └∘│
+│ │ ├∘┬∘│
+│ │ │ └∘│
+│ │ └∘┬∘│
+│ │   └∘│
+│ ├∘    │
+│ └∘    │
+└───────┘
+</pre></div></div>
+</div>
+<p>The other columns, which we have extracted as <code class="docutils literal notranslate"><span class="pre">k</span></code>, <code class="docutils literal notranslate"><span class="pre">v</span></code>, and <code class="docutils literal notranslate"><span class="pre">t</span></code>, store the key, value, and type for a node respectively. For example, the row corresponding to <code class="docutils literal notranslate"><span class="pre">&quot;number&quot;:</span> <span class="pre">12</span></code> has a key of <code class="docutils literal notranslate"><span class="pre">'number'</span></code>, a value of <code class="docutils literal notranslate"><span class="pre">12</span></code>, and a type of <code class="docutils literal notranslate"><span class="pre">3</span></code>, indicating the data is numeric. Labelling our tree with these vectors shows us exactly how parts of the tree correspond to the original JSON object.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">k</span><span class="w"> </span><span class="nv">PPH</span><span class="w"> </span><span class="nv">p</span>
+<span class="nv">v</span><span class="w"> </span><span class="nv">PPH</span><span class="w"> </span><span class="nv">p</span>
+<span class="nv">jsonTypes</span><span class="kd">←</span><span class="s1">&#39;N/A&#39;</span><span class="w"> </span><span class="s1">&#39;Object&#39;</span><span class="w"> </span><span class="s1">&#39;Array&#39;</span><span class="w"> </span><span class="s1">&#39;Numeric&#39;</span><span class="w"> </span><span class="s1">&#39;String&#39;</span>
+<span class="c1">⍝           0      1        2        3        4</span>
+<span class="nv">jsonTypes</span><span class="sr">[</span><span class="nv">t</span><span class="sr">]</span><span class="w"> </span><span class="nv">PPH</span><span class="w"> </span><span class="nv">p</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">┌────────────────┐
+│        ┌∘┬craft│
+│        │ └name │
+│        ├∘┬craft│
+│        │ └name │
+│        ├∘┬craft│
+│        │ └name │
+│        ├∘┬craft│
+│        │ └name │
+│        ├∘┬craft│
+│        │ └name │
+│        ├∘┬craft│
+│ ┌people┤ └name │
+│∘┤      ├∘┬craft│
+│ │      │ └name │
+│ │      ├∘┬craft│
+│ │      │ └name │
+│ │      ├∘┬craft│
+│ │      │ └name │
+│ │      ├∘┬craft│
+│ │      │ └name │
+│ │      ├∘┬craft│
+│ │      │ └name │
+│ │      └∘┬craft│
+│ │        └name │
+│ ├number        │
+│ └message       │
+└────────────────┘
+</pre></div><div class="output text_html"><pre class="language-APL">┌──────────────────────────┐
+│   ┌∘┬ISS                 │
+│   │ └Oleg Kononenko      │
+│   ├∘┬ISS                 │
+│   │ └Nikolai Chub        │
+│   ├∘┬ISS                 │
+│   │ └Tracy Caldwell Dyson│
+│   ├∘┬ISS                 │
+│   │ └Matthew Dominick    │
+│   ├∘┬ISS                 │
+│   │ └Michael Barratt     │
+│   ├∘┬ISS                 │
+│ ┌∘┤ └Jeanette Epps       │
+│∘┤ ├∘┬ISS                 │
+│ │ │ └Alexander Grebenkin │
+│ │ ├∘┬ISS                 │
+│ │ │ └Butch Wilmore       │
+│ │ ├∘┬ISS                 │
+│ │ │ └Sunita Williams     │
+│ │ ├∘┬Tiangong            │
+│ │ │ └Li Guangsu          │
+│ │ ├∘┬Tiangong            │
+│ │ │ └Li Cong             │
+│ │ └∘┬Tiangong            │
+│ │   └Ye Guangfu          │
+│ ├12                      │
+│ └success                 │
+└──────────────────────────┘
+</pre></div><div class="output text_html"><pre class="language-APL">┌──────────────────────────┐
+│            ┌Object┬String│
+│            │      └String│
+│            ├Object┬String│
+│            │      └String│
+│            ├Object┬String│
+│            │      └String│
+│            ├Object┬String│
+│            │      └String│
+│            ├Object┬String│
+│            │      └String│
+│            ├Object┬String│
+│      ┌Array┤      └String│
+│Object┤     ├Object┬String│
+│      │     │      └String│
+│      │     ├Object┬String│
+│      │     │      └String│
+│      │     ├Object┬String│
+│      │     │      └String│
+│      │     ├Object┬String│
+│      │     │      └String│
+│      │     ├Object┬String│
+│      │     │      └String│
+│      │     └Object┬String│
+│      │            └String│
+│      ├Numeric            │
+│      └String             │
+└──────────────────────────┘
+</pre></div></div>
+</div>
+<p>Now that we have all of this information, we can begin to manipulate our tree to group the astronaut’s names by their craft. Our first step will be to find those nodes which indicate the craft, and extract the unique craft names.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">i</span><span class="kd">←</span><span class="o">⍸</span><span class="s1">&#39;craft&#39;</span><span class="na">∘</span><span class="o">≡</span><span class="na">¨</span><span class="nv">k</span><span class="w">    </span><span class="c1">⍝ which nodes have a key of &#39;craft&#39;</span>
+<span class="o">⊢</span><span class="nv">c</span><span class="kd">←</span><span class="o">∪</span><span class="nv">v</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]</span><span class="w">          </span><span class="c1">⍝ find the unique craft names</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">┌───┬────────┐
+│ISS│Tiangong│
+└───┴────────┘
+</pre></div></div>
+</div>
+<p>Look again at our target structure.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;ISS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Oleg Kononenko&quot;</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
+  <span class="s2">&quot;Tiangong&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Li Guangsu&quot;</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>We want a root object with two keys (<code class="docutils literal notranslate"><span class="pre">&quot;ISS&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;Tiangong&quot;</span></code>), each of which maps to an array. Our parent vector already has nodes in the indices <code class="docutils literal notranslate"><span class="pre">0</span></code> up to and including <code class="docutils literal notranslate"><span class="pre">(≢p)-1</span></code>, so our new nodes should have IDs <code class="docutils literal notranslate"><span class="pre">≢p</span></code> and greater. So, we create our new root node with ID <code class="docutils literal notranslate"><span class="pre">≢p</span></code>, and child nodes for each group with IDs <code class="docutils literal notranslate"><span class="pre">(≢p)+1</span></code>, <code class="docutils literal notranslate"><span class="pre">(≢p)+2</span></code>, and so on.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="o">⊢</span><span class="nv">r</span><span class="kd">←</span><span class="o">≢</span><span class="nv">p</span><span class="w">         </span><span class="c1">⍝ new node for root object</span>
+<span class="o">⊢</span><span class="nv">g</span><span class="kd">←</span><span class="nv">r</span><span class="o">+</span><span class="m">1</span><span class="o">+⍳≢</span><span class="nv">c</span><span class="w">    </span><span class="c1">⍝ child nodes for groups</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">40
+</pre></div><div class="output text_html"><pre class="language-APL">41 42
+</pre></div></div>
+</div>
+<p>We then want to add these nodes and their associated data to each of the vectors we are using for this tree.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">p</span><span class="o">,</span><span class="kd">←</span><span class="p">(</span><span class="m">1</span><span class="o">+≢</span><span class="nv">c</span><span class="p">)</span><span class="o">⍴</span><span class="nv">r</span><span class="w">     </span><span class="c1">⍝ each new node points to r as its parent</span>
+<span class="nv">k</span><span class="o">,</span><span class="kd">←</span><span class="p">(</span><span class="o">⊂</span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">,</span><span class="nv">c</span><span class="w">      </span><span class="c1">⍝ root node has no key, group nodes have craft names as keys</span>
+<span class="nv">v</span><span class="o">,</span><span class="kd">←</span><span class="p">(</span><span class="m">1</span><span class="o">+≢</span><span class="nv">c</span><span class="p">)</span><span class="o">⍴⊂</span><span class="no">⍬</span><span class="w">    </span><span class="c1">⍝ no node has values assigned yet</span>
+<span class="nv">t</span><span class="o">,</span><span class="kd">←</span><span class="m">1</span><span class="o">,</span><span class="p">(</span><span class="o">≢</span><span class="nv">c</span><span class="p">)</span><span class="o">⍴</span><span class="m">2</span><span class="w">     </span><span class="c1">⍝ root node has type 1 (object) and groups have type 2 (array)</span>
+
+<span class="nv">k</span><span class="w"> </span><span class="nv">PPH</span><span class="w"> </span><span class="nv">p</span>
+<span class="nv">v</span><span class="w"> </span><span class="nv">PPH</span><span class="w"> </span><span class="nv">p</span>
+<span class="nv">jsonTypes</span><span class="sr">[</span><span class="nv">t</span><span class="sr">]</span><span class="w"> </span><span class="nv">PPH</span><span class="w"> </span><span class="nv">p</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">┌────────────────┬──────────┐
+│        ┌∘┬craft│∘┬ISS     │
+│        │ └name │ └Tiangong│
+│        ├∘┬craft│          │
+│        │ └name │          │
+│        ├∘┬craft│          │
+│        │ └name │          │
+│        ├∘┬craft│          │
+│        │ └name │          │
+│        ├∘┬craft│          │
+│        │ └name │          │
+│        ├∘┬craft│          │
+│ ┌people┤ └name │          │
+│∘┤      ├∘┬craft│          │
+│ │      │ └name │          │
+│ │      ├∘┬craft│          │
+│ │      │ └name │          │
+│ │      ├∘┬craft│          │
+│ │      │ └name │          │
+│ │      ├∘┬craft│          │
+│ │      │ └name │          │
+│ │      ├∘┬craft│          │
+│ │      │ └name │          │
+│ │      └∘┬craft│          │
+│ │        └name │          │
+│ ├number        │          │
+│ └message       │          │
+└────────────────┴──────────┘
+</pre></div><div class="output text_html"><pre class="language-APL">┌──────────────────────────┬───┐
+│   ┌∘┬ISS                 │∘┬∘│
+│   │ └Oleg Kononenko      │ └∘│
+│   ├∘┬ISS                 │   │
+│   │ └Nikolai Chub        │   │
+│   ├∘┬ISS                 │   │
+│   │ └Tracy Caldwell Dyson│   │
+│   ├∘┬ISS                 │   │
+│   │ └Matthew Dominick    │   │
+│   ├∘┬ISS                 │   │
+│   │ └Michael Barratt     │   │
+│   ├∘┬ISS                 │   │
+│ ┌∘┤ └Jeanette Epps       │   │
+│∘┤ ├∘┬ISS                 │   │
+│ │ │ └Alexander Grebenkin │   │
+│ │ ├∘┬ISS                 │   │
+│ │ │ └Butch Wilmore       │   │
+│ │ ├∘┬ISS                 │   │
+│ │ │ └Sunita Williams     │   │
+│ │ ├∘┬Tiangong            │   │
+│ │ │ └Li Guangsu          │   │
+│ │ ├∘┬Tiangong            │   │
+│ │ │ └Li Cong             │   │
+│ │ └∘┬Tiangong            │   │
+│ │   └Ye Guangfu          │   │
+│ ├12                      │   │
+│ └success                 │   │
+└──────────────────────────┴───┘
+</pre></div><div class="output text_html"><pre class="language-APL">┌──────────────────────────┬────────────┐
+│            ┌Object┬String│Object┬Array│
+│            │      └String│      └Array│
+│            ├Object┬String│            │
+│            │      └String│            │
+│            ├Object┬String│            │
+│            │      └String│            │
+│            ├Object┬String│            │
+│            │      └String│            │
+│            ├Object┬String│            │
+│            │      └String│            │
+│            ├Object┬String│            │
+│      ┌Array┤      └String│            │
+│Object┤     ├Object┬String│            │
+│      │     │      └String│            │
+│      │     ├Object┬String│            │
+│      │     │      └String│            │
+│      │     ├Object┬String│            │
+│      │     │      └String│            │
+│      │     ├Object┬String│            │
+│      │     │      └String│            │
+│      │     ├Object┬String│            │
+│      │     │      └String│            │
+│      │     └Object┬String│            │
+│      │            └String│            │
+│      ├Numeric            │            │
+│      └String             │            │
+└──────────────────────────┴────────────┘
+</pre></div></div>
+</div>
+<p>Now, we want to move the astronaut names from where they are, to the correct group. We’re going to use a little trick to find the name nodes - since the original data was in DFPT order, and we haven’t changed the order so far, each <code class="docutils literal notranslate"><span class="pre">&quot;craft&quot;</span></code> node (which we found earlier as <code class="docutils literal notranslate"><span class="pre">i</span></code>) appears immediately before the <code class="docutils literal notranslate"><span class="pre">&quot;name&quot;</span></code> node it accompanies in the parent vector. You can see this in our original table, where each row containing the key <code class="docutils literal notranslate"><span class="pre">'craft'</span></code> appears straight before the fellow row with the key <code class="docutils literal notranslate"><span class="pre">'name'</span></code>. We can exploit this to be sure that the nodes <code class="docutils literal notranslate"><span class="pre">i+1</span></code> are exactly the <code class="docutils literal notranslate"><span class="pre">&quot;name&quot;</span></code> nodes.</p>
+<p>To move the astronaut names to their correct groups, we simply need to update their parents to the appropriate group node. We find the index in the <code class="docutils literal notranslate"><span class="pre">c</span></code> vector of craft names of the craft name we are concerned with, and use that to index the vector <code class="docutils literal notranslate"><span class="pre">g</span></code> of new group nodes, whose craft names are ordered identically to <code class="docutils literal notranslate"><span class="pre">c</span></code>. We also need to update the keys of these name nodes to be empty, as when we feed this data back to <code class="docutils literal notranslate"><span class="pre">⎕JSON</span></code> later, it will not be expecting array elements to have keys.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">p</span><span class="sr">[</span><span class="nv">i</span><span class="o">+</span><span class="m">1</span><span class="sr">]</span><span class="kd">←</span><span class="nv">g</span><span class="sr">[</span><span class="nv">c</span><span class="o">⍳</span><span class="nv">v</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]]</span>
+<span class="nv">k</span><span class="sr">[</span><span class="nv">i</span><span class="o">+</span><span class="m">1</span><span class="sr">]</span><span class="kd">←</span><span class="o">⊂</span><span class="s1">&#39;&#39;</span>
+
+<span class="nv">k</span><span class="w"> </span><span class="nv">PPH</span><span class="w"> </span><span class="nv">p</span>
+<span class="nv">v</span><span class="w"> </span><span class="nv">PPH</span><span class="w"> </span><span class="nv">p</span>
+<span class="nv">jsonTypes</span><span class="sr">[</span><span class="nv">t</span><span class="sr">]</span><span class="w"> </span><span class="nv">PPH</span><span class="w"> </span><span class="nv">p</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">┌────────────────┬────────────┐
+│        ┌∘─craft│     ┌∘     │
+│        ├∘─craft│     ├∘     │
+│        ├∘─craft│     ├∘     │
+│        ├∘─craft│     ├∘     │
+│        ├∘─craft│ ┌ISS┼∘     │
+│ ┌people┼∘─craft│∘┤   ├∘     │
+│∘┤      ├∘─craft│ │   ├∘     │
+│ │      ├∘─craft│ │   ├∘     │
+│ │      ├∘─craft│ │   └∘     │
+│ │      ├∘─craft│ │        ┌∘│
+│ │      ├∘─craft│ └Tiangong┼∘│
+│ │      └∘─craft│          └∘│
+│ ├number        │            │
+│ └message       │            │
+└────────────────┴────────────┘
+</pre></div><div class="output text_html"><pre class="language-APL">┌──────────────┬────────────────────────┐
+│   ┌∘─ISS     │   ┌Oleg Kononenko      │
+│   ├∘─ISS     │   ├Nikolai Chub        │
+│   ├∘─ISS     │   ├Tracy Caldwell Dyson│
+│   ├∘─ISS     │   ├Matthew Dominick    │
+│   ├∘─ISS     │ ┌∘┼Michael Barratt     │
+│ ┌∘┼∘─ISS     │∘┤ ├Jeanette Epps       │
+│∘┤ ├∘─ISS     │ │ ├Alexander Grebenkin │
+│ │ ├∘─ISS     │ │ ├Butch Wilmore       │
+│ │ ├∘─ISS     │ │ └Sunita Williams     │
+│ │ ├∘─Tiangong│ │ ┌Li Guangsu          │
+│ │ ├∘─Tiangong│ └∘┼Li Cong             │
+│ │ └∘─Tiangong│   └Ye Guangfu          │
+│ ├12          │                        │
+│ └success     │                        │
+└──────────────┴────────────────────────┘
+</pre></div><div class="output text_html"><pre class="language-APL">┌──────────────────────────┬───────────────────┐
+│            ┌Object─String│            ┌String│
+│            ├Object─String│            ├String│
+│            ├Object─String│            ├String│
+│            ├Object─String│            ├String│
+│            ├Object─String│      ┌Array┼String│
+│      ┌Array┼Object─String│Object┤     ├String│
+│Object┤     ├Object─String│      │     ├String│
+│      │     ├Object─String│      │     ├String│
+│      │     ├Object─String│      │     └String│
+│      │     ├Object─String│      │     ┌String│
+│      │     ├Object─String│      └Array┼String│
+│      │     └Object─String│            └String│
+│      ├Numeric            │                   │
+│      └String             │                   │
+└──────────────────────────┴───────────────────┘
+</pre></div></div>
+</div>
+<p>Now we have two distinct trees, and we only need the newly created one, so we can simply delete the other using the idiom we described previously.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">m</span><span class="kd">←</span><span class="nv">r</span><span class="o">=</span><span class="nv">p</span><span class="w"> </span><span class="nv">I</span><span class="na">@</span><span class="p">(</span><span class="nv">r</span><span class="na">∘</span><span class="o">≠</span><span class="p">)</span><span class="na">⍣</span><span class="o">≡⍳≢</span><span class="nv">p</span><span class="w">    </span><span class="c1">⍝ make of nodes which are in the new tree</span>
+<span class="nv">p</span><span class="kd">←</span><span class="p">(</span><span class="o">⍸~</span><span class="nv">m</span><span class="p">)(</span><span class="o">⊢-</span><span class="m">1</span><span class="o">+⍸</span><span class="p">)</span><span class="nv">m</span><span class="na">/</span><span class="nv">p</span><span class="w">     </span><span class="c1">⍝ delete nodes in the old tree</span>
+<span class="nv">k</span><span class="kd">←</span><span class="nv">m</span><span class="na">/</span><span class="nv">k</span><span class="w">                 </span><span class="c1">⍝─┐</span>
+<span class="nv">v</span><span class="kd">←</span><span class="nv">m</span><span class="na">/</span><span class="nv">v</span><span class="w">                 </span><span class="c1">⍝─┼─ filter the associated data</span>
+<span class="nv">t</span><span class="kd">←</span><span class="nv">m</span><span class="na">/</span><span class="nv">t</span><span class="w">                 </span><span class="c1">⍝─┘</span>
+
+<span class="nv">k</span><span class="w"> </span><span class="nv">PPH</span><span class="w"> </span><span class="nv">p</span>
+<span class="nv">v</span><span class="w"> </span><span class="nv">PPH</span><span class="w"> </span><span class="nv">p</span>
+<span class="nv">jsonTypes</span><span class="sr">[</span><span class="nv">t</span><span class="sr">]</span><span class="w"> </span><span class="nv">PPH</span><span class="w"> </span><span class="nv">p</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">┌────────────┐
+│     ┌∘     │
+│     ├∘     │
+│     ├∘     │
+│     ├∘     │
+│ ┌ISS┼∘     │
+│∘┤   ├∘     │
+│ │   ├∘     │
+│ │   ├∘     │
+│ │   └∘     │
+│ │        ┌∘│
+│ └Tiangong┼∘│
+│          └∘│
+└────────────┘
+</pre></div><div class="output text_html"><pre class="language-APL">┌────────────────────────┐
+│   ┌Oleg Kononenko      │
+│   ├Nikolai Chub        │
+│   ├Tracy Caldwell Dyson│
+│   ├Matthew Dominick    │
+│ ┌∘┼Michael Barratt     │
+│∘┤ ├Jeanette Epps       │
+│ │ ├Alexander Grebenkin │
+│ │ ├Butch Wilmore       │
+│ │ └Sunita Williams     │
+│ │ ┌Li Guangsu          │
+│ └∘┼Li Cong             │
+│   └Ye Guangfu          │
+└────────────────────────┘
+</pre></div><div class="output text_html"><pre class="language-APL">┌───────────────────┐
+│            ┌String│
+│            ├String│
+│            ├String│
+│            ├String│
+│      ┌Array┼String│
+│Object┤     ├String│
+│      │     ├String│
+│      │     ├String│
+│      │     └String│
+│      │     ┌String│
+│      └Array┼String│
+│            └String│
+└───────────────────┘
+</pre></div></div>
+</div>
+<p>Now, our tree corresponds exactly to the JSON structure we want to return, all that remains is to feed it back into <code class="docutils literal notranslate"><span class="pre">⎕JSON</span></code>. Remember that the matrix format <code class="docutils literal notranslate"><span class="pre">⎕JSON</span></code> uses has the depth vector as its first column. In order to pass our vectors back to <code class="docutils literal notranslate"><span class="pre">⎕JSON</span></code>, we need to recover the depth vector. We could exploit the structure that we know our parent vector to have, since we controlled exactly how it was constructed, but we will instead take this opportunity to show how <code class="docutils literal notranslate"><span class="pre">ParentToDepth</span></code> (which we defined <a class="reference internal" href="#relating-depths-and-parent-vectors.md#depth-vector-ordering"><span class="xref myst">previously</span></a>) works in practice.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="c1">⍝ find depths and DFPT ordering of p</span>
+<span class="nv">d</span><span class="w"> </span><span class="nv">perm</span><span class="kd">←</span><span class="nv">ParentToDepth</span><span class="w"> </span><span class="nv">p</span>
+
+<span class="c1">⍝ correct d, k, v, and t to DFPT order</span>
+<span class="nv">d</span><span class="kd">←</span><span class="nv">d</span><span class="sr">[</span><span class="nv">perm</span><span class="sr">]</span>
+<span class="nv">k</span><span class="kd">←</span><span class="nv">k</span><span class="sr">[</span><span class="nv">perm</span><span class="sr">]</span>
+<span class="nv">v</span><span class="kd">←</span><span class="nv">v</span><span class="sr">[</span><span class="nv">perm</span><span class="sr">]</span>
+<span class="nv">t</span><span class="kd">←</span><span class="nv">t</span><span class="sr">[</span><span class="nv">perm</span><span class="sr">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can then pack these vectors back into the matrix format expected by <code class="docutils literal notranslate"><span class="pre">⎕JSON</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="o">⍉↑</span><span class="nv">d</span><span class="w"> </span><span class="nv">k</span><span class="w"> </span><span class="nv">v</span><span class="w"> </span><span class="nv">t</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">┌─┬────────┬────────────────────┬─┐
+│0│        │                    │1│
+├─┼────────┼────────────────────┼─┤
+│1│ISS     │                    │2│
+├─┼────────┼────────────────────┼─┤
+│2│        │Oleg Kononenko      │4│
+├─┼────────┼────────────────────┼─┤
+│2│        │Nikolai Chub        │4│
+├─┼────────┼────────────────────┼─┤
+│2│        │Tracy Caldwell Dyson│4│
+├─┼────────┼────────────────────┼─┤
+│2│        │Matthew Dominick    │4│
+├─┼────────┼────────────────────┼─┤
+│2│        │Michael Barratt     │4│
+├─┼────────┼────────────────────┼─┤
+│2│        │Jeanette Epps       │4│
+├─┼────────┼────────────────────┼─┤
+│2│        │Alexander Grebenkin │4│
+├─┼────────┼────────────────────┼─┤
+│2│        │Butch Wilmore       │4│
+├─┼────────┼────────────────────┼─┤
+│2│        │Sunita Williams     │4│
+├─┼────────┼────────────────────┼─┤
+│1│Tiangong│                    │2│
+├─┼────────┼────────────────────┼─┤
+│2│        │Li Guangsu          │4│
+├─┼────────┼────────────────────┼─┤
+│2│        │Li Cong             │4│
+├─┼────────┼────────────────────┼─┤
+│2│        │Ye Guangfu          │4│
+└─┴────────┴────────────────────┴─┘
+</pre></div></div>
+</div>
+<p>And finally, we can pass this matrix back to <code class="docutils literal notranslate"><span class="pre">⎕JSON</span></code>, and it generates the output we want.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nf">⎕JSON⎕OPT</span><span class="p">(</span><span class="s1">&#39;Format&#39;</span><span class="w"> </span><span class="s1">&#39;M&#39;</span><span class="p">)(</span><span class="s1">&#39;Compact&#39;</span><span class="w"> </span><span class="m">0</span><span class="p">)</span><span class="o">⍉↑</span><span class="nv">d</span><span class="w"> </span><span class="nv">k</span><span class="w"> </span><span class="nv">v</span><span class="w"> </span><span class="nv">t</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">{
+  "ISS": [
+    "Oleg Kononenko",
+    "Nikolai Chub",
+    "Tracy Caldwell Dyson",
+    "Matthew Dominick",
+    "Michael Barratt",
+    "Jeanette Epps",
+    "Alexander Grebenkin",
+    "Butch Wilmore",
+    "Sunita Williams"
+  ],
+  "Tiangong": [
+    "Li Guangsu",
+    "Li Cong",
+    "Ye Guangfu"
+  ]
+}
+</pre></div></div>
+</div>
 </section>
 
     <script type="text/x-thebe-config">
@@ -420,16 +1079,16 @@ document.write(`
         },
         codeMirrorConfig: {
             theme: "abcdef",
-            mode: "python"
+            mode: "dyalog_apl"
         },
         kernelOptions: {
-            name: "python3",
+            name: "dyalog_apl",
             path: "./trees"
         },
         predefinedOutput: true
     }
     </script>
-    <script>kernelName = 'python3'</script>
+    <script>kernelName = 'dyalog_apl'</script>
 
                 </article>
               
@@ -442,20 +1101,20 @@ document.write(`
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="top-down-construction.html"
+       href="bottom-up-aggregation.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Top-Down Construction</p>
+        <p class="prev-next-title">Bottom-Up Accumulation</p>
       </div>
     </a>
     <a class="right-next"
-       href="parsing.html"
+       href="../combinatorics/enumerative.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Parsing</p>
+        <p class="prev-next-title">Enumerative Combinatorics</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

@@ -206,7 +206,7 @@ Let's use node $1$ as an example. This node has depth $2$, which we can be sure 
 ```{code-cell}
 p[1]          ⍝ depth ≥ 1 since 1 is not a root
 p[p[1]]       ⍝ depth ≥ 2 since p[1] is not a root
-p[p[p[1]]]    ⍝ depth = 2 since p[p[4]] is a root
+p[p[p[1]]]    ⍝ depth = 2 since p[p[1]] is a root
 ```
 
 Since we're traversing the tree until the parent does not change, we can automate this repetition with `⍣≡` to find the depth of any particular node.

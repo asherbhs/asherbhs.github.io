@@ -16,9 +16,7 @@ kernelspec:
 
 While this tutorial is primarily targeted at intemediate APL users, this section includes translations of various code snippets into BQN, J, and K (K6) for the convenience of users of those languages. I do not use these languages nearly as frequently as APL, so there are more likely to be places for improvement, do let me know!
 
-## Basic Operations
-
-### Finding Children
+## Finding Children
 
 **APL:**
 
@@ -44,7 +42,7 @@ I.p e.i
 &~^i?p
 ```
 
-### Finding Leaves
+## Finding Leaves
 
 **APL:**
 
@@ -70,7 +68,7 @@ I.p e.i
 ^p?!#p
 ```
 
-### Trimming Branches
+## Trimming Branches
 
 **APL:**
 
@@ -97,7 +95,7 @@ i i}p
 @[p;i;:;i]
 ```
 
-### Finding Roots
+## Finding Roots
 
 **APL:**
 
@@ -123,7 +121,7 @@ I⍣≡⍨p
 (p@)/p
 ```
 
-### Selecting Sub-Trees
+## Selecting Sub-Trees
 
 **APL:**
 
@@ -149,7 +147,33 @@ i e.~{{y j}~p{~y{~j=.I.-.y e.i}}^:_ i.#p
 ~^i?{@[x;&^i?x;p@]}/!#p
 ```
 
-### Mirroring
+## Shuffling
+
+**APL:**
+
+```
+perm⍳p[perm]
+```
+
+**BQN:**
+
+```
+perm⊐perm⊏p
+```
+
+**J:**
+
+```
+perm i.perm{p
+```
+
+**K:**
+
+```
+perm?p@perm
+```
+
+## Mirroring
 
 **APL:**
 
@@ -174,3 +198,56 @@ i e.~{{y j}~p{~y{~j=.I.-.y e.i}}^:_ i.#p
 ```
 -1+(#p)-|p
 ```
+
+## DepthToParent
+
+**APL:**
+
+```
+DepthToParent←{d←⍵
+    p←⍳≢d
+    _←2{p[⍵]←⍺[⍺⍸⍵]}/⊂⍤⊢⌸d
+    p
+}
+```
+
+**BQN:**
+
+```
+DepthToParent←{d←𝕩
+    p←↕≠d
+    {p(𝕨⊏˜¯1+𝕨⍋𝕩)⌾(𝕩⊸⊏)↩}´˘2↕d⊔↕≠d
+    p
+}
+```
+
+**J:**
+
+```
+DepthToParent=:{{d=.y
+    p=:i.#d
+    2{{p=:p y}~x{~_1+x I.y}}&>/\d<@]/.i.#d
+    p
+}}
+```
+
+**K:**
+
+```
+DepthToParent:{d:x
+    p::!#d
+    {p::@[p;y;:;x@x'y]}/'2':.=d
+    p}
+```
+
+## Depths
+
+## ParentToDepth
+
+## Forest
+
+## Deforest
+
+## Deleting
+
+## ParentToNested

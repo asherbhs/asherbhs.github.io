@@ -231,7 +231,7 @@ This can be easily extended to work with multiple nodes as roots, for example if
 ⍝ └───┴──────────── find those which hit 1 or 6
 ```
 
-### Shuffling Nodes
+### Shuffling
 
 On the [previous page](representing-trees.md), we used a little trick to properly correct the parent references in a path matrix after permuting the nodes. We're going to use the same trick to permute parent vectors, and we're going to actually show how it works.
 
@@ -408,7 +408,7 @@ PPH p    ⍝ visualise horizontally
 (⍳≢p) PPV p    ⍝ label each node by its index
 ```
 
-This lets us check the results of the tree transformations we've done on this page:
+This let's us check the results of the tree transformations we've done on this page:
 
 ```{code-cell}
 ⍝ children of nodes 1 and 6
