@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=87e54e7c" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=bfa96906" />
@@ -600,10 +600,11 @@ document.write(`
 <p>We can then repeat our process for each level.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">_</span><span class="kd">←</span><span class="kt">{</span>
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">DoLayer</span><span class="kd">←</span><span class="kt">{</span>
 <span class="w">    </span><span class="nv">i</span><span class="kd">←</span><span class="o">⍸</span><span class="nv">d</span><span class="o">=</span><span class="bp">⍵</span>
 <span class="w">    </span><span class="nv">p</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]</span><span class="kt">{</span><span class="nv">r</span><span class="sr">[</span><span class="bp">⍺</span><span class="sr">]</span><span class="o">,</span><span class="kd">←</span><span class="o">⊂</span><span class="nv">r</span><span class="sr">[</span><span class="bp">⍵</span><span class="sr">]</span><span class="kt">}</span><span class="na">⌸</span><span class="nv">i</span>
-<span class="kt">}</span><span class="na">¨</span><span class="o">⌽</span><span class="m">1</span><span class="o">+⍳⌈</span><span class="na">/</span><span class="nv">d</span>
+<span class="kt">}</span>
+<span class="nv">DoLayer</span><span class="na">¨</span><span class="o">⌽</span><span class="m">1</span><span class="o">+⍳⌈</span><span class="na">/</span><span class="nv">d</span>
 </pre></div>
 </div>
 </div>
@@ -710,18 +711,19 @@ document.write(`
 <p>Putting this together into a dfn, there’s one more thing we need to worry about. When we have a tree or forest consisting of only root nodes, that is, all nodes have depth <span class="math notranslate nohighlight">\(0\)</span>, our <code class="docutils literal notranslate"><span class="pre">¨</span></code> will still run once on the prototype of <code class="docutils literal notranslate"><span class="pre">⌽1+⍳⌈/d</span></code>, leading to an incorrect result. Therefore, we will introduce a guard statement to avoid this.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">ParentToNested</span><span class="kd">←</span><span class="kt">{</span>
-<span class="w">    </span><span class="nv">p</span><span class="kd">←</span><span class="bp">⍵</span>
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">ParentToNested</span><span class="kd">←</span><span class="kt">{</span><span class="w"> </span><span class="c1">⍝ convert a parent vector to a nested representation</span>
+<span class="w">    </span><span class="nv">p</span><span class="kd">←</span><span class="bp">⍵</span><span class="w">    </span><span class="c1">⍝ input parent vector</span>
 <span class="w">    </span><span class="bp">⍺</span><span class="kd">←</span><span class="o">⊂</span><span class="na">⍤</span><span class="o">,</span><span class="na">¨</span><span class="o">⍳≢</span><span class="nv">p</span>
-<span class="w">    </span><span class="nv">r</span><span class="kd">←</span><span class="bp">⍺</span>
+<span class="w">    </span><span class="nv">r</span><span class="kd">←</span><span class="bp">⍺</span><span class="w">    </span><span class="c1">⍝ values to place at nodes (by default, their indices in the parent vector)</span>
 <span class="w">    </span><span class="nv">d</span><span class="kd">←</span><span class="nv">Depths</span><span class="w"> </span><span class="nv">p</span>
-<span class="w">    </span><span class="nv">md</span><span class="kd">←</span><span class="o">⌈</span><span class="na">/</span><span class="nv">d</span>
-<span class="w">    </span><span class="nv">md</span><span class="o">=</span><span class="m">0</span><span class="bp">:</span><span class="w"> </span><span class="nv">r</span>
-<span class="w">    </span><span class="nv">_</span><span class="kd">←</span><span class="kt">{</span>
+<span class="w">    </span><span class="nv">maxDepth</span><span class="kd">←</span><span class="o">⌈</span><span class="na">/</span><span class="nv">d</span>
+<span class="w">    </span><span class="nv">maxDepth</span><span class="o">=</span><span class="m">0</span><span class="bp">:</span><span class="w"> </span><span class="nv">r</span>
+<span class="w">    </span><span class="nv">DoLayer</span><span class="kd">←</span><span class="kt">{</span>
 <span class="w">        </span><span class="nv">i</span><span class="kd">←</span><span class="o">⍸</span><span class="nv">d</span><span class="o">=</span><span class="bp">⍵</span>
 <span class="w">        </span><span class="nv">_</span><span class="kd">←</span><span class="nv">p</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]</span><span class="kt">{</span><span class="nv">r</span><span class="sr">[</span><span class="bp">⍺</span><span class="sr">]</span><span class="o">,</span><span class="kd">←</span><span class="o">⊂</span><span class="nv">r</span><span class="sr">[</span><span class="bp">⍵</span><span class="sr">]</span><span class="kt">}</span><span class="na">⌸</span><span class="nv">i</span>
-<span class="w">        </span><span class="no">⍬</span><span class="w">    </span><span class="c1">⍝ the interpreter will complain if we don&#39;t provide a result</span>
-<span class="w">    </span><span class="kt">}</span><span class="na">¨</span><span class="o">⌽</span><span class="m">1</span><span class="o">+⍳</span><span class="nv">md</span>
+<span class="w">        </span><span class="m">1</span><span class="w">    </span><span class="c1">⍝ the interpreter will complain if we don&#39;t provide a result</span>
+<span class="w">    </span><span class="kt">}</span>
+<span class="w">    </span><span class="nv">_</span><span class="kd">←</span><span class="nv">DoLayer</span><span class="na">¨</span><span class="o">⌽</span><span class="m">1</span><span class="o">+⍳</span><span class="nv">maxDepth</span>
 <span class="w">    </span><span class="p">(</span><span class="nv">p</span><span class="o">=⍳≢</span><span class="nv">p</span><span class="p">)</span><span class="na">/</span><span class="nv">r</span>
 <span class="kt">}</span>
 <span class="nv">v</span><span class="w"> </span><span class="nv">ParentToNested</span><span class="w"> </span><span class="nv">p</span>
@@ -744,10 +746,12 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">r</span><span class="kd">←</span><span class="o">⊂</span><span class="na">¨</span><span class="nv">v</span>
-<span class="nv">_</span><span class="kd">←</span><span class="kt">{</span>
+<span class="nv">DoLayer</span><span class="kd">←</span><span class="kt">{</span>
 <span class="w">    </span><span class="nv">i</span><span class="kd">←</span><span class="o">⍸</span><span class="nv">d</span><span class="o">=</span><span class="bp">⍵</span>
 <span class="w">    </span><span class="nv">r</span><span class="sr">[</span><span class="nv">p</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]]</span><span class="o">,</span><span class="kd">←</span><span class="o">⊂</span><span class="na">¨</span><span class="nv">r</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]</span><span class="w">    </span><span class="c1">⍝ using indexing instead of ⌸</span>
-<span class="kt">}</span><span class="na">¨</span><span class="o">⌽</span><span class="m">1</span><span class="o">+⍳⌈</span><span class="na">/</span><span class="nv">d</span>
+<span class="w">    </span><span class="m">1</span>
+<span class="kt">}</span>
+<span class="nv">_</span><span class="kd">←</span><span class="nv">DoLayer</span><span class="na">¨</span><span class="o">⌽</span><span class="m">1</span><span class="o">+⍳⌈</span><span class="na">/</span><span class="nv">d</span>
 <span class="p">(</span><span class="nv">p</span><span class="o">=⍳≢</span><span class="nv">p</span><span class="p">)</span><span class="na">/</span><span class="nv">r</span>
 </pre></div>
 </div>
@@ -778,16 +782,20 @@ document.write(`
 <span class="expanded">Hide code cell content</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">Sum</span><span class="kd">←</span><span class="kt">{</span><span class="nv">v</span><span class="w"> </span><span class="nv">p</span><span class="kd">←</span><span class="bp">⍺⍵</span>
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">Sum</span><span class="kd">←</span><span class="kt">{</span><span class="w"> </span><span class="c1">⍝ sum the values in each tree in a forest</span>
+<span class="w">    </span><span class="nv">v</span><span class="kd">←</span><span class="bp">⍺</span><span class="w">    </span><span class="c1">⍝ numbers at each node</span>
+<span class="w">    </span><span class="nv">p</span><span class="kd">←</span><span class="bp">⍵</span><span class="w">    </span><span class="c1">⍝ parent vector</span>
+<span class="w">    </span><span class="nv">sums</span><span class="kd">←</span><span class="nv">v</span>
 <span class="w">    </span><span class="nv">d</span><span class="kd">←</span><span class="nv">Depths</span><span class="w"> </span><span class="nv">p</span>
-<span class="w">    </span><span class="nv">md</span><span class="kd">←</span><span class="o">⌈</span><span class="na">/</span><span class="nv">d</span>
-<span class="w">    </span><span class="nv">md</span><span class="o">=</span><span class="m">0</span><span class="bp">:</span><span class="w"> </span><span class="nv">v</span>
-<span class="w">    </span><span class="nv">_</span><span class="kd">←</span><span class="kt">{</span>
+<span class="w">    </span><span class="nv">maxDepth</span><span class="kd">←</span><span class="o">⌈</span><span class="na">/</span><span class="nv">d</span>
+<span class="w">    </span><span class="nv">maxDepth</span><span class="o">=</span><span class="m">0</span><span class="bp">:</span><span class="w"> </span><span class="nv">sums</span>
+<span class="w">    </span><span class="nv">DoLayer</span><span class="kd">←</span><span class="kt">{</span>
 <span class="w">        </span><span class="nv">i</span><span class="kd">←</span><span class="o">⍸</span><span class="nv">d</span><span class="o">=</span><span class="bp">⍵</span>
-<span class="w">        </span><span class="nv">v</span><span class="sr">[</span><span class="nv">p</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]]</span><span class="o">+</span><span class="kd">←</span><span class="nv">v</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]</span>
-<span class="w">        </span><span class="no">⍬</span>
-<span class="w">    </span><span class="kt">}</span><span class="na">¨</span><span class="o">⌽</span><span class="m">1</span><span class="o">+⍳⌈</span><span class="na">/</span><span class="nv">d</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">p</span><span class="o">=⍳≢</span><span class="nv">p</span><span class="p">)</span><span class="na">/</span><span class="nv">v</span>
+<span class="w">        </span><span class="nv">sums</span><span class="sr">[</span><span class="nv">p</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]]</span><span class="o">+</span><span class="kd">←</span><span class="nv">sums</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]</span>
+<span class="w">        </span><span class="m">1</span>
+<span class="w">    </span><span class="kt">}</span>
+<span class="w">    </span><span class="nv">_</span><span class="kd">←</span><span class="nv">DoLayer</span><span class="na">¨</span><span class="o">⌽</span><span class="m">1</span><span class="o">+⍳</span><span class="nv">maxDepth</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">p</span><span class="o">=⍳≢</span><span class="nv">p</span><span class="p">)</span><span class="na">/</span><span class="nv">sums</span>
 <span class="kt">}</span>
 </pre></div>
 </div>
@@ -804,9 +812,7 @@ document.write(`
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="c1">⍝ this exploits the commutativity of addition</span>
-<span class="nv">Sum2</span><span class="kd">←</span><span class="kt">{</span><span class="nv">v</span><span class="w"> </span><span class="nv">p</span><span class="kd">←</span><span class="bp">⍺⍵</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">I</span><span class="na">⍣</span><span class="o">≡</span><span class="na">⍨</span><span class="nv">p</span><span class="p">)</span><span class="o">+</span><span class="na">/⍤</span><span class="o">⊢</span><span class="na">⌸</span><span class="nv">v</span>
-<span class="kt">}</span>
+<span class="nv">Sum2</span><span class="kd">←</span><span class="kt">{</span><span class="p">(</span><span class="nv">I</span><span class="na">⍣</span><span class="o">≡</span><span class="na">⍨</span><span class="bp">⍵</span><span class="p">)</span><span class="o">+</span><span class="na">/⍤</span><span class="o">⊢</span><span class="na">⌸</span><span class="bp">⍺</span><span class="kt">}</span>
 </pre></div>
 </div>
 </div>
@@ -821,17 +827,19 @@ document.write(`
 <span class="expanded">Hide code cell content</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">Height</span><span class="kd">←</span><span class="kt">{</span><span class="nv">p</span><span class="kd">←</span><span class="bp">⍵</span>
-<span class="w">    </span><span class="nv">r</span><span class="kd">←</span><span class="m">0</span><span class="o">⍴</span><span class="na">⍨</span><span class="o">≢</span><span class="nv">p</span>
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">Height</span><span class="kd">←</span><span class="kt">{</span><span class="w"> </span><span class="c1">⍝ find the height of each node in a parent vector</span>
+<span class="w">    </span><span class="nv">p</span><span class="kd">←</span><span class="bp">⍵</span><span class="w">    </span><span class="c1">⍝ parent vector</span>
+<span class="w">    </span><span class="nv">heights</span><span class="kd">←</span><span class="m">0</span><span class="o">⍴</span><span class="na">⍨</span><span class="o">≢</span><span class="nv">p</span>
 <span class="w">    </span><span class="nv">d</span><span class="kd">←</span><span class="nv">Depths</span><span class="w"> </span><span class="nv">p</span>
-<span class="w">    </span><span class="nv">md</span><span class="kd">←</span><span class="o">⌈</span><span class="na">/</span><span class="nv">d</span>
-<span class="w">    </span><span class="nv">md</span><span class="o">=</span><span class="m">0</span><span class="bp">:</span><span class="w"> </span><span class="nv">r</span>
-<span class="w">    </span><span class="nv">_</span><span class="kd">←</span><span class="kt">{</span>
+<span class="w">    </span><span class="nv">maxDepth</span><span class="kd">←</span><span class="o">⌈</span><span class="na">/</span><span class="nv">d</span>
+<span class="w">    </span><span class="nv">maxDepth</span><span class="o">=</span><span class="m">0</span><span class="bp">:</span><span class="w"> </span><span class="nv">heights</span>
+<span class="w">    </span><span class="nv">DoLayer</span><span class="kd">←</span><span class="kt">{</span>
 <span class="w">        </span><span class="nv">i</span><span class="kd">←</span><span class="o">⍸</span><span class="nv">d</span><span class="o">=</span><span class="bp">⍵</span>
-<span class="w">        </span><span class="nv">p</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]</span><span class="kt">{</span><span class="nv">r</span><span class="sr">[</span><span class="bp">⍺</span><span class="sr">]</span><span class="kd">←</span><span class="m">1</span><span class="o">+⌈</span><span class="na">/</span><span class="nv">r</span><span class="sr">[</span><span class="bp">⍵</span><span class="sr">]</span><span class="kt">}</span><span class="na">⌸</span><span class="nv">i</span>
-<span class="w">        </span><span class="no">⍬</span>
-<span class="w">    </span><span class="kt">}</span><span class="na">¨</span><span class="o">⌽</span><span class="m">1</span><span class="o">+⍳</span><span class="nv">md</span>
-<span class="w">    </span><span class="nv">r</span>
+<span class="w">        </span><span class="nv">p</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]</span><span class="kt">{</span><span class="nv">heights</span><span class="sr">[</span><span class="bp">⍺</span><span class="sr">]</span><span class="kd">←</span><span class="m">1</span><span class="o">+⌈</span><span class="na">/</span><span class="nv">heights</span><span class="sr">[</span><span class="bp">⍵</span><span class="sr">]</span><span class="kt">}</span><span class="na">⌸</span><span class="nv">i</span>
+<span class="w">        </span><span class="m">1</span>
+<span class="w">    </span><span class="kt">}</span>
+<span class="w">    </span><span class="nv">_</span><span class="kd">←</span><span class="nv">DoLayer</span><span class="na">¨</span><span class="o">⌽</span><span class="m">1</span><span class="o">+⍳</span><span class="nv">maxDepth</span>
+<span class="w">    </span><span class="nv">heights</span>
 <span class="kt">}</span>
 </pre></div>
 </div>

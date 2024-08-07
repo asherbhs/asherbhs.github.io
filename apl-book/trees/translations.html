@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=87e54e7c" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=bfa96906" />
@@ -572,6 +572,8 @@ p[i]←i
     _←2{p[⍵]←⍺[⍺⍸⍵]}/⊂⍤⊢⌸d
     p
 }
+
+DepthToParent←{⊃{((⍸/⌷⊃)⍺)@(1⊃⍺)⊢⍵}/(⊂⍳≢d),⍨2,⍥⊂/⊂⍤⊢⌸d←⍵}
 </pre></div>
 </div>
 <p><strong>BQN:</strong></p>
@@ -580,6 +582,8 @@ p[i]←i
     {p(𝕨⊏˜¯1+𝕨⍋𝕩)⌾(𝕩⊸⊏)↩}´˘2↕d⊔↕≠d
     p
 }
+
+DepthToParent←{(↕≠d){((⊑⊏˜¯1+⍋´)𝕨)⌾((1⊑𝕨)⊸⊏)𝕩}˝2↕⊔d←𝕩}
 </pre></div>
 </div>
 <p><strong>J:</strong></p>
@@ -588,6 +592,8 @@ p[i]←i
     <span class="mi">2</span><span class="p">{{</span><span class="n">p</span><span class="o">=</span><span class="p">:</span><span class="n">p</span> <span class="n">y</span><span class="p">}</span><span class="o">~</span><span class="n">x</span><span class="p">{</span><span class="o">~</span><span class="n">_1</span><span class="o">+</span><span class="n">x</span> <span class="n">I</span><span class="o">.</span><span class="n">y</span><span class="p">}}</span><span class="o">&amp;&gt;/</span>\<span class="n">d</span><span class="o">&lt;@</span><span class="p">]</span><span class="o">/.</span><span class="n">i</span><span class="o">.</span><span class="c1">#d</span>
     <span class="n">p</span>
 <span class="p">}}</span>
+
+<span class="n">DepthToParent</span><span class="o">=</span><span class="p">:{{</span><span class="o">&gt;</span><span class="p">{{</span><span class="o">&lt;</span><span class="p">(</span><span class="o">&gt;</span><span class="n">y</span><span class="p">)(</span><span class="o">&gt;</span><span class="p">{:</span><span class="n">x</span><span class="p">)}</span><span class="o">~</span><span class="p">(</span><span class="o">&gt;</span><span class="p">{</span><span class="o">.</span><span class="n">x</span><span class="p">){</span><span class="o">~</span><span class="n">_1</span><span class="o">+</span><span class="n">I</span><span class="o">.&amp;&gt;/</span><span class="n">x</span><span class="p">}}</span><span class="o">&amp;&gt;/</span><span class="p">(</span><span class="o">&lt;</span><span class="n">p</span><span class="p">),</span><span class="o">~</span><span class="mi">2</span><span class="o">&lt;</span>\<span class="n">d</span><span class="o">&lt;/.</span><span class="n">p</span><span class="o">=.</span><span class="n">i</span><span class="o">.</span><span class="c1">#d=.y}}</span>
 </pre></div>
 </div>
 <p><strong>K:</strong></p>
@@ -595,6 +601,8 @@ p[i]←i
     p::!#d
     {p::@[p;y;:;x@x&#39;y]}/&#39;2&#39;:.=d
     p}
+
+DepthToParent:{(!#d){@[x;y[1];:;y[0]@y[0]&#39;y[1]]}/2&#39;:.=d:x}
 </pre></div>
 </div>
 </section>

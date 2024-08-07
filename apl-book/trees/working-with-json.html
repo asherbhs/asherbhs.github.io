@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=87e54e7c" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=bfa96906" />
@@ -576,8 +576,8 @@ document.write(`
 <p>The <a class="reference external" href="https://help.dyalog.com/latest/Content/Language/System%20Functions/json.htm"><code class="docutils literal notranslate"><span class="pre">⎕JSON</span></code> documentation</a> describes the format of this table in detail. For our purposes, the most important column is the first, which gives the nesting depth for each row. You may recognise this as a form of depth vector, just like those we have used to describe trees previously. We can use this to create a parent vector representing our JSON.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="o">⍪</span><span class="nv">d</span><span class="w"> </span><span class="nv">k</span><span class="w"> </span><span class="nv">v</span><span class="w"> </span><span class="nv">t</span><span class="kd">←</span><span class="o">↓⍉</span><span class="nf">⎕JSON⎕OPT</span><span class="s1">&#39;Format&#39;</span><span class="w"> </span><span class="s1">&#39;M&#39;</span><span class="o">⊢</span><span class="nv">json</span><span class="w">    </span><span class="c1">⍝ extract each column as a vector</span>
-<span class="o">⊢</span><span class="nv">p</span><span class="kd">←</span><span class="nv">DepthToParent</span><span class="w"> </span><span class="nv">d</span><span class="w">                       </span><span class="c1">⍝ create the parent vector</span>
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="o">⍪</span><span class="nv">d</span><span class="w"> </span><span class="nv">keys</span><span class="w"> </span><span class="nv">values</span><span class="w"> </span><span class="nv">types</span><span class="kd">←</span><span class="o">↓⍉</span><span class="nf">⎕JSON⎕OPT</span><span class="s1">&#39;Format&#39;</span><span class="w"> </span><span class="s1">&#39;M&#39;</span><span class="o">⊢</span><span class="nv">json</span><span class="w">    </span><span class="c1">⍝ extract each column as a vector</span>
+<span class="o">⊢</span><span class="nv">p</span><span class="kd">←</span><span class="nv">DepthToParent</span><span class="w"> </span><span class="nv">d</span><span class="w">                                   </span><span class="c1">⍝ create the parent vector</span>
 <span class="nv">PPH</span><span class="w"> </span><span class="nv">p</span>
 </pre></div>
 </div>
@@ -630,11 +630,10 @@ document.write(`
 <p>The other columns, which we have extracted as <code class="docutils literal notranslate"><span class="pre">k</span></code>, <code class="docutils literal notranslate"><span class="pre">v</span></code>, and <code class="docutils literal notranslate"><span class="pre">t</span></code>, store the key, value, and type for a node respectively. For example, the row corresponding to <code class="docutils literal notranslate"><span class="pre">&quot;number&quot;:</span> <span class="pre">12</span></code> has a key of <code class="docutils literal notranslate"><span class="pre">'number'</span></code>, a value of <code class="docutils literal notranslate"><span class="pre">12</span></code>, and a type of <code class="docutils literal notranslate"><span class="pre">3</span></code>, indicating the data is numeric. Labelling our tree with these vectors shows us exactly how parts of the tree correspond to the original JSON object.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">k</span><span class="w"> </span><span class="nv">PPH</span><span class="w"> </span><span class="nv">p</span>
-<span class="nv">v</span><span class="w"> </span><span class="nv">PPH</span><span class="w"> </span><span class="nv">p</span>
-<span class="nv">jsonTypes</span><span class="kd">←</span><span class="s1">&#39;N/A&#39;</span><span class="w"> </span><span class="s1">&#39;Object&#39;</span><span class="w"> </span><span class="s1">&#39;Array&#39;</span><span class="w"> </span><span class="s1">&#39;Numeric&#39;</span><span class="w"> </span><span class="s1">&#39;String&#39;</span>
-<span class="c1">⍝           0      1        2        3        4</span>
-<span class="nv">jsonTypes</span><span class="sr">[</span><span class="nv">t</span><span class="sr">]</span><span class="w"> </span><span class="nv">PPH</span><span class="w"> </span><span class="nv">p</span>
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">keys</span><span class="w"> </span><span class="nv">PPH</span><span class="w"> </span><span class="nv">p</span>
+<span class="nv">values</span><span class="w"> </span><span class="nv">PPH</span><span class="w"> </span><span class="nv">p</span>
+<span class="nv">typeNames</span><span class="kd">←</span><span class="s1">&#39;N/A&#39;</span><span class="w"> </span><span class="s1">&#39;Object&#39;</span><span class="w"> </span><span class="s1">&#39;Array&#39;</span><span class="w"> </span><span class="s1">&#39;Numeric&#39;</span><span class="w"> </span><span class="s1">&#39;String&#39;</span>
+<span class="nv">typeNames</span><span class="sr">[</span><span class="nv">types</span><span class="sr">]</span><span class="w"> </span><span class="nv">PPH</span><span class="w"> </span><span class="nv">p</span>
 </pre></div>
 </div>
 </div>
@@ -728,8 +727,8 @@ document.write(`
 <p>Now that we have all of this information, we can begin to manipulate our tree to group the astronaut’s names by their craft. Our first step will be to find those nodes which indicate the craft, and extract the unique craft names.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">i</span><span class="kd">←</span><span class="o">⍸</span><span class="s1">&#39;craft&#39;</span><span class="na">∘</span><span class="o">≡</span><span class="na">¨</span><span class="nv">k</span><span class="w">    </span><span class="c1">⍝ which nodes have a key of &#39;craft&#39;</span>
-<span class="o">⊢</span><span class="nv">c</span><span class="kd">←</span><span class="o">∪</span><span class="nv">v</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]</span><span class="w">          </span><span class="c1">⍝ find the unique craft names</span>
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">i</span><span class="kd">←</span><span class="o">⍸</span><span class="s1">&#39;craft&#39;</span><span class="na">∘</span><span class="o">≡</span><span class="na">¨</span><span class="nv">keys</span><span class="w">     </span><span class="c1">⍝ which nodes have a key of &#39;craft&#39;</span>
+<span class="o">⊢</span><span class="nv">crafts</span><span class="kd">←</span><span class="o">∪</span><span class="nv">values</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]</span><span class="w">    </span><span class="c1">⍝ find the unique craft names</span>
 </pre></div>
 </div>
 </div>
@@ -749,8 +748,8 @@ document.write(`
 <p>We want a root object with two keys (<code class="docutils literal notranslate"><span class="pre">&quot;ISS&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;Tiangong&quot;</span></code>), each of which maps to an array. Our parent vector already has nodes in the indices <code class="docutils literal notranslate"><span class="pre">0</span></code> up to and including <code class="docutils literal notranslate"><span class="pre">(≢p)-1</span></code>, so our new nodes should have IDs <code class="docutils literal notranslate"><span class="pre">≢p</span></code> and greater. So, we create our new root node with ID <code class="docutils literal notranslate"><span class="pre">≢p</span></code>, and child nodes for each group with IDs <code class="docutils literal notranslate"><span class="pre">(≢p)+1</span></code>, <code class="docutils literal notranslate"><span class="pre">(≢p)+2</span></code>, and so on.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="o">⊢</span><span class="nv">r</span><span class="kd">←</span><span class="o">≢</span><span class="nv">p</span><span class="w">         </span><span class="c1">⍝ new node for root object</span>
-<span class="o">⊢</span><span class="nv">g</span><span class="kd">←</span><span class="nv">r</span><span class="o">+</span><span class="m">1</span><span class="o">+⍳≢</span><span class="nv">c</span><span class="w">    </span><span class="c1">⍝ child nodes for groups</span>
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="o">⊢</span><span class="nv">root</span><span class="kd">←</span><span class="o">≢</span><span class="nv">p</span><span class="w">                   </span><span class="c1">⍝ new node for root object</span>
+<span class="o">⊢</span><span class="nv">groups</span><span class="kd">←</span><span class="nv">root</span><span class="o">+</span><span class="m">1</span><span class="o">+⍳≢</span><span class="nv">crafts</span><span class="w">    </span><span class="c1">⍝ child nodes for groups</span>
 </pre></div>
 </div>
 </div>
@@ -762,14 +761,14 @@ document.write(`
 <p>We then want to add these nodes and their associated data to each of the vectors we are using for this tree.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">p</span><span class="o">,</span><span class="kd">←</span><span class="p">(</span><span class="m">1</span><span class="o">+≢</span><span class="nv">c</span><span class="p">)</span><span class="o">⍴</span><span class="nv">r</span><span class="w">     </span><span class="c1">⍝ each new node points to r as its parent</span>
-<span class="nv">k</span><span class="o">,</span><span class="kd">←</span><span class="p">(</span><span class="o">⊂</span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">,</span><span class="nv">c</span><span class="w">      </span><span class="c1">⍝ root node has no key, group nodes have craft names as keys</span>
-<span class="nv">v</span><span class="o">,</span><span class="kd">←</span><span class="p">(</span><span class="m">1</span><span class="o">+≢</span><span class="nv">c</span><span class="p">)</span><span class="o">⍴⊂</span><span class="no">⍬</span><span class="w">    </span><span class="c1">⍝ no node has values assigned yet</span>
-<span class="nv">t</span><span class="o">,</span><span class="kd">←</span><span class="m">1</span><span class="o">,</span><span class="p">(</span><span class="o">≢</span><span class="nv">c</span><span class="p">)</span><span class="o">⍴</span><span class="m">2</span><span class="w">     </span><span class="c1">⍝ root node has type 1 (object) and groups have type 2 (array)</span>
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">p</span><span class="w">     </span><span class="o">,</span><span class="kd">←</span><span class="p">(</span><span class="m">1</span><span class="o">+≢</span><span class="nv">groups</span><span class="p">)</span><span class="o">⍴</span><span class="nv">root</span><span class="w">    </span><span class="c1">⍝ each new node points to root as its parent</span>
+<span class="nv">keys</span><span class="w">  </span><span class="o">,</span><span class="kd">←</span><span class="p">(</span><span class="o">⊂</span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">,</span><span class="nv">crafts</span><span class="w">        </span><span class="c1">⍝ root node has no key, group nodes have craft names as keys</span>
+<span class="nv">values</span><span class="o">,</span><span class="kd">←</span><span class="p">(</span><span class="m">1</span><span class="o">+≢</span><span class="nv">groups</span><span class="p">)</span><span class="o">⍴⊂</span><span class="no">⍬</span><span class="w">      </span><span class="c1">⍝ no node has values assigned yet</span>
+<span class="nv">types</span><span class="w"> </span><span class="o">,</span><span class="kd">←</span><span class="m">1</span><span class="o">,</span><span class="p">(</span><span class="o">≢</span><span class="nv">groups</span><span class="p">)</span><span class="o">⍴</span><span class="m">2</span><span class="w">       </span><span class="c1">⍝ root node has type 1 (object) and groups have type 2 (array)</span>
 
-<span class="nv">k</span><span class="w"> </span><span class="nv">PPH</span><span class="w"> </span><span class="nv">p</span>
-<span class="nv">v</span><span class="w"> </span><span class="nv">PPH</span><span class="w"> </span><span class="nv">p</span>
-<span class="nv">jsonTypes</span><span class="sr">[</span><span class="nv">t</span><span class="sr">]</span><span class="w"> </span><span class="nv">PPH</span><span class="w"> </span><span class="nv">p</span>
+<span class="nv">keys</span><span class="w"> </span><span class="nv">PPH</span><span class="w"> </span><span class="nv">p</span>
+<span class="nv">values</span><span class="w"> </span><span class="nv">PPH</span><span class="w"> </span><span class="nv">p</span>
+<span class="nv">typeNames</span><span class="sr">[</span><span class="nv">types</span><span class="sr">]</span><span class="w"> </span><span class="nv">PPH</span><span class="w"> </span><span class="nv">p</span>
 </pre></div>
 </div>
 </div>
@@ -861,15 +860,15 @@ document.write(`
 </pre></div></div>
 </div>
 <p>Now, we want to move the astronaut names from where they are, to the correct group. We’re going to use a little trick to find the name nodes - since the original data was in DFPT order, and we haven’t changed the order so far, each <code class="docutils literal notranslate"><span class="pre">&quot;craft&quot;</span></code> node (which we found earlier as <code class="docutils literal notranslate"><span class="pre">i</span></code>) appears immediately before the <code class="docutils literal notranslate"><span class="pre">&quot;name&quot;</span></code> node it accompanies in the parent vector. You can see this in our original table, where each row containing the key <code class="docutils literal notranslate"><span class="pre">'craft'</span></code> appears straight before the fellow row with the key <code class="docutils literal notranslate"><span class="pre">'name'</span></code>. We can exploit this to be sure that the nodes <code class="docutils literal notranslate"><span class="pre">i+1</span></code> are exactly the <code class="docutils literal notranslate"><span class="pre">&quot;name&quot;</span></code> nodes.</p>
-<p>To move the astronaut names to their correct groups, we simply need to update their parents to the appropriate group node. We find the index in the <code class="docutils literal notranslate"><span class="pre">c</span></code> vector of craft names of the craft name we are concerned with, and use that to index the vector <code class="docutils literal notranslate"><span class="pre">g</span></code> of new group nodes, whose craft names are ordered identically to <code class="docutils literal notranslate"><span class="pre">c</span></code>. We also need to update the keys of these name nodes to be empty, as when we feed this data back to <code class="docutils literal notranslate"><span class="pre">⎕JSON</span></code> later, it will not be expecting array elements to have keys.</p>
+<p>To move the astronaut names to their correct groups, we simply need to update their parents to the appropriate group node. We find the index in the <code class="docutils literal notranslate"><span class="pre">crafts</span></code> vector of the craft name we are concerned with, and use that to index the vector <code class="docutils literal notranslate"><span class="pre">groups</span></code>, whose craft names are ordered identically to <code class="docutils literal notranslate"><span class="pre">crafts</span></code>. We also need to update the keys of these name nodes to be empty, as when we feed this data back to <code class="docutils literal notranslate"><span class="pre">⎕JSON</span></code> later, it will not be expecting array elements to have keys.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">p</span><span class="sr">[</span><span class="nv">i</span><span class="o">+</span><span class="m">1</span><span class="sr">]</span><span class="kd">←</span><span class="nv">g</span><span class="sr">[</span><span class="nv">c</span><span class="o">⍳</span><span class="nv">v</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]]</span>
-<span class="nv">k</span><span class="sr">[</span><span class="nv">i</span><span class="o">+</span><span class="m">1</span><span class="sr">]</span><span class="kd">←</span><span class="o">⊂</span><span class="s1">&#39;&#39;</span>
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">p</span><span class="sr">[</span><span class="nv">i</span><span class="o">+</span><span class="m">1</span><span class="sr">]</span><span class="kd">←</span><span class="nv">groups</span><span class="sr">[</span><span class="nv">crafts</span><span class="o">⍳</span><span class="nv">values</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]]</span>
+<span class="nv">keys</span><span class="sr">[</span><span class="nv">i</span><span class="o">+</span><span class="m">1</span><span class="sr">]</span><span class="kd">←</span><span class="o">⊂</span><span class="s1">&#39;&#39;</span>
 
-<span class="nv">k</span><span class="w"> </span><span class="nv">PPH</span><span class="w"> </span><span class="nv">p</span>
-<span class="nv">v</span><span class="w"> </span><span class="nv">PPH</span><span class="w"> </span><span class="nv">p</span>
-<span class="nv">jsonTypes</span><span class="sr">[</span><span class="nv">t</span><span class="sr">]</span><span class="w"> </span><span class="nv">PPH</span><span class="w"> </span><span class="nv">p</span>
+<span class="nv">keys</span><span class="w"> </span><span class="nv">PPH</span><span class="w"> </span><span class="nv">p</span>
+<span class="nv">values</span><span class="w"> </span><span class="nv">PPH</span><span class="w"> </span><span class="nv">p</span>
+<span class="nv">typeNames</span><span class="sr">[</span><span class="nv">types</span><span class="sr">]</span><span class="w"> </span><span class="nv">PPH</span><span class="w"> </span><span class="nv">p</span>
 </pre></div>
 </div>
 </div>
@@ -927,15 +926,15 @@ document.write(`
 <p>Now we have two distinct trees, and we only need the newly created one, so we can simply delete the other using the idiom we described previously.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">m</span><span class="kd">←</span><span class="nv">r</span><span class="o">=</span><span class="nv">p</span><span class="w"> </span><span class="nv">I</span><span class="na">@</span><span class="p">(</span><span class="nv">r</span><span class="na">∘</span><span class="o">≠</span><span class="p">)</span><span class="na">⍣</span><span class="o">≡⍳≢</span><span class="nv">p</span><span class="w">    </span><span class="c1">⍝ make of nodes which are in the new tree</span>
-<span class="nv">p</span><span class="kd">←</span><span class="p">(</span><span class="o">⍸~</span><span class="nv">m</span><span class="p">)(</span><span class="o">⊢-</span><span class="m">1</span><span class="o">+⍸</span><span class="p">)</span><span class="nv">m</span><span class="na">/</span><span class="nv">p</span><span class="w">     </span><span class="c1">⍝ delete nodes in the old tree</span>
-<span class="nv">k</span><span class="kd">←</span><span class="nv">m</span><span class="na">/</span><span class="nv">k</span><span class="w">                 </span><span class="c1">⍝─┐</span>
-<span class="nv">v</span><span class="kd">←</span><span class="nv">m</span><span class="na">/</span><span class="nv">v</span><span class="w">                 </span><span class="c1">⍝─┼─ filter the associated data</span>
-<span class="nv">t</span><span class="kd">←</span><span class="nv">m</span><span class="na">/</span><span class="nv">t</span><span class="w">                 </span><span class="c1">⍝─┘</span>
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">mask</span><span class="kd">←</span><span class="nv">root</span><span class="o">=</span><span class="nv">p</span><span class="w"> </span><span class="nv">I</span><span class="na">@</span><span class="p">(</span><span class="nv">root</span><span class="na">∘</span><span class="o">≠</span><span class="p">)</span><span class="na">⍣</span><span class="o">≡⍳≢</span><span class="nv">p</span><span class="w">    </span><span class="c1">⍝ make of nodes which are in the new tree</span>
+<span class="nv">p</span><span class="kd">←</span><span class="p">(</span><span class="o">⍸~</span><span class="nv">mask</span><span class="p">)(</span><span class="o">⊢-</span><span class="m">1</span><span class="o">+⍸</span><span class="p">)</span><span class="nv">mask</span><span class="na">/</span><span class="nv">p</span><span class="w">        </span><span class="c1">⍝ delete nodes in the old tree</span>
+<span class="nv">keys</span><span class="w">  </span><span class="kd">←</span><span class="nv">mask</span><span class="na">/</span><span class="nv">keys</span><span class="w">               </span><span class="c1">⍝─┐</span>
+<span class="nv">values</span><span class="kd">←</span><span class="nv">mask</span><span class="na">/</span><span class="nv">values</span><span class="w">             </span><span class="c1">⍝ │ filter the associated data</span>
+<span class="nv">types</span><span class="w"> </span><span class="kd">←</span><span class="nv">mask</span><span class="na">/</span><span class="nv">types</span><span class="w">              </span><span class="c1">⍝─┘</span>
 
-<span class="nv">k</span><span class="w"> </span><span class="nv">PPH</span><span class="w"> </span><span class="nv">p</span>
-<span class="nv">v</span><span class="w"> </span><span class="nv">PPH</span><span class="w"> </span><span class="nv">p</span>
-<span class="nv">jsonTypes</span><span class="sr">[</span><span class="nv">t</span><span class="sr">]</span><span class="w"> </span><span class="nv">PPH</span><span class="w"> </span><span class="nv">p</span>
+<span class="nv">keys</span><span class="w"> </span><span class="nv">PPH</span><span class="w"> </span><span class="nv">p</span>
+<span class="nv">values</span><span class="w"> </span><span class="nv">PPH</span><span class="w"> </span><span class="nv">p</span>
+<span class="nv">typeNames</span><span class="sr">[</span><span class="nv">types</span><span class="sr">]</span><span class="w"> </span><span class="nv">PPH</span><span class="w"> </span><span class="nv">p</span>
 </pre></div>
 </div>
 </div>
@@ -984,17 +983,17 @@ document.write(`
 └───────────────────┘
 </pre></div></div>
 </div>
-<p>Now, our tree corresponds exactly to the JSON structure we want to return, all that remains is to feed it back into <code class="docutils literal notranslate"><span class="pre">⎕JSON</span></code>. Remember that the matrix format <code class="docutils literal notranslate"><span class="pre">⎕JSON</span></code> uses has the depth vector as its first column. In order to pass our vectors back to <code class="docutils literal notranslate"><span class="pre">⎕JSON</span></code>, we need to recover the depth vector. We could exploit the structure that we know our parent vector to have, since we controlled exactly how it was constructed, but we will instead take this opportunity to show how <code class="docutils literal notranslate"><span class="pre">ParentToDepth</span></code> (which we defined <a class="reference internal" href="#relating-depths-and-parent-vectors.md#depth-vector-ordering"><span class="xref myst">previously</span></a>) works in practice.</p>
+<p>Now, our tree corresponds exactly to the JSON structure we want to return, all that remains is to feed it back into <code class="docutils literal notranslate"><span class="pre">⎕JSON</span></code>. Remember that the matrix format <code class="docutils literal notranslate"><span class="pre">⎕JSON</span></code> uses has the depth vector as its first column. In order to pass our vectors back to <code class="docutils literal notranslate"><span class="pre">⎕JSON</span></code>, we need to recover the depth vector. We could exploit the structure that we know our parent vector to have, since we controlled exactly how it was constructed, but we will instead take this opportunity to show how <code class="docutils literal notranslate"><span class="pre">ParentToDepth</span></code> (which we defined <a class="reference internal" href="relating-depth-and-parent-vectors.html#depth-vector-ordering"><span class="std std-ref">previously</span></a>) works in practice.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="c1">⍝ find depths and DFPT ordering of p</span>
 <span class="nv">d</span><span class="w"> </span><span class="nv">perm</span><span class="kd">←</span><span class="nv">ParentToDepth</span><span class="w"> </span><span class="nv">p</span>
 
-<span class="c1">⍝ correct d, k, v, and t to DFPT order</span>
-<span class="nv">d</span><span class="kd">←</span><span class="nv">d</span><span class="sr">[</span><span class="nv">perm</span><span class="sr">]</span>
-<span class="nv">k</span><span class="kd">←</span><span class="nv">k</span><span class="sr">[</span><span class="nv">perm</span><span class="sr">]</span>
-<span class="nv">v</span><span class="kd">←</span><span class="nv">v</span><span class="sr">[</span><span class="nv">perm</span><span class="sr">]</span>
-<span class="nv">t</span><span class="kd">←</span><span class="nv">t</span><span class="sr">[</span><span class="nv">perm</span><span class="sr">]</span>
+<span class="c1">⍝ correct d, keys, values, and types to DFPT order</span>
+<span class="nv">d</span><span class="w">     </span><span class="kd">←</span><span class="nv">d</span><span class="w">     </span><span class="sr">[</span><span class="nv">perm</span><span class="sr">]</span>
+<span class="nv">keys</span><span class="w">  </span><span class="kd">←</span><span class="nv">keys</span><span class="w">  </span><span class="sr">[</span><span class="nv">perm</span><span class="sr">]</span>
+<span class="nv">values</span><span class="kd">←</span><span class="nv">values</span><span class="sr">[</span><span class="nv">perm</span><span class="sr">]</span>
+<span class="nv">types</span><span class="w"> </span><span class="kd">←</span><span class="nv">types</span><span class="w"> </span><span class="sr">[</span><span class="nv">perm</span><span class="sr">]</span>
 </pre></div>
 </div>
 </div>
@@ -1002,7 +1001,7 @@ document.write(`
 <p>We can then pack these vectors back into the matrix format expected by <code class="docutils literal notranslate"><span class="pre">⎕JSON</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="o">⍉↑</span><span class="nv">d</span><span class="w"> </span><span class="nv">k</span><span class="w"> </span><span class="nv">v</span><span class="w"> </span><span class="nv">t</span>
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="o">⍉↑</span><span class="nv">d</span><span class="w"> </span><span class="nv">keys</span><span class="w"> </span><span class="nv">values</span><span class="w"> </span><span class="nv">types</span>
 </pre></div>
 </div>
 </div>
@@ -1043,7 +1042,7 @@ document.write(`
 <p>And finally, we can pass this matrix back to <code class="docutils literal notranslate"><span class="pre">⎕JSON</span></code>, and it generates the output we want.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nf">⎕JSON⎕OPT</span><span class="p">(</span><span class="s1">&#39;Format&#39;</span><span class="w"> </span><span class="s1">&#39;M&#39;</span><span class="p">)(</span><span class="s1">&#39;Compact&#39;</span><span class="w"> </span><span class="m">0</span><span class="p">)</span><span class="o">⍉↑</span><span class="nv">d</span><span class="w"> </span><span class="nv">k</span><span class="w"> </span><span class="nv">v</span><span class="w"> </span><span class="nv">t</span>
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nf">⎕JSON⎕OPT</span><span class="p">(</span><span class="s1">&#39;Format&#39;</span><span class="w"> </span><span class="s1">&#39;M&#39;</span><span class="p">)(</span><span class="s1">&#39;Compact&#39;</span><span class="w"> </span><span class="m">0</span><span class="p">)</span><span class="o">⍉↑</span><span class="nv">d</span><span class="w"> </span><span class="nv">keys</span><span class="w"> </span><span class="nv">values</span><span class="w"> </span><span class="nv">types</span>
 </pre></div>
 </div>
 </div>

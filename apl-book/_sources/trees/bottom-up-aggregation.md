@@ -23,64 +23,65 @@ We've covered lots of ways to play with the structure of a tree, but, similarly 
 I←{⍺[⍵]}
 ]box on
 
-⍝ renders a tree given labels, box drawing characters, and padding
-⍝     ┌─────── vector of character matrices giving the labels for each node
-⍝     │ ┌───── box drawing characters to render the tree, e.g: '─┌┬┐│┴├┼┤│'
-⍝     │ │                                               normal ─┴───┘└───┴─ upstruck
-⍝     │ │ ┌─── number of spaces to pad with between sub-tree
-⍝     │ │ │ ┌─ parent vector
-_pp_←{v b s p←⍺ ⍺⍺ ⍵⍵ ⍵
-    d←p≠⍳≢p
-    _←{
-        q←p[⍵]
-        d+←⍵≠q
-        q
-    }⍣≡p
-    md←⌈/d
-    r←v        ⍝ result of rendering each sub-tree, seeded with labels
-    md=0: r    ⍝ avoid the each running on the prototype
-    _←{
-        i←⍸d=⍵    ⍝ nodes at this depth
-        F←{                                          ⍝ ⍺ parent, ⍵ rendered child sub-trees
-            ws←(1⊃⍴)¨⍵                               ⍝ widths of each rendered child
-            w←s-⍨+/s+ws                              ⍝ eventual width of the rendered tree       wwwwwww
-            cs←(+\0,¯1↓s+ws)+¯1+⌈2÷⍨ws               ⍝ centres of each rendered sub-tree         ∘ss∘ss∘
-            t←w⍴' '                                  ⍝ header to be decorated                   '       '
-            t[(⊢⊢⍤/⍨((⊃⌽cs)>⊢)∧(⊃cs)<⊢)⍳w]←b[0]      ⍝ add horizontal bar                       ' ───── '
-            t[   ⊃ cs]←b[1]                          ⍝ left end of bar                          '┌───── '
-            t[   ⊃⌽cs]←b[3]                          ⍝ right end of bar                         '┌─────┐'
-            t[¯1↓1↓cs]←b[2]                          ⍝ connectors to intermediate children      '┌──┬──┐'
-            t[(1=≢cs)⍴⊃cs]←b[4]                      ⍝ if there's only one child, just make it a lone upstrike
-            c←¯1+⌈2÷⍨w                               ⍝ index of the centre of the rendered tree     ∘
-            t[c]←b[5 6 7 8 9][b[0 1 2 3 4]⍳t[c]]     ⍝ connector to the parent                  '┌──┼──┐'
-            t⍪←(-s)↓⍤1⊃,/,∘(s⍴' ')⍤1¨((⌈/≢¨)↑¨⊢)⍵    ⍝ pad lables, join under header
-            rp←⍺⊃r                                   ⍝ label of the parent
-            ww←1⊃⍴rp                                 ⍝ width of label of parent
-            cc←¯1+⌈2÷⍨ww                             ⍝ centre of label of parent
-            t ←((c-cc)⌽ww↑⍤1⊢)⍣(w<ww)⊢t              ⍝ pad and recentre text so far if it's less wide
-            rp←((cc-c)⌽ w↑⍤1⊢)⍣(w>ww)⊢rp             ⍝ pad and recentre parent label if it's less wide
-            t⍪⍨←rp                                   ⍝ add parent label
-            r[⍺]←⊂t                                  ⍝ record result
-            ⍬
-        }
-        _←p[i]F⌸r[i]
-        ⍬
-    }¨⌽1+⍳md    ⍝ bottom up accumulation
-    r/⍨p=⍳≢p    ⍝ return results at roots only
-}
-
-PPV←{⍺←'∘' ⋄ v p←⍺⍵ ⋄   ((≢p)⍴⍉⍤⍪⍤⍕¨'∘'@(0=≢¨)v)('─┌┬┐│┴├┼┤│'_pp_ 1)p}    ⍝ vertical
-PPH←{⍺←'∘' ⋄ v p←⍺⍵ ⋄ ⍉¨((≢p)⍴  ⍪⍤⍕¨'∘'@(0=≢¨)v)('│┌├└─┤┬┼┴─'_pp_ 0)p}    ⍝ horizontal
-
-Depths←{p←⍵
+Depths←{ ⍝ find the depths of each node in a parent vector
+    ⍝ ←: a vector of the depths of each node in the input
+    p←⍵    ⍝ input parent vector
     depths←(≢p)⍴0
-    _←{
+    StepUp←{ ⍝ step up the tree and increment depths
         q←p[⍵]
         depths+←⍵≠q
         q
-    }⍣≡⍳≢p
+    }
+    _←StepUp⍣≡⍳≢p
     depths
 }
+
+_PrettyPrint_←{ ⍝ renders a tree given labels, box drawing characters, and padding
+	⍝ ←: vector of character matrices, each a labelled rendering of a tree in the forest given by the input parent vector
+	labels    ←⍺     ⍝ vector of character matrices giving the labels for each node
+	connectors←⍺⍺    ⍝ box drawing characters to render the tree, e.g: '─┌┬┐│┴├┼┤│' (normal, and upstruck)
+	spaces    ←⍵⍵    ⍝ number of spaces to pad with between sub-trees
+	p         ←⍵     ⍝ parent vector
+	d←Depths p
+	maxDepth←⌈/d
+	results←labels         ⍝ result of rendering each sub-tree, seeded with labels
+	maxDepth=0: results    ⍝ avoid the each running on the prototype
+	DoFamily←{ ⍝ render and record a sub-tree
+		⍝ ⍺: parent node
+		⍝ ⍵: rendered results of children
+		widths←(1⊃⍴)¨⍵                                                                           ⍝ widths of each rendered child
+		width←spaces-⍨+/spaces+widths                                                            ⍝ eventual width of the rendered tree       wwwwwww
+		centres←(+\0,¯1↓spaces+widths)+¯1+⌈2÷⍨widths                                             ⍝ centres of each rendered sub-tree         ∘ss∘ss∘
+		result←width⍴' '                                                                         ⍝ header to be decorated                   '       '
+		result[(⊢⊢⍤/⍨((⊃⌽centres)>⊢)∧(⊃centres)<⊢)⍳width]←connectors[0]                          ⍝ add horizontal bar                       ' ───── '
+		result[   ⊃ centres]←connectors[1]                                                       ⍝ left end of bar                          '┌───── '
+		result[   ⊃⌽centres]←connectors[3]                                                       ⍝ right end of bar                         '┌─────┐'
+		result[¯1↓1↓centres]←connectors[2]                                                       ⍝ connectors to intermediate children      '┌──┬──┐'
+		result[(1=≢centres)⍴⊃centres]←connectors[4]                                              ⍝ if there's only one child, just make it a lone upstrike
+		centre←¯1+⌈2÷⍨width                                                                      ⍝ index of the centre of the rendered tree     ∘
+		result[centre]←connectors[5 6 7 8 9][connectors[0 1 2 3 4]⍳result[centre]]               ⍝ connector to the parent                  '┌──┼──┐'
+		result⍪←(-spaces)↓⍤1⊃,/,∘(spaces⍴' ')⍤1¨⍵↑¨⍨⌈/≢¨⍵                                        ⍝ pad lables, join under header
+		parentResult←⍺⊃results                                                                   ⍝ label of the parent
+		parentWidth←1⊃⍴parentResult                                                              ⍝ width of label of parent
+		parentCentre←¯1+⌈2÷⍨parentWidth                                                          ⍝ centre of label of parent
+		result      ←((centre-parentCentre)⌽parentWidth↑⍤1⊢)⍣(width<parentWidth)⊢result          ⍝ pad and recentre text so far if it's less wide
+		parentResult←((parentCentre-centre)⌽      width↑⍤1⊢)⍣(width>parentWidth)⊢parentResult    ⍝ pad and recentre parent label if it's less wide
+		result⍪⍨←parentResult                                                                    ⍝ add parent label
+		results[⍺]←⊂result                                                                       ⍝ record result
+		1
+	}
+	DoLayer←{ ⍝ render and record all nodes whose children have depth ⍵
+		⍝ ⍵: depth to handle nodes at
+		i←⍸d=⍵    ⍝ nodes at this depth
+		_←p[i]DoFamily⌸results[i]
+		1
+	}
+	_←DoLayer¨⌽1+⍳maxDepth    ⍝ bottom up accumulation
+	results/⍨p=⍳≢p            ⍝ return results at roots only
+}
+
+PPV←{⍺←'∘' ⋄   ((≢⍵)⍴⍉⍤⍪⍤⍕¨'∘'@(0=≢¨)⍺)('─┌┬┐│┴├┼┤│'_PrettyPrint_ 1)⍵}    ⍝ vertical
+PPH←{⍺←'∘' ⋄ ⍉¨((≢⍵)⍴  ⍪⍤⍕¨'∘'@(0=≢¨)⍺)('│┌├└─┤┬┼┴─'_PrettyPrint_ 0)⍵}    ⍝ horizontal
 ```
 
 To show this process, let's reconstruct the nested representation of a tree, which we saw [earlier](representing-trees.md#the-nested-representation), from a parent vector.
@@ -169,10 +170,11 @@ r←⊂¨v    ⍝ reset r
 We can then repeat our process for each level.
 
 ```{code-cell}
-_←{
+DoLayer←{
     i←⍸d=⍵
     p[i]{r[⍺],←⊂r[⍵]}⌸i
-}¨⌽1+⍳⌈/d
+}
+DoLayer¨⌽1+⍳⌈/d
 ```
 
 Now, `r` contains the representation for every node in the tree.
@@ -192,18 +194,19 @@ And we are done! This is the general format for accumulating values according to
 Putting this together into a dfn, there's one more thing we need to worry about. When we have a tree or forest consisting of only root nodes, that is, all nodes have depth $0$, our `¨` will still run once on the prototype of `⌽1+⍳⌈/d`, leading to an incorrect result. Therefore, we will introduce a guard statement to avoid this.
 
 ```{code-cell}
-ParentToNested←{
-    p←⍵
+ParentToNested←{ ⍝ convert a parent vector to a nested representation
+    p←⍵    ⍝ input parent vector
     ⍺←⊂⍤,¨⍳≢p
-    r←⍺
+    r←⍺    ⍝ values to place at nodes (by default, their indices in the parent vector)
     d←Depths p
-    md←⌈/d
-    md=0: r
-    _←{
+    maxDepth←⌈/d
+    maxDepth=0: r
+    DoLayer←{
         i←⍸d=⍵
         _←p[i]{r[⍺],←⊂r[⍵]}⌸i
-        ⍬    ⍝ the interpreter will complain if we don't provide a result
-    }¨⌽1+⍳md
+        1    ⍝ the interpreter will complain if we don't provide a result
+    }
+    _←DoLayer¨⌽1+⍳maxDepth
     (p=⍳≢p)/r
 }
 v ParentToNested p
@@ -213,10 +216,12 @@ We should mention that, for simple accumulations, it's also possible to forego u
 
 ```{code-cell}
 r←⊂¨v
-_←{
+DoLayer←{
     i←⍸d=⍵
     r[p[i]],←⊂¨r[i]    ⍝ using indexing instead of ⌸
-}¨⌽1+⍳⌈/d
+    1
+}
+_←DoLayer¨⌽1+⍳⌈/d
 (p=⍳≢p)/r
 ```
 
@@ -230,16 +235,20 @@ Here, we exploit that fact that indexed assignment (`r[p[i]],←`) gracefully ha
 
 ```{code-cell}
 :tags: [remove-output, hide-cell]
-Sum←{v p←⍺⍵
+Sum←{ ⍝ sum the values in each tree in a forest
+    v←⍺    ⍝ numbers at each node
+    p←⍵    ⍝ parent vector
+    sums←v
     d←Depths p
-    md←⌈/d
-    md=0: v
-    _←{
+    maxDepth←⌈/d
+    maxDepth=0: sums
+    DoLayer←{
         i←⍸d=⍵
-        v[p[i]]+←v[i]
-        ⍬
-    }¨⌽1+⍳⌈/d
-    (p=⍳≢p)/v
+        sums[p[i]]+←sums[i]
+        1
+    }
+    _←DoLayer¨⌽1+⍳maxDepth
+    (p=⍳≢p)/sums
 }
 ```
 
@@ -250,9 +259,7 @@ Sum←{v p←⍺⍵
 ```{code-cell}
 :tags: [remove-output, hide-cell]
 ⍝ this exploits the commutativity of addition
-Sum2←{v p←⍺⍵
-    (I⍣≡⍨p)+/⍤⊢⌸v
-}
+Sum2←{(I⍣≡⍨⍵)+/⍤⊢⌸⍺}
 ```
 
 **Challenge 3**: Given a tree, find the height of each node. The *height* of a node is its depth subtracted from the depth of the node's deepest descendant.
@@ -261,16 +268,18 @@ Sum2←{v p←⍺⍵
 
 ```{code-cell}
 :tags: [remove-output, hide-cell]
-Height←{p←⍵
-    r←0⍴⍨≢p
+Height←{ ⍝ find the height of each node in a parent vector
+    p←⍵    ⍝ parent vector
+    heights←0⍴⍨≢p
     d←Depths p
-    md←⌈/d
-    md=0: r
-    _←{
+    maxDepth←⌈/d
+    maxDepth=0: heights
+    DoLayer←{
         i←⍸d=⍵
-        p[i]{r[⍺]←1+⌈/r[⍵]}⌸i
-        ⍬
-    }¨⌽1+⍳md
-    r
+        p[i]{heights[⍺]←1+⌈/heights[⍵]}⌸i
+        1
+    }
+    _←DoLayer¨⌽1+⍳maxDepth
+    heights
 }
 ```

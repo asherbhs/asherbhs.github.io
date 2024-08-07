@@ -23,54 +23,65 @@ While we are focusing on the parent vector representation, the depth vector is s
 I←{⍺[⍵]}
 ]box on
 
-⍝ renders a tree given labels, box drawing characters, and padding
-⍝     ┌─────── vector of character matrices giving the labels for each node
-⍝     │ ┌───── box drawing characters to render the tree, e.g: '─┌┬┐│┴├┼┤│'
-⍝     │ │                                               normal ─┴───┘└───┴─ upstruck
-⍝     │ │ ┌─── number of spaces to pad with between sub-tree
-⍝     │ │ │ ┌─ parent vector
-_pp_←{v b s p←⍺ ⍺⍺ ⍵⍵ ⍵
-    d←p≠⍳≢p
-    _←{
+Depths←{ ⍝ find the depths of each node in a parent vector
+    ⍝ ←: a vector of the depths of each node in the input
+    p←⍵    ⍝ input parent vector
+    depths←(≢p)⍴0
+    StepUp←{ ⍝ step up the tree and increment depths
         q←p[⍵]
-        d+←⍵≠q
+        depths+←⍵≠q
         q
-    }⍣≡p
-    md←⌈/d
-    r←v        ⍝ result of rendering each sub-tree, seeded with labels
-    md=0: r    ⍝ avoid the each running on the prototype
-    _←{
-        i←⍸d=⍵    ⍝ nodes at this depth
-        F←{                                          ⍝ ⍺ parent, ⍵ rendered child sub-trees
-            ws←(1⊃⍴)¨⍵                               ⍝ widths of each rendered child
-            w←s-⍨+/s+ws                              ⍝ eventual width of the rendered tree       wwwwwww
-            cs←(+\0,¯1↓s+ws)+¯1+⌈2÷⍨ws               ⍝ centres of each rendered sub-tree         ∘ss∘ss∘
-            t←w⍴' '                                  ⍝ header to be decorated                   '       '
-            t[(⊢⊢⍤/⍨((⊃⌽cs)>⊢)∧(⊃cs)<⊢)⍳w]←b[0]      ⍝ add horizontal bar                       ' ───── '
-            t[   ⊃ cs]←b[1]                          ⍝ left end of bar                          '┌───── '
-            t[   ⊃⌽cs]←b[3]                          ⍝ right end of bar                         '┌─────┐'
-            t[¯1↓1↓cs]←b[2]                          ⍝ connectors to intermediate children      '┌──┬──┐'
-            t[(1=≢cs)⍴⊃cs]←b[4]                      ⍝ if there's only one child, just make it a lone upstrike
-            c←¯1+⌈2÷⍨w                               ⍝ index of the centre of the rendered tree     ∘
-            t[c]←b[5 6 7 8 9][b[0 1 2 3 4]⍳t[c]]     ⍝ connector to the parent                  '┌──┼──┐'
-            t⍪←(-s)↓⍤1⊃,/,∘(s⍴' ')⍤1¨((⌈/≢¨)↑¨⊢)⍵    ⍝ pad lables, join under header
-            rp←⍺⊃r                                   ⍝ label of the parent
-            ww←1⊃⍴rp                                 ⍝ width of label of parent
-            cc←¯1+⌈2÷⍨ww                             ⍝ centre of label of parent
-            t ←((c-cc)⌽ww↑⍤1⊢)⍣(w<ww)⊢t              ⍝ pad and recentre text so far if it's less wide
-            rp←((cc-c)⌽ w↑⍤1⊢)⍣(w>ww)⊢rp             ⍝ pad and recentre parent label if it's less wide
-            t⍪⍨←rp                                   ⍝ add parent label
-            r[⍺]←⊂t                                  ⍝ record result
-            ⍬
-        }
-        _←p[i]F⌸r[i]
-        ⍬
-    }¨⌽1+⍳md    ⍝ bottom up accumulation
-    r/⍨p=⍳≢p    ⍝ return results at roots only
+    }
+    _←StepUp⍣≡⍳≢p
+    depths
 }
 
-PPV←{⍺←'∘' ⋄ v p←⍺⍵ ⋄   ((≢p)⍴⍉⍤⍪⍤⍕¨'∘'@(0=≢¨)v)('─┌┬┐│┴├┼┤│'_pp_ 1)p}    ⍝ vertical
-PPH←{⍺←'∘' ⋄ v p←⍺⍵ ⋄ ⍉¨((≢p)⍴  ⍪⍤⍕¨'∘'@(0=≢¨)v)('│┌├└─┤┬┼┴─'_pp_ 0)p}    ⍝ horizontal
+_PrettyPrint_←{ ⍝ renders a tree given labels, box drawing characters, and padding
+	⍝ ←: vector of character matrices, each a labelled rendering of a tree in the forest given by the input parent vector
+	labels    ←⍺     ⍝ vector of character matrices giving the labels for each node
+	connectors←⍺⍺    ⍝ box drawing characters to render the tree, e.g: '─┌┬┐│┴├┼┤│' (normal, and upstruck)
+	spaces    ←⍵⍵    ⍝ number of spaces to pad with between sub-trees
+	p         ←⍵     ⍝ parent vector
+	d←Depths p
+	maxDepth←⌈/d
+	results←labels         ⍝ result of rendering each sub-tree, seeded with labels
+	maxDepth=0: results    ⍝ avoid the each running on the prototype
+	DoFamily←{ ⍝ render and record a sub-tree
+		⍝ ⍺: parent node
+		⍝ ⍵: rendered results of children
+		widths←(1⊃⍴)¨⍵                                                                           ⍝ widths of each rendered child
+		width←spaces-⍨+/spaces+widths                                                            ⍝ eventual width of the rendered tree       wwwwwww
+		centres←(+\0,¯1↓spaces+widths)+¯1+⌈2÷⍨widths                                             ⍝ centres of each rendered sub-tree         ∘ss∘ss∘
+		result←width⍴' '                                                                         ⍝ header to be decorated                   '       '
+		result[(⊢⊢⍤/⍨((⊃⌽centres)>⊢)∧(⊃centres)<⊢)⍳width]←connectors[0]                          ⍝ add horizontal bar                       ' ───── '
+		result[   ⊃ centres]←connectors[1]                                                       ⍝ left end of bar                          '┌───── '
+		result[   ⊃⌽centres]←connectors[3]                                                       ⍝ right end of bar                         '┌─────┐'
+		result[¯1↓1↓centres]←connectors[2]                                                       ⍝ connectors to intermediate children      '┌──┬──┐'
+		result[(1=≢centres)⍴⊃centres]←connectors[4]                                              ⍝ if there's only one child, just make it a lone upstrike
+		centre←¯1+⌈2÷⍨width                                                                      ⍝ index of the centre of the rendered tree     ∘
+		result[centre]←connectors[5 6 7 8 9][connectors[0 1 2 3 4]⍳result[centre]]               ⍝ connector to the parent                  '┌──┼──┐'
+		result⍪←(-spaces)↓⍤1⊃,/,∘(spaces⍴' ')⍤1¨⍵↑¨⍨⌈/≢¨⍵                                        ⍝ pad lables, join under header
+		parentResult←⍺⊃results                                                                   ⍝ label of the parent
+		parentWidth←1⊃⍴parentResult                                                              ⍝ width of label of parent
+		parentCentre←¯1+⌈2÷⍨parentWidth                                                          ⍝ centre of label of parent
+		result      ←((centre-parentCentre)⌽parentWidth↑⍤1⊢)⍣(width<parentWidth)⊢result          ⍝ pad and recentre text so far if it's less wide
+		parentResult←((parentCentre-centre)⌽      width↑⍤1⊢)⍣(width>parentWidth)⊢parentResult    ⍝ pad and recentre parent label if it's less wide
+		result⍪⍨←parentResult                                                                    ⍝ add parent label
+		results[⍺]←⊂result                                                                       ⍝ record result
+		1
+	}
+	DoLayer←{ ⍝ render and record all nodes whose children have depth ⍵
+		⍝ ⍵: depth to handle nodes at
+		i←⍸d=⍵    ⍝ nodes at this depth
+		_←p[i]DoFamily⌸results[i]
+		1
+	}
+	_←DoLayer¨⌽1+⍳maxDepth    ⍝ bottom up accumulation
+	results/⍨p=⍳≢p            ⍝ return results at roots only
+}
+
+PPV←{⍺←'∘' ⋄   ((≢⍵)⍴⍉⍤⍪⍤⍕¨'∘'@(0=≢¨)⍺)('─┌┬┐│┴├┼┤│'_PrettyPrint_ 1)⍵}    ⍝ vertical
+PPH←{⍺←'∘' ⋄ ⍉¨((≢⍵)⍴  ⍪⍤⍕¨'∘'@(0=≢¨)⍺)('│┌├└─┤┬┼┴─'_PrettyPrint_ 0)⍵}    ⍝ horizontal
 ```
 
 ## Constructing the Parent Vector
@@ -166,13 +177,15 @@ d PPV p
 Putting it all together:
 
 ```{code-cell}
-DepthToParent←{d←⍵
-    p←⍳≢d
-    _←2{p[⍵]←⍺[⍺⍸⍵]}/⊂⍤⊢⌸d
-    ⍝ │ │   ││    │ │└───┴─── indices of each level
-    ⍝ └─│───││────│─┴──────── pairwise between levels
-    ⍝   │   │└────┴────────── leftmost node at previous level - the parent
-    ⍝   └───┴──────────────── make this the parent
+DepthToParent←{ ⍝ return the parent vector representation of a tree from a depth vector
+    ⍝ ←: the parent vector corresponding to the depth vector input
+    d←⍵                       ⍝ depth vector to be parentified
+    p←⍳≢d                     ⍝ seed as all loops
+    _←2{p[⍵]←⍺[⍺⍸⍵]}/⊂⍤⊢⌸d    ⍝ find the parents of each non-root
+    ⍝ │ │   ││    │ │└───┴─ indices of each level
+    ⍝ └─│───││────│─┴─ pairwise between levels
+    ⍝   │   │└────┴─ leftmost node at previous level - the parent
+    ⍝   └───┴─ make this the parent
     p
 }
 ```
@@ -213,11 +226,12 @@ Since we're traversing the tree until the parent does not change, we can automat
 
 ```{code-cell}
 depth←0           ⍝ seed value
-_←{
+StepUp←{
     q←p[⍵]        ⍝ parent of current node
     depth+←⍵≠q    ⍝ increment depth if not a root
-    q             ⍝╶┬╴continue until p[⍵]≡⍵
-}⍣≡1              ⍝╶┘
+    q
+}
+_←StepUp⍣≡1
 depth             ⍝ node 5 has depth 2
 ```
 
@@ -225,11 +239,12 @@ This method can be easily extended to find the depths of all nodes at once.
 
 ```{code-cell}
 depths←(≢p)⍴0      ⍝ seed for all nodes
-_←{
+StepUp←{
     q←p[⍵]
     depths+←⍵≠q    ⍝ increment for each path which has not hit a root
     q
-}⍣≡⍳≢p             ⍝ all nodes this time
+}
+_←StepUp⍣≡⍳≢p        ⍝ all nodes this time
 depths
 depths PPV p
 ```
@@ -237,13 +252,16 @@ depths PPV p
 Wrapping it all up in a dfn:
 
 ```{code-cell}
-Depths←{p←⍵
+Depths←{ ⍝ find the depths of each node in a parent vector
+    ⍝ ←: a vector of the depths of each node in the input
+    p←⍵    ⍝ input parent vector
     depths←(≢p)⍴0
-    _←{
+    StepUp←{ ⍝ step up the tree and increment depths
         q←p[⍵]
         depths+←⍵≠q
         q
-    }⍣≡⍳≢p
+    }
+    _←StepUp⍣≡⍳≢p
     depths
 }
 (Depths p) PPV p
@@ -256,16 +274,19 @@ Remember: `depths` is not in DFPT order! Our next task will be to put it back in
 **Solution:**
 
 ```{code-cell}
-:tags: [hide-cell, remove-output]
-Depths←{p←⍵
+:tags: [hide-cell]
+Depths←{ ⍝ find the depths of each node in a parent vector
+    p←⍵
     depths←p≠⍳≢p    ⍝ skip the first iteration by incrementing non-roots up-front
-    _←{
+    StepUp←{
         q←p[⍵]
         depths+←⍵≠q
         q
-    }⍣≡p            ⍝ we can now skip straight to p
+    }
+    _←StepUp⍣≡p     ⍝ we can now skip straight to p
     depths
 }
+(Depths p) PPV p
 ```
 
 ## Depth Vector Ordering
@@ -282,12 +303,13 @@ Now, as we traverse the tree to find depths, we can also record the ancestors fo
 
 ```{code-cell}
 depths←(≢p)⍴0
-_←{
+StepUp←{
     paths,←⍵       ⍝ record the nodes found at this iteration
     q←p[⍵]
     depths+←⍵≠q
     q
-}⍣≡⍳≢p
+}
+_←StepUp⍣≡⍳≢p
 ```
 
 Now, if we look at `paths`, we can see that the first column is all the nodes in the tree, the second column is their parents, and so on.
@@ -337,15 +359,18 @@ Huzzah! This is the depth vector we started with at the top of the page.
 As we'll see [later](working-with-json.md), we often have other vectors of data associated with our trees. When we find the depth vector of a tree, we will also want to re-order this extra data so that it still lines up. Therefore, when we wrap this method up in a dfn, we will have it return the depths and the ordering separetely, allowing the caller to use the ordering to shuffle any extra data they like.
 
 ```{code-cell}
-ParentToDepth←{
+ParentToDepth←{ ⍝ recover the depths and DFPT ordering of a parent vector
+    ⍝ ←: a two element vector consisting of (1) the depths of each node and (2) the permutation vector for DFPT order
+    p←⍵    ⍝ input parent vector
     paths←(≢p)0⍴⍬
     depths←(≢p)⍴0
-    _←{
+    StepUp←{
         paths,←⍵
         q←p[⍵]
         depths+←⍵≠q
         q
-    }⍣≡⍳≢p
+    }
+    _←StepUp⍣≡⍳≢p
     order←⍋⌽¨(depths+1)⊂⍤↑⍤¯1⊢paths
     depths order
 }

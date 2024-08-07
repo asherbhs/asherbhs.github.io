@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=87e54e7c" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=bfa96906" />
@@ -563,13 +563,15 @@ d: 0 1 2 2 1 2 3 3 3 1
 <p>Putting it all together:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">DepthToParent</span><span class="kd">←</span><span class="kt">{</span><span class="nv">d</span><span class="kd">←</span><span class="bp">⍵</span>
-<span class="w">    </span><span class="nv">p</span><span class="kd">←</span><span class="o">⍳≢</span><span class="nv">d</span>
-<span class="w">    </span><span class="nv">_</span><span class="kd">←</span><span class="m">2</span><span class="kt">{</span><span class="nv">p</span><span class="sr">[</span><span class="bp">⍵</span><span class="sr">]</span><span class="kd">←</span><span class="bp">⍺</span><span class="sr">[</span><span class="bp">⍺</span><span class="o">⍸</span><span class="bp">⍵</span><span class="sr">]</span><span class="kt">}</span><span class="na">/</span><span class="o">⊂</span><span class="na">⍤</span><span class="o">⊢</span><span class="na">⌸</span><span class="nv">d</span>
-<span class="w">    </span><span class="c1">⍝ │ │   ││    │ │└───┴─── indices of each level</span>
-<span class="w">    </span><span class="c1">⍝ └─│───││────│─┴──────── pairwise between levels</span>
-<span class="w">    </span><span class="c1">⍝   │   │└────┴────────── leftmost node at previous level - the parent</span>
-<span class="w">    </span><span class="c1">⍝   └───┴──────────────── make this the parent</span>
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">DepthToParent</span><span class="kd">←</span><span class="kt">{</span><span class="w"> </span><span class="c1">⍝ return the parent vector representation of a tree from a depth vector</span>
+<span class="w">    </span><span class="c1">⍝ ←: the parent vector corresponding to the depth vector input</span>
+<span class="w">    </span><span class="nv">d</span><span class="kd">←</span><span class="bp">⍵</span><span class="w">                       </span><span class="c1">⍝ depth vector to be parentified</span>
+<span class="w">    </span><span class="nv">p</span><span class="kd">←</span><span class="o">⍳≢</span><span class="nv">d</span><span class="w">                     </span><span class="c1">⍝ seed as all loops</span>
+<span class="w">    </span><span class="nv">_</span><span class="kd">←</span><span class="m">2</span><span class="kt">{</span><span class="nv">p</span><span class="sr">[</span><span class="bp">⍵</span><span class="sr">]</span><span class="kd">←</span><span class="bp">⍺</span><span class="sr">[</span><span class="bp">⍺</span><span class="o">⍸</span><span class="bp">⍵</span><span class="sr">]</span><span class="kt">}</span><span class="na">/</span><span class="o">⊂</span><span class="na">⍤</span><span class="o">⊢</span><span class="na">⌸</span><span class="nv">d</span><span class="w">    </span><span class="c1">⍝ find the parents of each non-root</span>
+<span class="w">    </span><span class="c1">⍝ │ │   ││    │ │└───┴─ indices of each level</span>
+<span class="w">    </span><span class="c1">⍝ └─│───││────│─┴─ pairwise between levels</span>
+<span class="w">    </span><span class="c1">⍝   │   │└────┴─ leftmost node at previous level - the parent</span>
+<span class="w">    </span><span class="c1">⍝   └───┴─ make this the parent</span>
 <span class="w">    </span><span class="nv">p</span>
 <span class="kt">}</span>
 </pre></div>
@@ -643,11 +645,12 @@ d: 0 1 2 2 1 2 3 3 3 1
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">depth</span><span class="kd">←</span><span class="m">0</span><span class="w">           </span><span class="c1">⍝ seed value</span>
-<span class="nv">_</span><span class="kd">←</span><span class="kt">{</span>
+<span class="nv">StepUp</span><span class="kd">←</span><span class="kt">{</span>
 <span class="w">    </span><span class="nv">q</span><span class="kd">←</span><span class="nv">p</span><span class="sr">[</span><span class="bp">⍵</span><span class="sr">]</span><span class="w">        </span><span class="c1">⍝ parent of current node</span>
 <span class="w">    </span><span class="nv">depth</span><span class="o">+</span><span class="kd">←</span><span class="bp">⍵</span><span class="o">≠</span><span class="nv">q</span><span class="w">    </span><span class="c1">⍝ increment depth if not a root</span>
-<span class="w">    </span><span class="nv">q</span><span class="w">             </span><span class="c1">⍝╶┬╴continue until p[⍵]≡⍵</span>
-<span class="kt">}</span><span class="na">⍣</span><span class="o">≡</span><span class="m">1</span><span class="w">              </span><span class="c1">⍝╶┘</span>
+<span class="w">    </span><span class="nv">q</span>
+<span class="kt">}</span>
+<span class="nv">_</span><span class="kd">←</span><span class="nv">StepUp</span><span class="na">⍣</span><span class="o">≡</span><span class="m">1</span>
 <span class="nv">depth</span><span class="w">             </span><span class="c1">⍝ node 5 has depth 2</span>
 </pre></div>
 </div>
@@ -660,11 +663,12 @@ d: 0 1 2 2 1 2 3 3 3 1
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">depths</span><span class="kd">←</span><span class="p">(</span><span class="o">≢</span><span class="nv">p</span><span class="p">)</span><span class="o">⍴</span><span class="m">0</span><span class="w">      </span><span class="c1">⍝ seed for all nodes</span>
-<span class="nv">_</span><span class="kd">←</span><span class="kt">{</span>
+<span class="nv">StepUp</span><span class="kd">←</span><span class="kt">{</span>
 <span class="w">    </span><span class="nv">q</span><span class="kd">←</span><span class="nv">p</span><span class="sr">[</span><span class="bp">⍵</span><span class="sr">]</span>
 <span class="w">    </span><span class="nv">depths</span><span class="o">+</span><span class="kd">←</span><span class="bp">⍵</span><span class="o">≠</span><span class="nv">q</span><span class="w">    </span><span class="c1">⍝ increment for each path which has not hit a root</span>
 <span class="w">    </span><span class="nv">q</span>
-<span class="kt">}</span><span class="na">⍣</span><span class="o">≡⍳≢</span><span class="nv">p</span><span class="w">             </span><span class="c1">⍝ all nodes this time</span>
+<span class="kt">}</span>
+<span class="nv">_</span><span class="kd">←</span><span class="nv">StepUp</span><span class="na">⍣</span><span class="o">≡⍳≢</span><span class="nv">p</span><span class="w">        </span><span class="c1">⍝ all nodes this time</span>
 <span class="nv">depths</span>
 <span class="nv">depths</span><span class="w"> </span><span class="nv">PPV</span><span class="w"> </span><span class="nv">p</span>
 </pre></div>
@@ -686,13 +690,16 @@ d: 0 1 2 2 1 2 3 3 3 1
 <p>Wrapping it all up in a dfn:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">Depths</span><span class="kd">←</span><span class="kt">{</span><span class="nv">p</span><span class="kd">←</span><span class="bp">⍵</span>
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">Depths</span><span class="kd">←</span><span class="kt">{</span><span class="w"> </span><span class="c1">⍝ find the depths of each node in a parent vector</span>
+<span class="w">    </span><span class="c1">⍝ ←: a vector of the depths of each node in the input</span>
+<span class="w">    </span><span class="nv">p</span><span class="kd">←</span><span class="bp">⍵</span><span class="w">    </span><span class="c1">⍝ input parent vector</span>
 <span class="w">    </span><span class="nv">depths</span><span class="kd">←</span><span class="p">(</span><span class="o">≢</span><span class="nv">p</span><span class="p">)</span><span class="o">⍴</span><span class="m">0</span>
-<span class="w">    </span><span class="nv">_</span><span class="kd">←</span><span class="kt">{</span>
+<span class="w">    </span><span class="nv">StepUp</span><span class="kd">←</span><span class="kt">{</span><span class="w"> </span><span class="c1">⍝ step up the tree and increment depths</span>
 <span class="w">        </span><span class="nv">q</span><span class="kd">←</span><span class="nv">p</span><span class="sr">[</span><span class="bp">⍵</span><span class="sr">]</span>
 <span class="w">        </span><span class="nv">depths</span><span class="o">+</span><span class="kd">←</span><span class="bp">⍵</span><span class="o">≠</span><span class="nv">q</span>
 <span class="w">        </span><span class="nv">q</span>
-<span class="w">    </span><span class="kt">}</span><span class="na">⍣</span><span class="o">≡⍳≢</span><span class="nv">p</span>
+<span class="w">    </span><span class="kt">}</span>
+<span class="w">    </span><span class="nv">_</span><span class="kd">←</span><span class="nv">StepUp</span><span class="na">⍣</span><span class="o">≡⍳≢</span><span class="nv">p</span>
 <span class="w">    </span><span class="nv">depths</span>
 <span class="kt">}</span>
 <span class="p">(</span><span class="nv">Depths</span><span class="w"> </span><span class="nv">p</span><span class="p">)</span><span class="w"> </span><span class="nv">PPV</span><span class="w"> </span><span class="nv">p</span>
@@ -714,25 +721,39 @@ d: 0 1 2 2 1 2 3 3 3 1
 <p>Remember: <code class="docutils literal notranslate"><span class="pre">depths</span></code> is not in DFPT order! Our next task will be to put it back in that order to fully recover the depth vector.</p>
 <p><strong>Challenge:</strong> Can you change the initial conditions of our method so that we can skip the first iteration?</p>
 <p><strong>Solution:</strong></p>
-<div class="cell tag_hide-cell tag_remove-output docutils container">
+<div class="cell tag_hide-cell docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
 <span class="collapsed">Show code cell content</span>
 <span class="expanded">Hide code cell content</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">Depths</span><span class="kd">←</span><span class="kt">{</span><span class="nv">p</span><span class="kd">←</span><span class="bp">⍵</span>
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">Depths</span><span class="kd">←</span><span class="kt">{</span><span class="w"> </span><span class="c1">⍝ find the depths of each node in a parent vector</span>
+<span class="w">    </span><span class="nv">p</span><span class="kd">←</span><span class="bp">⍵</span>
 <span class="w">    </span><span class="nv">depths</span><span class="kd">←</span><span class="nv">p</span><span class="o">≠⍳≢</span><span class="nv">p</span><span class="w">    </span><span class="c1">⍝ skip the first iteration by incrementing non-roots up-front</span>
-<span class="w">    </span><span class="nv">_</span><span class="kd">←</span><span class="kt">{</span>
+<span class="w">    </span><span class="nv">StepUp</span><span class="kd">←</span><span class="kt">{</span>
 <span class="w">        </span><span class="nv">q</span><span class="kd">←</span><span class="nv">p</span><span class="sr">[</span><span class="bp">⍵</span><span class="sr">]</span>
 <span class="w">        </span><span class="nv">depths</span><span class="o">+</span><span class="kd">←</span><span class="bp">⍵</span><span class="o">≠</span><span class="nv">q</span>
 <span class="w">        </span><span class="nv">q</span>
-<span class="w">    </span><span class="kt">}</span><span class="na">⍣</span><span class="o">≡</span><span class="nv">p</span><span class="w">            </span><span class="c1">⍝ we can now skip straight to p</span>
+<span class="w">    </span><span class="kt">}</span>
+<span class="w">    </span><span class="nv">_</span><span class="kd">←</span><span class="nv">StepUp</span><span class="na">⍣</span><span class="o">≡</span><span class="nv">p</span><span class="w">     </span><span class="c1">⍝ we can now skip straight to p</span>
 <span class="w">    </span><span class="nv">depths</span>
 <span class="kt">}</span>
+<span class="p">(</span><span class="nv">Depths</span><span class="w"> </span><span class="nv">p</span><span class="p">)</span><span class="w"> </span><span class="nv">PPV</span><span class="w"> </span><span class="nv">p</span>
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">┌───────────┐
+│     0     │
+│ ┌───┴┬───┐│
+│ 1    1   1│
+│┌┴┐   │    │
+│2 2   2    │
+│    ┌─┼─┐  │
+│    3 3 3  │
+└───────────┘
+</pre></div></div>
 </details>
 </div>
 </section>
@@ -751,12 +772,13 @@ d: 0 1 2 2 1 2 3 3 3 1
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">depths</span><span class="kd">←</span><span class="p">(</span><span class="o">≢</span><span class="nv">p</span><span class="p">)</span><span class="o">⍴</span><span class="m">0</span>
-<span class="nv">_</span><span class="kd">←</span><span class="kt">{</span>
+<span class="nv">StepUp</span><span class="kd">←</span><span class="kt">{</span>
 <span class="w">    </span><span class="nv">paths</span><span class="o">,</span><span class="kd">←</span><span class="bp">⍵</span><span class="w">       </span><span class="c1">⍝ record the nodes found at this iteration</span>
 <span class="w">    </span><span class="nv">q</span><span class="kd">←</span><span class="nv">p</span><span class="sr">[</span><span class="bp">⍵</span><span class="sr">]</span>
 <span class="w">    </span><span class="nv">depths</span><span class="o">+</span><span class="kd">←</span><span class="bp">⍵</span><span class="o">≠</span><span class="nv">q</span>
 <span class="w">    </span><span class="nv">q</span>
-<span class="kt">}</span><span class="na">⍣</span><span class="o">≡⍳≢</span><span class="nv">p</span>
+<span class="kt">}</span>
+<span class="nv">_</span><span class="kd">←</span><span class="nv">StepUp</span><span class="na">⍣</span><span class="o">≡⍳≢</span><span class="nv">p</span>
 </pre></div>
 </div>
 </div>
@@ -888,15 +910,18 @@ d: 0 1 2 2 1 2 3 3 3 1
 <p>As we’ll see <a class="reference internal" href="working-with-json.html"><span class="std std-doc">later</span></a>, we often have other vectors of data associated with our trees. When we find the depth vector of a tree, we will also want to re-order this extra data so that it still lines up. Therefore, when we wrap this method up in a dfn, we will have it return the depths and the ordering separetely, allowing the caller to use the ordering to shuffle any extra data they like.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">ParentToDepth</span><span class="kd">←</span><span class="kt">{</span>
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">ParentToDepth</span><span class="kd">←</span><span class="kt">{</span><span class="w"> </span><span class="c1">⍝ recover the depths and DFPT ordering of a parent vector</span>
+<span class="w">    </span><span class="c1">⍝ ←: a two element vector consisting of (1) the depths of each node and (2) the permutation vector for DFPT order</span>
+<span class="w">    </span><span class="nv">p</span><span class="kd">←</span><span class="bp">⍵</span><span class="w">    </span><span class="c1">⍝ input parent vector</span>
 <span class="w">    </span><span class="nv">paths</span><span class="kd">←</span><span class="p">(</span><span class="o">≢</span><span class="nv">p</span><span class="p">)</span><span class="m">0</span><span class="o">⍴</span><span class="no">⍬</span>
 <span class="w">    </span><span class="nv">depths</span><span class="kd">←</span><span class="p">(</span><span class="o">≢</span><span class="nv">p</span><span class="p">)</span><span class="o">⍴</span><span class="m">0</span>
-<span class="w">    </span><span class="nv">_</span><span class="kd">←</span><span class="kt">{</span>
+<span class="w">    </span><span class="nv">StepUp</span><span class="kd">←</span><span class="kt">{</span>
 <span class="w">        </span><span class="nv">paths</span><span class="o">,</span><span class="kd">←</span><span class="bp">⍵</span>
 <span class="w">        </span><span class="nv">q</span><span class="kd">←</span><span class="nv">p</span><span class="sr">[</span><span class="bp">⍵</span><span class="sr">]</span>
 <span class="w">        </span><span class="nv">depths</span><span class="o">+</span><span class="kd">←</span><span class="bp">⍵</span><span class="o">≠</span><span class="nv">q</span>
 <span class="w">        </span><span class="nv">q</span>
-<span class="w">    </span><span class="kt">}</span><span class="na">⍣</span><span class="o">≡⍳≢</span><span class="nv">p</span>
+<span class="w">    </span><span class="kt">}</span>
+<span class="w">    </span><span class="nv">_</span><span class="kd">←</span><span class="nv">StepUp</span><span class="na">⍣</span><span class="o">≡⍳≢</span><span class="nv">p</span>
 <span class="w">    </span><span class="nv">order</span><span class="kd">←</span><span class="o">⍋⌽</span><span class="na">¨</span><span class="p">(</span><span class="nv">depths</span><span class="o">+</span><span class="m">1</span><span class="p">)</span><span class="o">⊂</span><span class="na">⍤</span><span class="o">↑</span><span class="na">⍤</span><span class="m">¯1</span><span class="o">⊢</span><span class="nv">paths</span>
 <span class="w">    </span><span class="nv">depths</span><span class="w"> </span><span class="nv">order</span>
 <span class="kt">}</span>

@@ -81,7 +81,9 @@ It's fairly straightforward to calculate the depth of each node for a tree repre
 ```{code-cell}
 t←(,'a') ((,'b') (,⊂,'e') (,⊂,'f')) ((,'c') ((,'g') (,⊂,'h') (,⊂,'i') (,⊂,'j'))) (,'d')
 NestedDepth←{
-    ⍺←0             ⍝ depth of the root is 0
+    ⍺←0
+    ⍝ ⍵: nested vector corresponding to a sub-tree
+    ⍝ ⍺: depth of the sub-tree (0 at the root)
     1=≢⍵: ,⍺        ⍝ if there are no children, just return own depth
     ⍺,(⍺+1)∇¨1↓⍵    ⍝ else, recursively find depths of children
 }

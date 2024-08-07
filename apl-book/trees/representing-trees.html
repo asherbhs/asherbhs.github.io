@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=87e54e7c" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=bfa96906" />
@@ -504,7 +504,9 @@ document.write(`
 <div class="cell_input docutils container">
 <div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">t</span><span class="kd">←</span><span class="p">(</span><span class="o">,</span><span class="s1">&#39;a&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="o">,</span><span class="s1">&#39;b&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="o">,⊂,</span><span class="s1">&#39;e&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="o">,⊂,</span><span class="s1">&#39;f&#39;</span><span class="p">))</span><span class="w"> </span><span class="p">((</span><span class="o">,</span><span class="s1">&#39;c&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="o">,</span><span class="s1">&#39;g&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="o">,⊂,</span><span class="s1">&#39;h&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="o">,⊂,</span><span class="s1">&#39;i&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="o">,⊂,</span><span class="s1">&#39;j&#39;</span><span class="p">)))</span><span class="w"> </span><span class="p">(</span><span class="o">,</span><span class="s1">&#39;d&#39;</span><span class="p">)</span>
 <span class="nv">NestedDepth</span><span class="kd">←</span><span class="kt">{</span>
-<span class="w">    </span><span class="bp">⍺</span><span class="kd">←</span><span class="m">0</span><span class="w">             </span><span class="c1">⍝ depth of the root is 0</span>
+<span class="w">    </span><span class="bp">⍺</span><span class="kd">←</span><span class="m">0</span>
+<span class="w">    </span><span class="c1">⍝ ⍵: nested vector corresponding to a sub-tree</span>
+<span class="w">    </span><span class="c1">⍝ ⍺: depth of the sub-tree (0 at the root)</span>
 <span class="w">    </span><span class="m">1</span><span class="o">=≢</span><span class="bp">⍵:</span><span class="w"> </span><span class="o">,</span><span class="bp">⍺</span><span class="w">        </span><span class="c1">⍝ if there are no children, just return own depth</span>
 <span class="w">    </span><span class="bp">⍺</span><span class="o">,</span><span class="p">(</span><span class="bp">⍺</span><span class="o">+</span><span class="m">1</span><span class="p">)</span><span class="bp">∇</span><span class="na">¨</span><span class="m">1</span><span class="o">↓</span><span class="bp">⍵</span><span class="w">    </span><span class="c1">⍝ else, recursively find depths of children</span>
 <span class="kt">}</span>
