@@ -48,6 +48,7 @@ I can take no credit for discovering the techniques discussed in this tutorial. 
 
 Other useful resources on working with trees in array languages include:
 
-- Aaron Hsu's talks on [text processing](https://dyalog.tv/Dyalog22/?v=5I4YPkVU7mY) and [tree wrangling](https://dyalog.tv/Dyalog18/?v=hzPd3umu78g)
+- Aaron Hsu's talks on [text processing](https://dyalog.tv/Dyalog22/?v=5I4YPkVU7mY) and [tree wrangling](https://dyalog.tv/Dyalog18/?v=hzPd3umu78g).
+- Brandon Wilson's [talk on parsing](https://www.youtube.com/watch?v=Ym2TIKgiRkM).
 - The [README](https://github.com/tlack/atree/blob/master/README.md) of a C++ implementation of Apter trees.
 - [This](https://github.com/JohnEarnest/ok/blob/gh-pages/docs/Trees.md) section of the oK documentation covering two different representations of trees.
