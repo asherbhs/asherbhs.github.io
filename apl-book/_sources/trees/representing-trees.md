@@ -146,7 +146,7 @@ depth: 0 1 2 2 1 2 3 3 3 1
     parent of i ─┘   i   └─ start of next sub-tree
 ```
 
-The depth vector representation is therefore only useful in some situations. Indeed, we’ll find it very handy in the sections on [working with ⎕JSON](https://asherbhs.github.io/apl-book/trees/working-with-json.html) and [parsing](https://asherbhs.github.io/apl-book/trees/parsing.html), but it is not the representation that we would like to settle on for most of our operations.
+The depth vector representation is therefore only useful in some situations. Indeed, we’ll find it very handy in the page on [working with ⎕JSON](https://asherbhs.github.io/apl-book/trees/working-with-json.html), but it is not the representation that we would like to settle on for most of our operations.
 
 ## The Path Matrix Representation
 

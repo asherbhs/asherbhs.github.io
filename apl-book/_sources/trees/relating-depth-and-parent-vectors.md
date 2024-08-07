@@ -86,7 +86,7 @@ PPH←{⍺←'∘' ⋄ ⍉¨((≢⍵)⍴  ⍪⍤⍕¨'∘'@(0=≢¨)⍺)('│┌
 
 ## Constructing the Parent Vector
 
-The first thing we'll look at is constructing a parent vector, given a depth vector. In both the page on [working with `⎕JSON`](working-with-json.md) and the page on [parsing](parsing.md), we will begin with a depth vector, and construct a parent vector in order to do more complicated operations. So it's important for us to be able to make this conversion.
+The first thing we'll look at is constructing a parent vector, given a depth vector. In the page on [working with `⎕JSON`](working-with-json.md), we will begin with a depth vector, and construct a parent vector in order to do more complicated operations. So it's important for us to be able to make this conversion.
 
 Let's look at the same tree we worked with in the page on [representing trees](representing-trees.md).
 
