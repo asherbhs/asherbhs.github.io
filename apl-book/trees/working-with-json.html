@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=87e54e7c" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=bfa96906" />
@@ -922,7 +922,7 @@ document.write(`
 <p>Now we have two distinct trees, and we only need the newly created one, so we can simply delete the other using the idiom we described previously.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">mask</span><span class="kd">←</span><span class="nv">root</span><span class="o">=</span><span class="nv">p</span><span class="w"> </span><span class="nv">I</span><span class="na">@</span><span class="p">(</span><span class="nv">root</span><span class="na">∘</span><span class="o">≠</span><span class="p">)</span><span class="na">⍣</span><span class="o">≡⍳≢</span><span class="nv">p</span><span class="w">    </span><span class="c1">⍝ make of nodes which are in the new tree</span>
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">mask</span><span class="kd">←</span><span class="nv">root</span><span class="o">=</span><span class="nv">p</span><span class="w"> </span><span class="nv">I</span><span class="na">@</span><span class="p">(</span><span class="nv">root</span><span class="na">∘</span><span class="o">≠</span><span class="p">)</span><span class="na">⍣</span><span class="o">≡⍳≢</span><span class="nv">p</span><span class="w">    </span><span class="c1">⍝ mask of nodes which are in the new tree</span>
 <span class="nv">p</span><span class="kd">←</span><span class="p">(</span><span class="o">⍸~</span><span class="nv">mask</span><span class="p">)(</span><span class="o">⊢-</span><span class="m">1</span><span class="o">+⍸</span><span class="p">)</span><span class="nv">mask</span><span class="na">/</span><span class="nv">p</span><span class="w">        </span><span class="c1">⍝ delete nodes in the old tree</span>
 <span class="nv">keys</span><span class="w">  </span><span class="kd">←</span><span class="nv">mask</span><span class="na">/</span><span class="nv">keys</span><span class="w">               </span><span class="c1">⍝─┐</span>
 <span class="nv">values</span><span class="kd">←</span><span class="nv">mask</span><span class="na">/</span><span class="nv">values</span><span class="w">             </span><span class="c1">⍝ │ filter the associated data</span>

@@ -112,13 +112,13 @@ The location of a sub-tree in the depth vector.
 
 Finally, if `j` is the parent of `i`, we know that `j` must have a depth one less than the depth of `i`, i.e. `d[j]=d[i]-1`. All of this information together leads to a neat method for constructing a parent vector from a depth vector.
 
-Firstly, we want to group the nodes in the depth vector by their given depth. `⌸` is the perfect primitive for this:
+Firstly, we want to group the nodes in the depth vector by their given depth. `⌸` (Key) is the perfect primitive for this:
 
 ```{code-cell}
 ⊂⍤⊢⌸d
 ```
 
-Here, we have grouped the nodes in the tree by their depth. `⌸` orders the groups it creates by the order the values appear in its right argument. The ordering of the depth vector ensures that this is exactly the all the possible depths of the tree in ascending order. So, the $0$th place has all nodes with a depth of $0$ (in our case just the single root), the $1$st place has all those with a depth of $1$, and so on.
+Here, we have grouped the nodes in the tree by their depth. `⌸` orders the groups it creates by the order the values appear in its right argument. The ordering of the depth vector ensures that this is exactly the all of the possible depths of the tree in ascending order. So, at index $0$ we have all nodes with a depth of $0$ (in our case just the single root), at index $1$ we have all those with a depth of $1$, and so on.
 
 Any non-root node `i` will appear after its parent `j` in the depth vector, and before the next node at the same depth as its parent. It is not possible for there to be another node with the same depth as `j` which appears between `i` and `j`.
 
@@ -180,7 +180,7 @@ Putting it all together:
 DepthToParent←{ ⍝ return the parent vector representation of a tree from a depth vector
     ⍝ ←: the parent vector corresponding to the depth vector input
     d←⍵                       ⍝ depth vector to be parentified
-    p←⍳≢d                     ⍝ seed as all loops
+    p←⍳≢d                     ⍝ begin by setting all nodes as roots
     _←2{p[⍵]←⍺[⍺⍸⍵]}/⊂⍤⊢⌸d    ⍝ find the parents of each non-root
     ⍝ │ │   ││    │ │└───┴─ indices of each level
     ⍝ └─│───││────│─┴─ pairwise between levels
@@ -190,7 +190,7 @@ DepthToParent←{ ⍝ return the parent vector representation of a tree from a d
 }
 ```
 
-Now that we can convert depth vectors to parent vectors, a natural next question is converting parent vectors back into depth vectors. There are two stages to this: firstly of which is finding the depths of each node, and secondly imposing the DFPT ordering on the nodes.
+Now that we can convert depth vectors to parent vectors, a natural next question is converting parent vectors back into depth vectors. There are two stages to this: firstly finding the depths of each node, and secondly imposing the DFPT ordering on the nodes.
 
 ## Recovering Depths
 
@@ -232,7 +232,7 @@ StepUp←{
     q
 }
 _←StepUp⍣≡1
-depth             ⍝ node 5 has depth 2
+depth             ⍝ node 1 has depth 2
 ```
 
 This method can be easily extended to find the depths of all nodes at once.

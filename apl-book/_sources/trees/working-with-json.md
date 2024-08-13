@@ -206,7 +206,7 @@ typeNames[types] PPH p
 Now we have two distinct trees, and we only need the newly created one, so we can simply delete the other using the idiom we described previously.
 
 ```{code-cell}
-mask←root=p I@(root∘≠)⍣≡⍳≢p    ⍝ make of nodes which are in the new tree
+mask←root=p I@(root∘≠)⍣≡⍳≢p    ⍝ mask of nodes which are in the new tree
 p←(⍸~mask)(⊢-1+⍸)mask/p        ⍝ delete nodes in the old tree
 keys  ←mask/keys               ⍝─┐
 values←mask/values             ⍝ │ filter the associated data

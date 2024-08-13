@@ -212,9 +212,9 @@ parent: 0 0 1 1 0 4 5 5 5 0
 
 Following these pointers from any starting node will trace out the path to that node from the root, as found in the path matrix.
 
-Notice that node $0$, as the root, has no parent. We could use some kind of sentinal value like $-1$ to indicate that a node has no parent, but for reasons which will become clear as we work with this representation more, we instead have the root, node $0$, point to itself.
+Notice that node $0$, as the root, has no parent. We could use some kind of sentinel value like $-1$ to indicate that a node has no parent. For reasons which will become clear as we work with this representation more, we instead have the root, node $0$, point to itself.
 
-Like the depth vector, the parent vector is extremely space efficient. Like the path matrix, it is not heavily constrained by ordering requirements. The nodes can be shuffled arbitrarily, so long as we update the parents in each place to reflect the suffling.
+Like the depth vector, the parent vector is extremely space efficient. Like the path matrix, it is not heavily constrained by ordering requirements. The nodes can be shuffled arbitrarily, so long as we update the parents in each place to reflect the shuffling.
 
 This representation is suitable for most of our purposes, and it is the one we will focus on for the rest of the tutorial.
 

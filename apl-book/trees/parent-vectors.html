@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=87e54e7c" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=bfa96906" />
@@ -429,10 +429,10 @@ document.write(`
 <h1>Parent Vectors<a class="headerlink" href="#parent-vectors" title="Link to this heading">#</a></h1>
 <p>At the end of the previous section we settled on the parent vector representation as the main representation of trees we will be using in this tutorial. To reiterate, to represent a tree of <span class="math notranslate nohighlight">\(n\)</span> nodes, we associate each node with an index in <code class="docutils literal notranslate"><span class="pre">⍳n</span></code>, and create an <span class="math notranslate nohighlight">\(n\)</span>-element vector <code class="docutils literal notranslate"><span class="pre">parent</span></code> such that if a node <code class="docutils literal notranslate"><span class="pre">i</span></code> is a child of a node <code class="docutils literal notranslate"><span class="pre">j</span></code>, then <code class="docutils literal notranslate"><span class="pre">parent[i]=j</span></code>.</p>
 <p>We’re going to use a slightly larger tree for the examples in this section:</p>
-<figure class="align-default" id="id1">
+<figure class="align-default" id="id2">
 <img alt="A diagram of a new tree." src="../_images/PV_ManimCE_v0.18.1.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 9 </span><span class="caption-text">The tree we’re going to work with in this section.</span><a class="headerlink" href="#id1" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 9 </span><span class="caption-text">The tree we’re going to work with in this section.</span><a class="headerlink" href="#id2" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p>and the parent vector representing this tree:</p>
@@ -542,10 +542,10 @@ parent: 0 0 1 2 2 1 0 6 7 7 7 0
 <section id="trimming-branches">
 <h3>Trimming Branches<a class="headerlink" href="#trimming-branches" title="Link to this heading">#</a></h3>
 <p>Time for our first structural change to a tree. Say that we want to remove a sub-tree from the main tree, but still keep the nodes around for reference. In a sense, we just want to snip the connection between a parent and child node:</p>
-<figure class="align-default" id="id2">
+<figure class="align-default" id="id3">
 <img alt="The same tree, with the edge between nodes 0 and 6 fading away, while the tree rearranges itself." src="../_images/PVSnip_ManimCE_v0.18.1.gif" />
 <figcaption>
-<p><span class="caption-number">Fig. 10 </span><span class="caption-text">Trimming the branch between nodes <span class="math notranslate nohighlight">\(0\)</span> and <span class="math notranslate nohighlight">\(6\)</span>.</span><a class="headerlink" href="#id2" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 10 </span><span class="caption-text">Trimming the branch between nodes <span class="math notranslate nohighlight">\(0\)</span> and <span class="math notranslate nohighlight">\(6\)</span>.</span><a class="headerlink" href="#id3" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p>Recall that a root node (a node with no parent) is indicated by a self-loop in the parent vector - it is considered its own parent. Because of this, it’s easy to trim a node from its parent by setting its parent to itself.</p>
@@ -570,10 +570,10 @@ parent: 0 0 1 2 2 1 0 6 7 7 7 0
 <h3>Finding Roots<a class="headerlink" href="#finding-roots" title="Link to this heading">#</a></h3>
 <p>Given a parent vector which represents multiple trees, we may like to find which tree each node is part of. Each tree is uniquely identified by its root node, so we can find the tree each node is a member of by finding which root node it descends from.</p>
 <p>After trimming node <span class="math notranslate nohighlight">\(4\)</span> from our tree, our two new trees look like:</p>
-<figure class="align-default" id="id3">
+<figure class="align-default" id="id4">
 <img alt="The two trees resulting from the snipping operation shown previously." src="../_images/PVSnipped_ManimCE_v0.18.1.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 11 </span><span class="caption-text">Our two trees after snipping the branch between nodes <span class="math notranslate nohighlight">\(0\)</span> and <span class="math notranslate nohighlight">\(6\)</span>.</span><a class="headerlink" href="#id3" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 11 </span><span class="caption-text">Our two trees after snipping the branch between nodes <span class="math notranslate nohighlight">\(0\)</span> and <span class="math notranslate nohighlight">\(6\)</span>.</span><a class="headerlink" href="#id4" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p>and they are represented by the parent vector:</p>
@@ -650,10 +650,10 @@ parent: 0 0 1 2 2 1 6 6 7 7 7 0
 <section id="selecting-sub-trees">
 <h3>Selecting Sub-Trees<a class="headerlink" href="#selecting-sub-trees" title="Link to this heading">#</a></h3>
 <p>We can use a similar technique to select sub-trees of a tree. In the previous example, repeatedly indexing with <code class="docutils literal notranslate"><span class="pre">p</span></code> saturated at the root node. With a small modification to the expression, we can have the indexing saturate at a different point. Take our tree from before we snipped node <span class="math notranslate nohighlight">\(6\)</span> off:</p>
-<figure class="align-default" id="id4">
+<figure class="align-default" id="id5">
 <img alt="The tree diagram from the previous section." src="../_images/PV_ManimCE_v0.18.1.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 12 </span><span class="caption-text">Node <span class="math notranslate nohighlight">\(6\)</span> has been kindly reattached.</span><a class="headerlink" href="#id4" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 12 </span><span class="caption-text">Node <span class="math notranslate nohighlight">\(6\)</span> has been kindly reattached.</span><a class="headerlink" href="#id5" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p>Let’s reset <code class="docutils literal notranslate"><span class="pre">p</span></code> to this tree.</p>
@@ -751,10 +751,10 @@ parent: 0 0 1 2 2 1 6 6 7 7 7 0
 <div class="output text_html"><pre class="language-APL">7 2 7 0 6 0 1 2 7 1 0 0
 </pre></div></div>
 </div>
-<figure class="align-default" id="id5">
+<figure class="align-default" id="id6">
 <img alt="The edges in the tree shuffling after our incomplete permutation of the parent vector." src="../_images/PVPermute_ManimCE_v0.18.1.gif" />
 <figcaption>
-<p><span class="caption-number">Fig. 13 </span><span class="caption-text">The result of shuffling the parent vector.</span><a class="headerlink" href="#id5" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 13 </span><span class="caption-text">The result of shuffling the parent vector.</span><a class="headerlink" href="#id6" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p>To fix this tangle of branches, we need to find where each parent was sent by the permutation, and correct the parent vector accordingly.</p>
@@ -805,10 +805,10 @@ parent: 0 0 1 2 2 1 6 6 7 7 7 0
 <div class="output text_html"><pre class="language-APL">4 9 4 10 5 10 11 9 4 11 10 10
 </pre></div></div>
 </div>
-<figure class="align-default" id="id6">
+<figure class="align-default" id="id7">
 <img alt="The edges in the tree shuffling back to normal." src="../_images/PVPermuteFix_ManimCE_v0.18.1.gif" />
 <figcaption>
-<p><span class="caption-number">Fig. 14 </span><span class="caption-text">Fixing the parent pointers.</span><a class="headerlink" href="#id6" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 14 </span><span class="caption-text">Fixing the parent pointers.</span><a class="headerlink" href="#id7" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p>The result of this is a shuffled parent vector, with parent pointers set so as to represent exactly the same tree we started with.</p>
@@ -833,10 +833,10 @@ parent: 0 0 1 2 2 1 6 6 7 7 7 0
 </pre></div></div>
 </div>
 <p>On our example tree, inverting looks like this:</p>
-<figure class="align-default" id="id7">
+<figure class="align-default" id="id8">
 <img alt="The tree moving to mirror itself horizontally." src="../_images/PVInvert_ManimCE_v0.18.1.gif" />
 <figcaption>
-<p><span class="caption-number">Fig. 15 </span><span class="caption-text">Mirroring the tree.</span><a class="headerlink" href="#id7" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 15 </span><span class="caption-text">Mirroring the tree.</span><a class="headerlink" href="#id8" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p>Our first step is to invert the parent vector is simply reverse it.</p>
@@ -863,6 +863,7 @@ parent: 0 0 1 2 2 1 6 6 7 7 7 0
 </pre></div><div class="output text_html"><pre class="language-APL">11 4 4 4 5 11 10 9 9 10 11 11
 </pre></div></div>
 </div>
+<p>Note that we could also have used the general method for fixing parents that we saw earlier, with <code class="docutils literal notranslate"><span class="pre">⌽⍳≢p</span></code> as our permutation vector. The method we use here exploits the specific knowledge we have of how we shuffle the tree, and as a result is more performant than the general method for most tree sizes <a class="footnote-reference brackets" href="#large" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>.</p>
 </section>
 </section>
 <section id="pretty-printing">
@@ -889,47 +890,47 @@ parent: 0 0 1 2 2 1 6 6 7 7 7 0
 <span class="kt">}</span>
 
 <span class="nv">_PrettyPrint_</span><span class="kd">←</span><span class="kt">{</span><span class="w"> </span><span class="c1">⍝ renders a tree given labels, box drawing characters, and padding</span>
-<span class="w">	</span><span class="c1">⍝ ←: vector of character matrices, each a labelled rendering of a tree in the forest given by the input parent vector</span>
-<span class="w">	</span><span class="nv">labels</span><span class="w">    </span><span class="kd">←</span><span class="bp">⍺</span><span class="w">     </span><span class="c1">⍝ vector of character matrices giving the labels for each node</span>
-<span class="w">	</span><span class="nv">connectors</span><span class="kd">←</span><span class="bp">⍺⍺</span><span class="w">    </span><span class="c1">⍝ box drawing characters to render the tree, e.g: &#39;─┌┬┐│┴├┼┤│&#39; (normal, and upstruck)</span>
-<span class="w">	</span><span class="nv">spaces</span><span class="w">    </span><span class="kd">←</span><span class="bp">⍵⍵</span><span class="w">    </span><span class="c1">⍝ number of spaces to pad with between sub-trees</span>
-<span class="w">	</span><span class="nv">p</span><span class="w">         </span><span class="kd">←</span><span class="bp">⍵</span><span class="w">     </span><span class="c1">⍝ parent vector</span>
-<span class="w">	</span><span class="nv">d</span><span class="kd">←</span><span class="nv">Depths</span><span class="w"> </span><span class="nv">p</span>
-<span class="w">	</span><span class="nv">maxDepth</span><span class="kd">←</span><span class="o">⌈</span><span class="na">/</span><span class="nv">d</span>
-<span class="w">	</span><span class="nv">results</span><span class="kd">←</span><span class="nv">labels</span><span class="w">         </span><span class="c1">⍝ result of rendering each sub-tree, seeded with labels</span>
-<span class="w">	</span><span class="nv">maxDepth</span><span class="o">=</span><span class="m">0</span><span class="bp">:</span><span class="w"> </span><span class="nv">results</span><span class="w">    </span><span class="c1">⍝ avoid the each running on the prototype</span>
-<span class="w">	</span><span class="nv">DoFamily</span><span class="kd">←</span><span class="kt">{</span><span class="w"> </span><span class="c1">⍝ render and record a sub-tree</span>
-<span class="w">		</span><span class="c1">⍝ ⍺: parent node</span>
-<span class="w">		</span><span class="c1">⍝ ⍵: rendered results of children</span>
-<span class="w">		</span><span class="nv">widths</span><span class="kd">←</span><span class="p">(</span><span class="m">1</span><span class="o">⊃⍴</span><span class="p">)</span><span class="na">¨</span><span class="bp">⍵</span><span class="w">                                                                           </span><span class="c1">⍝ widths of each rendered child</span>
-<span class="w">		</span><span class="nv">width</span><span class="kd">←</span><span class="nv">spaces</span><span class="o">-</span><span class="na">⍨</span><span class="o">+</span><span class="na">/</span><span class="nv">spaces</span><span class="o">+</span><span class="nv">widths</span><span class="w">                                                            </span><span class="c1">⍝ eventual width of the rendered tree       wwwwwww</span>
-<span class="w">		</span><span class="nv">centres</span><span class="kd">←</span><span class="p">(</span><span class="o">+</span><span class="na">\</span><span class="m">0</span><span class="o">,</span><span class="m">¯1</span><span class="o">↓</span><span class="nv">spaces</span><span class="o">+</span><span class="nv">widths</span><span class="p">)</span><span class="o">+</span><span class="m">¯1</span><span class="o">+⌈</span><span class="m">2</span><span class="o">÷</span><span class="na">⍨</span><span class="nv">widths</span><span class="w">                                             </span><span class="c1">⍝ centres of each rendered sub-tree         ∘ss∘ss∘</span>
-<span class="w">		</span><span class="nv">result</span><span class="kd">←</span><span class="nv">width</span><span class="o">⍴</span><span class="s1">&#39; &#39;</span><span class="w">                                                                         </span><span class="c1">⍝ header to be decorated                   &#39;       &#39;</span>
-<span class="w">		</span><span class="nv">result</span><span class="sr">[</span><span class="p">(</span><span class="o">⊢⊢</span><span class="na">⍤/⍨</span><span class="p">((</span><span class="o">⊃⌽</span><span class="nv">centres</span><span class="p">)</span><span class="o">&gt;⊢</span><span class="p">)</span><span class="o">∧</span><span class="p">(</span><span class="o">⊃</span><span class="nv">centres</span><span class="p">)</span><span class="o">&lt;⊢</span><span class="p">)</span><span class="o">⍳</span><span class="nv">width</span><span class="sr">]</span><span class="kd">←</span><span class="nv">connectors</span><span class="sr">[</span><span class="m">0</span><span class="sr">]</span><span class="w">                          </span><span class="c1">⍝ add horizontal bar                       &#39; ───── &#39;</span>
-<span class="w">		</span><span class="nv">result</span><span class="sr">[</span><span class="w">   </span><span class="o">⊃</span><span class="w"> </span><span class="nv">centres</span><span class="sr">]</span><span class="kd">←</span><span class="nv">connectors</span><span class="sr">[</span><span class="m">1</span><span class="sr">]</span><span class="w">                                                       </span><span class="c1">⍝ left end of bar                          &#39;┌───── &#39;</span>
-<span class="w">		</span><span class="nv">result</span><span class="sr">[</span><span class="w">   </span><span class="o">⊃⌽</span><span class="nv">centres</span><span class="sr">]</span><span class="kd">←</span><span class="nv">connectors</span><span class="sr">[</span><span class="m">3</span><span class="sr">]</span><span class="w">                                                       </span><span class="c1">⍝ right end of bar                         &#39;┌─────┐&#39;</span>
-<span class="w">		</span><span class="nv">result</span><span class="sr">[</span><span class="m">¯1</span><span class="o">↓</span><span class="m">1</span><span class="o">↓</span><span class="nv">centres</span><span class="sr">]</span><span class="kd">←</span><span class="nv">connectors</span><span class="sr">[</span><span class="m">2</span><span class="sr">]</span><span class="w">                                                       </span><span class="c1">⍝ connectors to intermediate children      &#39;┌──┬──┐&#39;</span>
-<span class="w">		</span><span class="nv">result</span><span class="sr">[</span><span class="p">(</span><span class="m">1</span><span class="o">=≢</span><span class="nv">centres</span><span class="p">)</span><span class="o">⍴⊃</span><span class="nv">centres</span><span class="sr">]</span><span class="kd">←</span><span class="nv">connectors</span><span class="sr">[</span><span class="m">4</span><span class="sr">]</span><span class="w">                                              </span><span class="c1">⍝ if there&#39;s only one child, just make it a lone upstrike</span>
-<span class="w">		</span><span class="nv">centre</span><span class="kd">←</span><span class="m">¯1</span><span class="o">+⌈</span><span class="m">2</span><span class="o">÷</span><span class="na">⍨</span><span class="nv">width</span><span class="w">                                                                      </span><span class="c1">⍝ index of the centre of the rendered tree     ∘</span>
-<span class="w">		</span><span class="nv">result</span><span class="sr">[</span><span class="nv">centre</span><span class="sr">]</span><span class="kd">←</span><span class="nv">connectors</span><span class="sr">[</span><span class="m">5</span><span class="w"> </span><span class="m">6</span><span class="w"> </span><span class="m">7</span><span class="w"> </span><span class="m">8</span><span class="w"> </span><span class="m">9</span><span class="sr">][</span><span class="nv">connectors</span><span class="sr">[</span><span class="m">0</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="m">4</span><span class="sr">]</span><span class="o">⍳</span><span class="nv">result</span><span class="sr">[</span><span class="nv">centre</span><span class="sr">]]</span><span class="w">               </span><span class="c1">⍝ connector to the parent                  &#39;┌──┼──┐&#39;</span>
-<span class="w">		</span><span class="nv">result</span><span class="o">⍪</span><span class="kd">←</span><span class="p">(</span><span class="o">-</span><span class="nv">spaces</span><span class="p">)</span><span class="o">↓</span><span class="na">⍤</span><span class="m">1</span><span class="o">⊃,</span><span class="na">/</span><span class="o">,</span><span class="na">∘</span><span class="p">(</span><span class="nv">spaces</span><span class="o">⍴</span><span class="s1">&#39; &#39;</span><span class="p">)</span><span class="na">⍤</span><span class="m">1</span><span class="na">¨</span><span class="bp">⍵</span><span class="o">↑</span><span class="na">¨⍨</span><span class="o">⌈</span><span class="na">/</span><span class="o">≢</span><span class="na">¨</span><span class="bp">⍵</span><span class="w">                                        </span><span class="c1">⍝ pad lables, join under header</span>
-<span class="w">		</span><span class="nv">parentResult</span><span class="kd">←</span><span class="bp">⍺</span><span class="o">⊃</span><span class="nv">results</span><span class="w">                                                                   </span><span class="c1">⍝ label of the parent</span>
-<span class="w">		</span><span class="nv">parentWidth</span><span class="kd">←</span><span class="m">1</span><span class="o">⊃⍴</span><span class="nv">parentResult</span><span class="w">                                                              </span><span class="c1">⍝ width of label of parent</span>
-<span class="w">		</span><span class="nv">parentCentre</span><span class="kd">←</span><span class="m">¯1</span><span class="o">+⌈</span><span class="m">2</span><span class="o">÷</span><span class="na">⍨</span><span class="nv">parentWidth</span><span class="w">                                                          </span><span class="c1">⍝ centre of label of parent</span>
-<span class="w">		</span><span class="nv">result</span><span class="w">      </span><span class="kd">←</span><span class="p">((</span><span class="nv">centre</span><span class="o">-</span><span class="nv">parentCentre</span><span class="p">)</span><span class="o">⌽</span><span class="nv">parentWidth</span><span class="o">↑</span><span class="na">⍤</span><span class="m">1</span><span class="o">⊢</span><span class="p">)</span><span class="na">⍣</span><span class="p">(</span><span class="nv">width</span><span class="o">&lt;</span><span class="nv">parentWidth</span><span class="p">)</span><span class="o">⊢</span><span class="nv">result</span><span class="w">          </span><span class="c1">⍝ pad and recentre text so far if it&#39;s less wide</span>
-<span class="w">		</span><span class="nv">parentResult</span><span class="kd">←</span><span class="p">((</span><span class="nv">parentCentre</span><span class="o">-</span><span class="nv">centre</span><span class="p">)</span><span class="o">⌽</span><span class="w">      </span><span class="nv">width</span><span class="o">↑</span><span class="na">⍤</span><span class="m">1</span><span class="o">⊢</span><span class="p">)</span><span class="na">⍣</span><span class="p">(</span><span class="nv">width</span><span class="o">&gt;</span><span class="nv">parentWidth</span><span class="p">)</span><span class="o">⊢</span><span class="nv">parentResult</span><span class="w">    </span><span class="c1">⍝ pad and recentre parent label if it&#39;s less wide</span>
-<span class="w">		</span><span class="nv">result</span><span class="o">⍪</span><span class="na">⍨</span><span class="kd">←</span><span class="nv">parentResult</span><span class="w">                                                                    </span><span class="c1">⍝ add parent label</span>
-<span class="w">		</span><span class="nv">results</span><span class="sr">[</span><span class="bp">⍺</span><span class="sr">]</span><span class="kd">←</span><span class="o">⊂</span><span class="nv">result</span><span class="w">                                                                       </span><span class="c1">⍝ record result</span>
-<span class="w">		</span><span class="m">1</span>
-<span class="w">	</span><span class="kt">}</span>
-<span class="w">	</span><span class="nv">DoLayer</span><span class="kd">←</span><span class="kt">{</span><span class="w"> </span><span class="c1">⍝ render and record all nodes whose children have depth ⍵</span>
-<span class="w">		</span><span class="c1">⍝ ⍵: depth to handle nodes at</span>
-<span class="w">		</span><span class="nv">i</span><span class="kd">←</span><span class="o">⍸</span><span class="nv">d</span><span class="o">=</span><span class="bp">⍵</span><span class="w">    </span><span class="c1">⍝ nodes at this depth</span>
-<span class="w">		</span><span class="nv">_</span><span class="kd">←</span><span class="nv">p</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]</span><span class="nv">DoFamily</span><span class="na">⌸</span><span class="nv">results</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]</span>
-<span class="w">		</span><span class="m">1</span>
-<span class="w">	</span><span class="kt">}</span>
-<span class="w">	</span><span class="nv">_</span><span class="kd">←</span><span class="nv">DoLayer</span><span class="na">¨</span><span class="o">⌽</span><span class="m">1</span><span class="o">+⍳</span><span class="nv">maxDepth</span><span class="w">    </span><span class="c1">⍝ bottom up accumulation</span>
-<span class="w">	</span><span class="nv">results</span><span class="na">/⍨</span><span class="nv">p</span><span class="o">=⍳≢</span><span class="nv">p</span><span class="w">            </span><span class="c1">⍝ return results at roots only</span>
+<span class="w">    </span><span class="c1">⍝ ←: vector of character matrices, each a labelled rendering of a tree in the forest given by the input parent vector</span>
+<span class="w">    </span><span class="nv">labels</span><span class="w">    </span><span class="kd">←</span><span class="bp">⍺</span><span class="w">     </span><span class="c1">⍝ vector of character matrices giving the labels for each node</span>
+<span class="w">    </span><span class="nv">connectors</span><span class="kd">←</span><span class="bp">⍺⍺</span><span class="w">    </span><span class="c1">⍝ box drawing characters to render the tree, e.g: &#39;─┌┬┐│┴├┼┤│&#39; (normal, and upstruck)</span>
+<span class="w">    </span><span class="nv">spaces</span><span class="w">    </span><span class="kd">←</span><span class="bp">⍵⍵</span><span class="w">    </span><span class="c1">⍝ number of spaces to pad with between sub-trees</span>
+<span class="w">    </span><span class="nv">p</span><span class="w">         </span><span class="kd">←</span><span class="bp">⍵</span><span class="w">     </span><span class="c1">⍝ parent vector</span>
+<span class="w">    </span><span class="nv">d</span><span class="kd">←</span><span class="nv">Depths</span><span class="w"> </span><span class="nv">p</span>
+<span class="w">    </span><span class="nv">maxDepth</span><span class="kd">←</span><span class="o">⌈</span><span class="na">/</span><span class="nv">d</span>
+<span class="w">    </span><span class="nv">results</span><span class="kd">←</span><span class="nv">labels</span><span class="w">         </span><span class="c1">⍝ result of rendering each sub-tree, seeded with labels</span>
+<span class="w">    </span><span class="nv">maxDepth</span><span class="o">=</span><span class="m">0</span><span class="bp">:</span><span class="w"> </span><span class="nv">results</span><span class="w">    </span><span class="c1">⍝ avoid the each running on the prototype</span>
+<span class="w">    </span><span class="nv">DoFamily</span><span class="kd">←</span><span class="kt">{</span><span class="w"> </span><span class="c1">⍝ render and record a sub-tree</span>
+<span class="w">        </span><span class="c1">⍝ ⍺: parent node</span>
+<span class="w">        </span><span class="c1">⍝ ⍵: rendered results of children</span>
+<span class="w">        </span><span class="nv">widths</span><span class="kd">←</span><span class="p">(</span><span class="m">1</span><span class="o">⊃⍴</span><span class="p">)</span><span class="na">¨</span><span class="bp">⍵</span><span class="w">                                                                           </span><span class="c1">⍝ widths of each rendered child</span>
+<span class="w">        </span><span class="nv">width</span><span class="kd">←</span><span class="nv">spaces</span><span class="o">-</span><span class="na">⍨</span><span class="o">+</span><span class="na">/</span><span class="nv">spaces</span><span class="o">+</span><span class="nv">widths</span><span class="w">                                                            </span><span class="c1">⍝ eventual width of the rendered tree       wwwwwww</span>
+<span class="w">        </span><span class="nv">centres</span><span class="kd">←</span><span class="p">(</span><span class="o">+</span><span class="na">\</span><span class="m">0</span><span class="o">,</span><span class="m">¯1</span><span class="o">↓</span><span class="nv">spaces</span><span class="o">+</span><span class="nv">widths</span><span class="p">)</span><span class="o">+</span><span class="m">¯1</span><span class="o">+⌈</span><span class="m">2</span><span class="o">÷</span><span class="na">⍨</span><span class="nv">widths</span><span class="w">                                             </span><span class="c1">⍝ centres of each rendered sub-tree         ∘ss∘ss∘</span>
+<span class="w">        </span><span class="nv">result</span><span class="kd">←</span><span class="nv">width</span><span class="o">⍴</span><span class="s1">&#39; &#39;</span><span class="w">                                                                         </span><span class="c1">⍝ header to be decorated                   &#39;       &#39;</span>
+<span class="w">        </span><span class="nv">result</span><span class="sr">[</span><span class="p">(</span><span class="o">⊢⊢</span><span class="na">⍤/⍨</span><span class="p">((</span><span class="o">⊃⌽</span><span class="nv">centres</span><span class="p">)</span><span class="o">&gt;⊢</span><span class="p">)</span><span class="o">∧</span><span class="p">(</span><span class="o">⊃</span><span class="nv">centres</span><span class="p">)</span><span class="o">&lt;⊢</span><span class="p">)</span><span class="o">⍳</span><span class="nv">width</span><span class="sr">]</span><span class="kd">←</span><span class="nv">connectors</span><span class="sr">[</span><span class="m">0</span><span class="sr">]</span><span class="w">                          </span><span class="c1">⍝ add horizontal bar                       &#39; ───── &#39;</span>
+<span class="w">        </span><span class="nv">result</span><span class="sr">[</span><span class="w">   </span><span class="o">⊃</span><span class="w"> </span><span class="nv">centres</span><span class="sr">]</span><span class="kd">←</span><span class="nv">connectors</span><span class="sr">[</span><span class="m">1</span><span class="sr">]</span><span class="w">                                                       </span><span class="c1">⍝ left end of bar                          &#39;┌───── &#39;</span>
+<span class="w">        </span><span class="nv">result</span><span class="sr">[</span><span class="w">   </span><span class="o">⊃⌽</span><span class="nv">centres</span><span class="sr">]</span><span class="kd">←</span><span class="nv">connectors</span><span class="sr">[</span><span class="m">3</span><span class="sr">]</span><span class="w">                                                       </span><span class="c1">⍝ right end of bar                         &#39;┌─────┐&#39;</span>
+<span class="w">        </span><span class="nv">result</span><span class="sr">[</span><span class="m">¯1</span><span class="o">↓</span><span class="m">1</span><span class="o">↓</span><span class="nv">centres</span><span class="sr">]</span><span class="kd">←</span><span class="nv">connectors</span><span class="sr">[</span><span class="m">2</span><span class="sr">]</span><span class="w">                                                       </span><span class="c1">⍝ connectors to intermediate children      &#39;┌──┬──┐&#39;</span>
+<span class="w">        </span><span class="nv">result</span><span class="sr">[</span><span class="p">(</span><span class="m">1</span><span class="o">=≢</span><span class="nv">centres</span><span class="p">)</span><span class="o">⍴⊃</span><span class="nv">centres</span><span class="sr">]</span><span class="kd">←</span><span class="nv">connectors</span><span class="sr">[</span><span class="m">4</span><span class="sr">]</span><span class="w">                                              </span><span class="c1">⍝ if there&#39;s only one child, just make it a lone upstrike</span>
+<span class="w">        </span><span class="nv">centre</span><span class="kd">←</span><span class="m">¯1</span><span class="o">+⌈</span><span class="m">2</span><span class="o">÷</span><span class="na">⍨</span><span class="nv">width</span><span class="w">                                                                      </span><span class="c1">⍝ index of the centre of the rendered tree     ∘</span>
+<span class="w">        </span><span class="nv">result</span><span class="sr">[</span><span class="nv">centre</span><span class="sr">]</span><span class="kd">←</span><span class="nv">connectors</span><span class="sr">[</span><span class="m">5</span><span class="w"> </span><span class="m">6</span><span class="w"> </span><span class="m">7</span><span class="w"> </span><span class="m">8</span><span class="w"> </span><span class="m">9</span><span class="sr">][</span><span class="nv">connectors</span><span class="sr">[</span><span class="m">0</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="m">4</span><span class="sr">]</span><span class="o">⍳</span><span class="nv">result</span><span class="sr">[</span><span class="nv">centre</span><span class="sr">]]</span><span class="w">               </span><span class="c1">⍝ connector to the parent                  &#39;┌──┼──┐&#39;</span>
+<span class="w">        </span><span class="nv">result</span><span class="o">⍪</span><span class="kd">←</span><span class="p">(</span><span class="o">-</span><span class="nv">spaces</span><span class="p">)</span><span class="o">↓</span><span class="na">⍤</span><span class="m">1</span><span class="o">⊃,</span><span class="na">/</span><span class="o">,</span><span class="na">∘</span><span class="p">(</span><span class="nv">spaces</span><span class="o">⍴</span><span class="s1">&#39; &#39;</span><span class="p">)</span><span class="na">⍤</span><span class="m">1</span><span class="na">¨</span><span class="bp">⍵</span><span class="o">↑</span><span class="na">¨⍨</span><span class="o">⌈</span><span class="na">/</span><span class="o">≢</span><span class="na">¨</span><span class="bp">⍵</span><span class="w">                                        </span><span class="c1">⍝ pad lables, join under header</span>
+<span class="w">        </span><span class="nv">parentResult</span><span class="kd">←</span><span class="bp">⍺</span><span class="o">⊃</span><span class="nv">results</span><span class="w">                                                                   </span><span class="c1">⍝ label of the parent</span>
+<span class="w">        </span><span class="nv">parentWidth</span><span class="kd">←</span><span class="m">1</span><span class="o">⊃⍴</span><span class="nv">parentResult</span><span class="w">                                                              </span><span class="c1">⍝ width of label of parent</span>
+<span class="w">        </span><span class="nv">parentCentre</span><span class="kd">←</span><span class="m">¯1</span><span class="o">+⌈</span><span class="m">2</span><span class="o">÷</span><span class="na">⍨</span><span class="nv">parentWidth</span><span class="w">                                                          </span><span class="c1">⍝ centre of label of parent</span>
+<span class="w">        </span><span class="nv">result</span><span class="w">      </span><span class="kd">←</span><span class="p">((</span><span class="nv">centre</span><span class="o">-</span><span class="nv">parentCentre</span><span class="p">)</span><span class="o">⌽</span><span class="nv">parentWidth</span><span class="o">↑</span><span class="na">⍤</span><span class="m">1</span><span class="o">⊢</span><span class="p">)</span><span class="na">⍣</span><span class="p">(</span><span class="nv">width</span><span class="o">&lt;</span><span class="nv">parentWidth</span><span class="p">)</span><span class="o">⊢</span><span class="nv">result</span><span class="w">          </span><span class="c1">⍝ pad and recentre text so far if it&#39;s less wide</span>
+<span class="w">        </span><span class="nv">parentResult</span><span class="kd">←</span><span class="p">((</span><span class="nv">parentCentre</span><span class="o">-</span><span class="nv">centre</span><span class="p">)</span><span class="o">⌽</span><span class="w">      </span><span class="nv">width</span><span class="o">↑</span><span class="na">⍤</span><span class="m">1</span><span class="o">⊢</span><span class="p">)</span><span class="na">⍣</span><span class="p">(</span><span class="nv">width</span><span class="o">&gt;</span><span class="nv">parentWidth</span><span class="p">)</span><span class="o">⊢</span><span class="nv">parentResult</span><span class="w">    </span><span class="c1">⍝ pad and recentre parent label if it&#39;s less wide</span>
+<span class="w">        </span><span class="nv">result</span><span class="o">⍪</span><span class="na">⍨</span><span class="kd">←</span><span class="nv">parentResult</span><span class="w">                                                                    </span><span class="c1">⍝ add parent label</span>
+<span class="w">        </span><span class="nv">results</span><span class="sr">[</span><span class="bp">⍺</span><span class="sr">]</span><span class="kd">←</span><span class="o">⊂</span><span class="nv">result</span><span class="w">                                                                       </span><span class="c1">⍝ record result</span>
+<span class="w">        </span><span class="m">1</span>
+<span class="w">    </span><span class="kt">}</span>
+<span class="w">    </span><span class="nv">DoLayer</span><span class="kd">←</span><span class="kt">{</span><span class="w"> </span><span class="c1">⍝ render and record all nodes whose children have depth ⍵</span>
+<span class="w">        </span><span class="c1">⍝ ⍵: depth to handle nodes at</span>
+<span class="w">        </span><span class="nv">i</span><span class="kd">←</span><span class="o">⍸</span><span class="nv">d</span><span class="o">=</span><span class="bp">⍵</span><span class="w">    </span><span class="c1">⍝ nodes at this depth</span>
+<span class="w">        </span><span class="nv">_</span><span class="kd">←</span><span class="nv">p</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]</span><span class="nv">DoFamily</span><span class="na">⌸</span><span class="nv">results</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]</span>
+<span class="w">        </span><span class="m">1</span>
+<span class="w">    </span><span class="kt">}</span>
+<span class="w">    </span><span class="nv">_</span><span class="kd">←</span><span class="nv">DoLayer</span><span class="na">¨</span><span class="o">⌽</span><span class="m">1</span><span class="o">+⍳</span><span class="nv">maxDepth</span><span class="w">    </span><span class="c1">⍝ bottom up accumulation</span>
+<span class="w">    </span><span class="nv">results</span><span class="na">/⍨</span><span class="nv">p</span><span class="o">=⍳≢</span><span class="nv">p</span><span class="w">            </span><span class="c1">⍝ return results at roots only</span>
 <span class="kt">}</span>
 
 <span class="nv">PPV</span><span class="kd">←</span><span class="kt">{</span><span class="bp">⍺</span><span class="kd">←</span><span class="s1">&#39;∘&#39;</span><span class="w"> </span><span class="p">⋄</span><span class="w">   </span><span class="p">((</span><span class="o">≢</span><span class="bp">⍵</span><span class="p">)</span><span class="o">⍴⍉</span><span class="na">⍤</span><span class="o">⍪</span><span class="na">⍤</span><span class="o">⍕</span><span class="na">¨</span><span class="s1">&#39;∘&#39;</span><span class="na">@</span><span class="p">(</span><span class="m">0</span><span class="o">=≢</span><span class="na">¨</span><span class="p">)</span><span class="bp">⍺</span><span class="p">)(</span><span class="s1">&#39;─┌┬┐│┴├┼┤│&#39;</span><span class="nv">_PrettyPrint_</span><span class="w"> </span><span class="m">1</span><span class="p">)</span><span class="bp">⍵</span><span class="kt">}</span><span class="w">    </span><span class="c1">⍝ vertical</span>
@@ -1013,7 +1014,7 @@ parent: 0 0 1 2 2 1 6 6 7 7 7 0
 └───────────────┘
 </pre></div></div>
 </div>
-<p>This let’s us check the results of the tree transformations we’ve done on this page:</p>
+<p>This lets us check the results of the tree transformations we’ve done on this page:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="c1">⍝ children of nodes 1 and 6</span>
@@ -1074,7 +1075,7 @@ parent: 0 0 1 2 2 1 6 6 7 7 7 0
 └────────┴──────┘
 </pre></div></div>
 </div>
-<p>Note that the output of PPV is a vector of character matrices, one for each tree represented in the parent vector.</p>
+<p>Note that the output of <code class="docutils literal notranslate"><span class="pre">PPV</span></code> is a vector of character matrices, one for each tree represented in the parent vector.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="c1">⍝ finding roots</span>
@@ -1134,6 +1135,13 @@ parent: 0 0 1 2 2 1 6 6 7 7 7 0
 └───────────────┘
 </pre></div></div>
 </div>
+<hr class="footnotes docutils" />
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="large" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>I ran some performance tests and found that for trees with over <span class="math notranslate nohighlight">\(100000\)</span> nodes, this relationship flips and using <code class="docutils literal notranslate"><span class="pre">⍳</span></code> becomes faster. The implementation of <code class="docutils literal notranslate"><span class="pre">⍳</span></code> is clearly doing some magic at this size! If you are working with extremely large trees, you may want to do your own benchmarking and choose the right method for your platform and use-case.</p>
+</aside>
+</aside>
 </section>
 </section>
 

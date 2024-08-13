@@ -443,7 +443,7 @@ document.write(`
 </figcaption>
 </figure>
 <p>Finally, if <code class="docutils literal notranslate"><span class="pre">j</span></code> is the parent of <code class="docutils literal notranslate"><span class="pre">i</span></code>, we know that <code class="docutils literal notranslate"><span class="pre">j</span></code> must have a depth one less than the depth of <code class="docutils literal notranslate"><span class="pre">i</span></code>, i.e. <code class="docutils literal notranslate"><span class="pre">d[j]=d[i]-1</span></code>. All of this information together leads to a neat method for constructing a parent vector from a depth vector.</p>
-<p>Firstly, we want to group the nodes in the depth vector by their given depth. <code class="docutils literal notranslate"><span class="pre">⌸</span></code> is the perfect primitive for this:</p>
+<p>Firstly, we want to group the nodes in the depth vector by their given depth. <code class="docutils literal notranslate"><span class="pre">⌸</span></code> (Key) is the perfect primitive for this:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="o">⊂</span><span class="na">⍤</span><span class="o">⊢</span><span class="na">⌸</span><span class="nv">d</span>
@@ -456,7 +456,7 @@ document.write(`
 └─┴─────┴─────┴─────┘
 </pre></div></div>
 </div>
-<p>Here, we have grouped the nodes in the tree by their depth. <code class="docutils literal notranslate"><span class="pre">⌸</span></code> orders the groups it creates by the order the values appear in its right argument. The ordering of the depth vector ensures that this is exactly the all the possible depths of the tree in ascending order. So, the <span class="math notranslate nohighlight">\(0\)</span>th place has all nodes with a depth of <span class="math notranslate nohighlight">\(0\)</span> (in our case just the single root), the <span class="math notranslate nohighlight">\(1\)</span>st place has all those with a depth of <span class="math notranslate nohighlight">\(1\)</span>, and so on.</p>
+<p>Here, we have grouped the nodes in the tree by their depth. <code class="docutils literal notranslate"><span class="pre">⌸</span></code> orders the groups it creates by the order the values appear in its right argument. The ordering of the depth vector ensures that this is exactly the all of the possible depths of the tree in ascending order. So, at index <span class="math notranslate nohighlight">\(0\)</span> we have all nodes with a depth of <span class="math notranslate nohighlight">\(0\)</span> (in our case just the single root), at index <span class="math notranslate nohighlight">\(1\)</span> we have all those with a depth of <span class="math notranslate nohighlight">\(1\)</span>, and so on.</p>
 <p>Any non-root node <code class="docutils literal notranslate"><span class="pre">i</span></code> will appear after its parent <code class="docutils literal notranslate"><span class="pre">j</span></code> in the depth vector, and before the next node at the same depth as its parent. It is not possible for there to be another node with the same depth as <code class="docutils literal notranslate"><span class="pre">j</span></code> which appears between <code class="docutils literal notranslate"><span class="pre">i</span></code> and <code class="docutils literal notranslate"><span class="pre">j</span></code>.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   no 1s here
       ┌┴┐
@@ -562,7 +562,7 @@ d: 0 1 2 2 1 2 3 3 3 1
 <div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">DepthToParent</span><span class="kd">←</span><span class="kt">{</span><span class="w"> </span><span class="c1">⍝ return the parent vector representation of a tree from a depth vector</span>
 <span class="w">    </span><span class="c1">⍝ ←: the parent vector corresponding to the depth vector input</span>
 <span class="w">    </span><span class="nv">d</span><span class="kd">←</span><span class="bp">⍵</span><span class="w">                       </span><span class="c1">⍝ depth vector to be parentified</span>
-<span class="w">    </span><span class="nv">p</span><span class="kd">←</span><span class="o">⍳≢</span><span class="nv">d</span><span class="w">                     </span><span class="c1">⍝ seed as all loops</span>
+<span class="w">    </span><span class="nv">p</span><span class="kd">←</span><span class="o">⍳≢</span><span class="nv">d</span><span class="w">                     </span><span class="c1">⍝ begin by setting all nodes as roots</span>
 <span class="w">    </span><span class="nv">_</span><span class="kd">←</span><span class="m">2</span><span class="kt">{</span><span class="nv">p</span><span class="sr">[</span><span class="bp">⍵</span><span class="sr">]</span><span class="kd">←</span><span class="bp">⍺</span><span class="sr">[</span><span class="bp">⍺</span><span class="o">⍸</span><span class="bp">⍵</span><span class="sr">]</span><span class="kt">}</span><span class="na">/</span><span class="o">⊂</span><span class="na">⍤</span><span class="o">⊢</span><span class="na">⌸</span><span class="nv">d</span><span class="w">    </span><span class="c1">⍝ find the parents of each non-root</span>
 <span class="w">    </span><span class="c1">⍝ │ │   ││    │ │└───┴─ indices of each level</span>
 <span class="w">    </span><span class="c1">⍝ └─│───││────│─┴─ pairwise between levels</span>
@@ -574,7 +574,7 @@ d: 0 1 2 2 1 2 3 3 3 1
 </div>
 </div>
 </div>
-<p>Now that we can convert depth vectors to parent vectors, a natural next question is converting parent vectors back into depth vectors. There are two stages to this: firstly of which is finding the depths of each node, and secondly imposing the DFPT ordering on the nodes.</p>
+<p>Now that we can convert depth vectors to parent vectors, a natural next question is converting parent vectors back into depth vectors. There are two stages to this: firstly finding the depths of each node, and secondly imposing the DFPT ordering on the nodes.</p>
 </section>
 <section id="recovering-depths">
 <h2>Recovering Depths<a class="headerlink" href="#recovering-depths" title="Link to this heading">#</a></h2>
@@ -647,7 +647,7 @@ d: 0 1 2 2 1 2 3 3 3 1
 <span class="w">    </span><span class="nv">q</span>
 <span class="kt">}</span>
 <span class="nv">_</span><span class="kd">←</span><span class="nv">StepUp</span><span class="na">⍣</span><span class="o">≡</span><span class="m">1</span>
-<span class="nv">depth</span><span class="w">             </span><span class="c1">⍝ node 5 has depth 2</span>
+<span class="nv">depth</span><span class="w">             </span><span class="c1">⍝ node 1 has depth 2</span>
 </pre></div>
 </div>
 </div>

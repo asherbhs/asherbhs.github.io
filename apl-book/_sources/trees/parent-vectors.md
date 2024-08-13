@@ -331,6 +331,10 @@ Since the whole vector has been reversed, the order between siblings is reversed
 (¯1+≢-⌽)p     ⍝ tacitly
 ```
 
+Note that we could also have used the general method for fixing parents that we saw earlier, with `⌽⍳≢p` as our permutation vector. The method we use here exploits the specific knowledge we have of how we shuffle the tree, and as a result is more performant than the general method for most tree sizes [^large].
+
+[^large]: I ran some performance tests and found that for trees with over $100000$ nodes, this relationship flips and using `⍳` becomes faster. The implementation of `⍳` is clearly doing some magic at this size! If you are working with extremely large trees, you may want to do your own benchmarking and choose the right method for your platform and use-case.
+
 ## Pretty Printing
 
 We're now looking at some sufficiently complicated tree operations that you might like to play around with other examples in the APL session yourself. It can be extremely frustrating to try an expression and be met just with a list of numbers and no way of visualising the resulting tree. For this reason, we're going to include here some definitions that will let you pretty-print trees as character matrices, which you can copy and use right away. If you're so inclined, you can have a crack at reading the code right away, but the general techniques it employs will be explained in due course.
@@ -352,47 +356,47 @@ Depths←{ ⍝ find the depths of each node in a parent vector
 }
 
 _PrettyPrint_←{ ⍝ renders a tree given labels, box drawing characters, and padding
-	⍝ ←: vector of character matrices, each a labelled rendering of a tree in the forest given by the input parent vector
-	labels    ←⍺     ⍝ vector of character matrices giving the labels for each node
-	connectors←⍺⍺    ⍝ box drawing characters to render the tree, e.g: '─┌┬┐│┴├┼┤│' (normal, and upstruck)
-	spaces    ←⍵⍵    ⍝ number of spaces to pad with between sub-trees
-	p         ←⍵     ⍝ parent vector
-	d←Depths p
-	maxDepth←⌈/d
-	results←labels         ⍝ result of rendering each sub-tree, seeded with labels
-	maxDepth=0: results    ⍝ avoid the each running on the prototype
-	DoFamily←{ ⍝ render and record a sub-tree
-		⍝ ⍺: parent node
-		⍝ ⍵: rendered results of children
-		widths←(1⊃⍴)¨⍵                                                                           ⍝ widths of each rendered child
-		width←spaces-⍨+/spaces+widths                                                            ⍝ eventual width of the rendered tree       wwwwwww
-		centres←(+\0,¯1↓spaces+widths)+¯1+⌈2÷⍨widths                                             ⍝ centres of each rendered sub-tree         ∘ss∘ss∘
-		result←width⍴' '                                                                         ⍝ header to be decorated                   '       '
-		result[(⊢⊢⍤/⍨((⊃⌽centres)>⊢)∧(⊃centres)<⊢)⍳width]←connectors[0]                          ⍝ add horizontal bar                       ' ───── '
-		result[   ⊃ centres]←connectors[1]                                                       ⍝ left end of bar                          '┌───── '
-		result[   ⊃⌽centres]←connectors[3]                                                       ⍝ right end of bar                         '┌─────┐'
-		result[¯1↓1↓centres]←connectors[2]                                                       ⍝ connectors to intermediate children      '┌──┬──┐'
-		result[(1=≢centres)⍴⊃centres]←connectors[4]                                              ⍝ if there's only one child, just make it a lone upstrike
-		centre←¯1+⌈2÷⍨width                                                                      ⍝ index of the centre of the rendered tree     ∘
-		result[centre]←connectors[5 6 7 8 9][connectors[0 1 2 3 4]⍳result[centre]]               ⍝ connector to the parent                  '┌──┼──┐'
-		result⍪←(-spaces)↓⍤1⊃,/,∘(spaces⍴' ')⍤1¨⍵↑¨⍨⌈/≢¨⍵                                        ⍝ pad lables, join under header
-		parentResult←⍺⊃results                                                                   ⍝ label of the parent
-		parentWidth←1⊃⍴parentResult                                                              ⍝ width of label of parent
-		parentCentre←¯1+⌈2÷⍨parentWidth                                                          ⍝ centre of label of parent
-		result      ←((centre-parentCentre)⌽parentWidth↑⍤1⊢)⍣(width<parentWidth)⊢result          ⍝ pad and recentre text so far if it's less wide
-		parentResult←((parentCentre-centre)⌽      width↑⍤1⊢)⍣(width>parentWidth)⊢parentResult    ⍝ pad and recentre parent label if it's less wide
-		result⍪⍨←parentResult                                                                    ⍝ add parent label
-		results[⍺]←⊂result                                                                       ⍝ record result
-		1
-	}
-	DoLayer←{ ⍝ render and record all nodes whose children have depth ⍵
-		⍝ ⍵: depth to handle nodes at
-		i←⍸d=⍵    ⍝ nodes at this depth
-		_←p[i]DoFamily⌸results[i]
-		1
-	}
-	_←DoLayer¨⌽1+⍳maxDepth    ⍝ bottom up accumulation
-	results/⍨p=⍳≢p            ⍝ return results at roots only
+    ⍝ ←: vector of character matrices, each a labelled rendering of a tree in the forest given by the input parent vector
+    labels    ←⍺     ⍝ vector of character matrices giving the labels for each node
+    connectors←⍺⍺    ⍝ box drawing characters to render the tree, e.g: '─┌┬┐│┴├┼┤│' (normal, and upstruck)
+    spaces    ←⍵⍵    ⍝ number of spaces to pad with between sub-trees
+    p         ←⍵     ⍝ parent vector
+    d←Depths p
+    maxDepth←⌈/d
+    results←labels         ⍝ result of rendering each sub-tree, seeded with labels
+    maxDepth=0: results    ⍝ avoid the each running on the prototype
+    DoFamily←{ ⍝ render and record a sub-tree
+        ⍝ ⍺: parent node
+        ⍝ ⍵: rendered results of children
+        widths←(1⊃⍴)¨⍵                                                                           ⍝ widths of each rendered child
+        width←spaces-⍨+/spaces+widths                                                            ⍝ eventual width of the rendered tree       wwwwwww
+        centres←(+\0,¯1↓spaces+widths)+¯1+⌈2÷⍨widths                                             ⍝ centres of each rendered sub-tree         ∘ss∘ss∘
+        result←width⍴' '                                                                         ⍝ header to be decorated                   '       '
+        result[(⊢⊢⍤/⍨((⊃⌽centres)>⊢)∧(⊃centres)<⊢)⍳width]←connectors[0]                          ⍝ add horizontal bar                       ' ───── '
+        result[   ⊃ centres]←connectors[1]                                                       ⍝ left end of bar                          '┌───── '
+        result[   ⊃⌽centres]←connectors[3]                                                       ⍝ right end of bar                         '┌─────┐'
+        result[¯1↓1↓centres]←connectors[2]                                                       ⍝ connectors to intermediate children      '┌──┬──┐'
+        result[(1=≢centres)⍴⊃centres]←connectors[4]                                              ⍝ if there's only one child, just make it a lone upstrike
+        centre←¯1+⌈2÷⍨width                                                                      ⍝ index of the centre of the rendered tree     ∘
+        result[centre]←connectors[5 6 7 8 9][connectors[0 1 2 3 4]⍳result[centre]]               ⍝ connector to the parent                  '┌──┼──┐'
+        result⍪←(-spaces)↓⍤1⊃,/,∘(spaces⍴' ')⍤1¨⍵↑¨⍨⌈/≢¨⍵                                        ⍝ pad lables, join under header
+        parentResult←⍺⊃results                                                                   ⍝ label of the parent
+        parentWidth←1⊃⍴parentResult                                                              ⍝ width of label of parent
+        parentCentre←¯1+⌈2÷⍨parentWidth                                                          ⍝ centre of label of parent
+        result      ←((centre-parentCentre)⌽parentWidth↑⍤1⊢)⍣(width<parentWidth)⊢result          ⍝ pad and recentre text so far if it's less wide
+        parentResult←((parentCentre-centre)⌽      width↑⍤1⊢)⍣(width>parentWidth)⊢parentResult    ⍝ pad and recentre parent label if it's less wide
+        result⍪⍨←parentResult                                                                    ⍝ add parent label
+        results[⍺]←⊂result                                                                       ⍝ record result
+        1
+    }
+    DoLayer←{ ⍝ render and record all nodes whose children have depth ⍵
+        ⍝ ⍵: depth to handle nodes at
+        i←⍸d=⍵    ⍝ nodes at this depth
+        _←p[i]DoFamily⌸results[i]
+        1
+    }
+    _←DoLayer¨⌽1+⍳maxDepth    ⍝ bottom up accumulation
+    results/⍨p=⍳≢p            ⍝ return results at roots only
 }
 
 PPV←{⍺←'∘' ⋄   ((≢⍵)⍴⍉⍤⍪⍤⍕¨'∘'@(0=≢¨)⍺)('─┌┬┐│┴├┼┤│'_PrettyPrint_ 1)⍵}    ⍝ vertical
@@ -419,7 +423,7 @@ PPH p    ⍝ visualise horizontally
 (⍳≢p) PPV p    ⍝ label each node by its index
 ```
 
-This let's us check the results of the tree transformations we've done on this page:
+This lets us check the results of the tree transformations we've done on this page:
 
 ```{code-cell}
 ⍝ children of nodes 1 and 6
@@ -439,7 +443,7 @@ p[i]←i
 (⍳≢p) PPV p
 ```
 
-Note that the output of PPV is a vector of character matrices, one for each tree represented in the parent vector.
+Note that the output of `PPV` is a vector of character matrices, one for each tree represented in the parent vector.
 
 ```{code-cell}
 ⍝ finding roots

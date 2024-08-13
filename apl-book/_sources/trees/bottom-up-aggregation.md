@@ -14,7 +14,7 @@ kernelspec:
 
 # Bottom-Up Accumulation
 
-We've covered lots of ways to play with the structure of a tree, but, similarly to how we often accumulate values in an array with a reduction, we often want to accumulate the values in a tree somehow, while respecting its structure. Usually, this involves working out way up from the bottom of the tree, with each parent combining the results of its children, until we reach the root.
+We've covered lots of ways to play with the structure of a tree, but, similarly to how we often accumulate values in an array with a reduction, we often want to accumulate the values in a tree somehow, while respecting its structure. Usually, this involves working our way up from the bottom of the tree, with each parent combining the results of its children, until we reach the root.
 
 ```{code-cell}
 :tags: [remove-cell]
