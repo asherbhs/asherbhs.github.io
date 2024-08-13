@@ -189,7 +189,7 @@ The final step is to extract the representation of just the root node (or nodes,
 (p=⍳≢p)/r
 ```
 
-And we are done! This is the general format for accumulating values according to a tree. Indeed, [look back](parent-vectors.md#pretty-printing) at `_pp_` - it uses exactly this method.
+And we are done! This is the general format for accumulating values according to a tree. Indeed, [look back](parent-vectors.md#pretty-printing) at `_PrettyPrint_` - it uses exactly this method.
 
 Putting this together into a dfn, there's one more thing we need to worry about. When we have a tree or forest consisting of only root nodes, that is, all nodes have depth $0$, our `¨` will still run once on the prototype of `⌽1+⍳⌈/d`, leading to an incorrect result. Therefore, we will introduce a guard statement to avoid this.
 

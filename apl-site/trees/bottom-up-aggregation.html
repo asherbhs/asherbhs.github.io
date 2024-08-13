@@ -701,7 +701,7 @@ document.write(`
 └───────────────────────────────────────────────┘
 </pre></div></div>
 </div>
-<p>And we are done! This is the general format for accumulating values according to a tree. Indeed, <a class="reference internal" href="parent-vectors.html#pretty-printing"><span class="std std-ref">look back</span></a> at <code class="docutils literal notranslate"><span class="pre">_pp_</span></code> - it uses exactly this method.</p>
+<p>And we are done! This is the general format for accumulating values according to a tree. Indeed, <a class="reference internal" href="parent-vectors.html#pretty-printing"><span class="std std-ref">look back</span></a> at <code class="docutils literal notranslate"><span class="pre">_PrettyPrint_</span></code> - it uses exactly this method.</p>
 <p>Putting this together into a dfn, there’s one more thing we need to worry about. When we have a tree or forest consisting of only root nodes, that is, all nodes have depth <span class="math notranslate nohighlight">\(0\)</span>, our <code class="docutils literal notranslate"><span class="pre">¨</span></code> will still run once on the prototype of <code class="docutils literal notranslate"><span class="pre">⌽1+⍳⌈/d</span></code>, leading to an incorrect result. Therefore, we will introduce a guard statement to avoid this.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
