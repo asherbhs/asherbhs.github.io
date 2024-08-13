@@ -1,0 +1,844 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Representing Trees &#8212; Doing Things in Dyalog APL</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=87e54e7c" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=bfa96906" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'trees/representing-trees';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Parent Vectors" href="parent-vectors.html" />
+    <link rel="prev" title="Introduction" href="intro.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Doing Things in Dyalog APL - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Doing Things in Dyalog APL - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Exploring Things with Dyalog APL
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Trees</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Representing Trees</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parent-vectors.html">Parent Vectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="relating-depth-and-parent-vectors.html">Relating the Depth and Parent Vectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="forests.html">Forests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deleting-nodes.html">Deleting Nodes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bottom-up-aggregation.html">Bottom-Up Accumulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="working-with-json.html">Working with <code class="docutils literal notranslate"><span class="pre">⎕JSON</span></code></a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Combinatorics</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../combinatorics/enumerative.html">Enumerative Combinatorics</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../combinatorics/combinations-and-bijective-proofs.html">Combinations and Bijective Proofs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../combinatorics/counting-functions.html">Counting Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../combinatorics/inclusion-exclusion.html">Inclusion-Exclusion and Counting Partitions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../combinatorics/stars-bars.html">Stars and Bars</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../combinatorics/integer-partitions.html">Integer Partitions</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Ftrees/representing-trees.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/trees/representing-trees.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Representing Trees</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#preliminary-definitions">Preliminary Definitions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-nested-representation">The Nested Representation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-depth-vector-representation">The Depth Vector Representation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-path-matrix-representation">The Path Matrix Representation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-parent-vector-representation">The Parent Vector Representation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#challenge">Challenge</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="representing-trees">
+<h1>Representing Trees<a class="headerlink" href="#representing-trees" title="Link to this heading">#</a></h1>
+<p>In this section, we’re going to look at several different ways to represent trees as arrays, and we’re going to settle on one as the main representation we’ll be looking at for the rest of the tutorial.</p>
+<section id="preliminary-definitions">
+<h2>Preliminary Definitions<a class="headerlink" href="#preliminary-definitions" title="Link to this heading">#</a></h2>
+<p>Before we go any further, let’s nail down one thing.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nf">⎕IO</span><span class="kd">←</span><span class="m">0</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The unending debate over what value <code class="docutils literal notranslate"><span class="pre">⎕IO</span></code> should take rages on. I don’t have a particular favourite, but we just need to pick one and be consistent with it throughout our study of trees.</p>
+<p>Additionally, there are some places where we’re going to want to use indexing functionally, so it will be helpful to define:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">I</span><span class="kd">←</span><span class="kt">{</span><span class="bp">⍺</span><span class="sr">[</span><span class="bp">⍵</span><span class="sr">]</span><span class="kt">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>If/when Dyalog gets the proposed <a class="reference external" href="https://aplwiki.com/wiki/From">Select</a> function, we’ll be able to drop the name and just write <code class="docutils literal notranslate"><span class="pre">⊇⍨</span></code>, but for now we will use <code class="docutils literal notranslate"><span class="pre">I</span></code>.</p>
+<p>Finally, for cosmetic reasons:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="sr">]</span><span class="nv">box</span><span class="w"> </span><span class="nv">on</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">Was OFF
+</pre></div></div>
+</div>
+</section>
+<section id="the-nested-representation">
+<h2>The Nested Representation<a class="headerlink" href="#the-nested-representation" title="Link to this heading">#</a></h2>
+<p>The naive way to represent a tree with an array is with a nested vector. Each node in a tree has an associated piece of data and some number of child nodes. We can represent this structure directly in a nested vector by storing the data of each node as the first element, and then storing the nested vectors representing the child nodes in the tail of the vector.</p>
+<p>Take the simple tree from the previous page:</p>
+<figure class="align-default" id="id1">
+<img alt="A diagram of a simple tree." src="../_images/IntroTree_ManimCE_v0.18.1.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 2 </span><span class="caption-text">A simple tree.</span><a class="headerlink" href="#id1" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>We can represent this tree like so:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">,</span><span class="s1">&#39;a&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="o">,</span><span class="s1">&#39;b&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="o">,⊂,</span><span class="s1">&#39;e&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="o">,⊂,</span><span class="s1">&#39;f&#39;</span><span class="p">))</span><span class="w"> </span><span class="p">((</span><span class="o">,</span><span class="s1">&#39;c&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="o">,</span><span class="s1">&#39;g&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="o">,⊂,</span><span class="s1">&#39;h&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="o">,⊂,</span><span class="s1">&#39;i&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="o">,⊂,</span><span class="s1">&#39;j&#39;</span><span class="p">)))</span><span class="w"> </span><span class="p">(</span><span class="o">,</span><span class="s1">&#39;d&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">┌─┬───────────┬───────────────────┬─┐
+│a│┌─┬───┬───┐│┌─┬───────────────┐│d│
+│ ││b│┌─┐│┌─┐│││c│┌─┬───┬───┬───┐││ │
+│ ││ ││e│││f││││ ││g│┌─┐│┌─┐│┌─┐│││ │
+│ ││ │└─┘│└─┘│││ ││ ││h│││i│││j││││ │
+│ │└─┴───┴───┘││ ││ │└─┘│└─┘│└─┘│││ │
+│ │           ││ │└─┴───┴───┴───┘││ │
+│ │           │└─┴───────────────┘│ │
+└─┴───────────┴───────────────────┴─┘
+</pre></div></div>
+</div>
+<p>The vector represents the root node labelled <code class="docutils literal notranslate"><span class="pre">a</span></code>, with the label stored as the first element, and the representations of the children placed in the tail.</p>
+<p>While messy to write out, this representation is elegant, and in most programming paradigms this kind of representation is used for working with trees. However, this structure isn’t suited for making the most of APL. To get really good performance, it’s important for us to be working with flat arrays. Deeply nested arrays are stored internally with pointers to potentially disparate allocations in the workspace. Traversing these pointers is a costly operation, compared to using APL’s well optimised array primitives.</p>
+</section>
+<section id="the-depth-vector-representation">
+<h2>The Depth Vector Representation<a class="headerlink" href="#the-depth-vector-representation" title="Link to this heading">#</a></h2>
+<p>So, let’s try to find a more APL-friendly representation for trees. Some information that tells us a lot about the structure of a tree is the <em>depth</em> of each node. We say the root node of a tree has depth <span class="math notranslate nohighlight">\(0\)</span>, the root’s children have depth <span class="math notranslate nohighlight">\(1\)</span>, their children have depth <span class="math notranslate nohighlight">\(2\)</span>, and so on.</p>
+<p>We can label each node of our example tree with its depth:</p>
+<figure class="align-default" id="id2">
+<img alt="The same tree, with nodes labelled with their depth." src="../_images/IntroTreeDepth_ManimCE_v0.18.1.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 3 </span><span class="caption-text">The same tree, with nodes labelled with their depth.</span><a class="headerlink" href="#id2" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>Notice that the depth corresponds to horizontal levels in the tree, and that siblings share the same depth.</p>
+<p>It’s fairly straightforward to calculate the depth of each node for a tree represented by a nested vector:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">t</span><span class="kd">←</span><span class="p">(</span><span class="o">,</span><span class="s1">&#39;a&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="o">,</span><span class="s1">&#39;b&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="o">,⊂,</span><span class="s1">&#39;e&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="o">,⊂,</span><span class="s1">&#39;f&#39;</span><span class="p">))</span><span class="w"> </span><span class="p">((</span><span class="o">,</span><span class="s1">&#39;c&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="o">,</span><span class="s1">&#39;g&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="o">,⊂,</span><span class="s1">&#39;h&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="o">,⊂,</span><span class="s1">&#39;i&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="o">,⊂,</span><span class="s1">&#39;j&#39;</span><span class="p">)))</span><span class="w"> </span><span class="p">(</span><span class="o">,</span><span class="s1">&#39;d&#39;</span><span class="p">)</span>
+<span class="nv">NestedDepth</span><span class="kd">←</span><span class="kt">{</span>
+<span class="w">    </span><span class="bp">⍺</span><span class="kd">←</span><span class="m">0</span>
+<span class="w">    </span><span class="c1">⍝ ⍵: nested vector corresponding to a sub-tree</span>
+<span class="w">    </span><span class="c1">⍝ ⍺: depth of the sub-tree (0 at the root)</span>
+<span class="w">    </span><span class="m">1</span><span class="o">=≢</span><span class="bp">⍵:</span><span class="w"> </span><span class="o">,</span><span class="bp">⍺</span><span class="w">        </span><span class="c1">⍝ if there are no children, just return own depth</span>
+<span class="w">    </span><span class="bp">⍺</span><span class="o">,</span><span class="p">(</span><span class="bp">⍺</span><span class="o">+</span><span class="m">1</span><span class="p">)</span><span class="bp">∇</span><span class="na">¨</span><span class="m">1</span><span class="o">↓</span><span class="bp">⍵</span><span class="w">    </span><span class="c1">⍝ else, recursively find depths of children</span>
+<span class="kt">}</span>
+<span class="nv">NestedDepth</span><span class="w"> </span><span class="nv">t</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">┌─┬───────┬─────────────┬─┐
+│0│┌─┬─┬─┐│┌─┬─────────┐│1│
+│ ││1│2│2│││1│┌─┬─┬─┬─┐││ │
+│ │└─┴─┴─┘││ ││2│3│3│3│││ │
+│ │       ││ │└─┴─┴─┴─┘││ │
+│ │       │└─┴─────────┘│ │
+└─┴───────┴─────────────┴─┘
+</pre></div></div>
+</div>
+<p>Reading this result from left to right (<code class="docutils literal notranslate"><span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">1</span></code>, <code class="docutils literal notranslate"><span class="pre">2</span></code>, <code class="docutils literal notranslate"><span class="pre">2</span></code>, <code class="docutils literal notranslate"><span class="pre">1</span></code>, and so on), we can see some useful patterns. Every time the depth steps up by one, we are descending to a child node. Similarly, whenever the depth decreases, we are ascending to a sibling of an ancestor. This means that we can do away with the nesting, keeping only the depth numbers, and preserve a full description of the structure of the tree.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="o">⊢</span><span class="nv">depths</span><span class="kd">←</span><span class="o">∊</span><span class="nv">NestedDepth</span><span class="w"> </span><span class="nv">t</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">0 1 2 2 1 2 3 3 3 1
+</pre></div></div>
+</div>
+<p>We call this description of a tree a <em>depth vector</em>. Nodes are now identified by an index into this vector. On its own, the depth vector doesn’t tell us anything about the extra data associated with each node. We therefore need to store the data associated with each node in a separate vector.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="o">⊢</span><span class="nv">data</span><span class="kd">←</span><span class="o">,</span><span class="na">¨</span><span class="s1">&#39;abefcghijd&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">┌─┬─┬─┬─┬─┬─┬─┬─┬─┬─┐
+│a│b│e│f│c│g│h│i│j│d│
+└─┴─┴─┴─┴─┴─┴─┴─┴─┴─┘
+</pre></div></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">data</span></code> vector is indexed by the same indices as the <code class="docutils literal notranslate"><span class="pre">depths</span></code> vector, so that for a node at index <code class="docutils literal notranslate"><span class="pre">i</span></code>, <code class="docutils literal notranslate"><span class="pre">depths[i]</span></code> is its depth and <code class="docutils literal notranslate"><span class="pre">data[i]</span></code> is its data.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="o">↑</span><span class="p">(</span><span class="o">⊂</span><span class="na">¨</span><span class="s1">&#39;index:&#39;</span><span class="w"> </span><span class="s1">&#39;depths:&#39;</span><span class="w"> </span><span class="s1">&#39;data:&#39;</span><span class="p">)</span><span class="o">,</span><span class="na">¨</span><span class="p">(</span><span class="o">⍳≢</span><span class="nv">depths</span><span class="p">)</span><span class="w"> </span><span class="nv">depths</span><span class="w"> </span><span class="nv">data</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">┌───────┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┐
+│index: │0│1│2│3│4│5│6│7│8│9│
+├───────┼─┼─┼─┼─┼─┼─┼─┼─┼─┼─┤
+│depths:│0│1│2│2│1│2│3│3│3│1│
+├───────┼─┼─┼─┼─┼─┼─┼─┼─┼─┼─┤
+│data:  │a│b│e│f│c│g│h│i│j│d│
+└───────┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┘
+</pre></div></div>
+</div>
+<p>At this point it’s helpful to make a small mental shift. We are drawing a one-to-one correspondence between node and indices into these vectors, using the indices as unique identifiers. We will use this so frequently that making the distinction explicit becomes tiring, so from now on, we will often refer to ‘the node associated with index <code class="docutils literal notranslate"><span class="pre">i</span></code>’ simply as ‘node <code class="docutils literal notranslate"><span class="pre">i</span></code>’.</p>
+<p>Labelling each node of our tree with its corresponding index reveals an interesting pattern.</p>
+<figure class="align-default" id="id3">
+<img alt="Nodes labelled with their index into the `depth` and `data` vectors." src="../_images/IntroTreeDFPT_ManimCE_v0.18.1.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 4 </span><span class="caption-text">The same tree, with nodes labelled with their index into the <code class="docutils literal notranslate"><span class="pre">depth</span></code> and <code class="docutils literal notranslate"><span class="pre">data</span></code> vectors.</span><a class="headerlink" href="#id3" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>If we trace the path through the tree given by these indices, we find that we traverse the tree in a particular pattern. We dive down the tree until we hit a leaf node (<span class="math notranslate nohighlight">\(0 \to 1 \to 2\)</span>). When we reach a leaf node, we step back along our path until we find a junction with an unexplored path, and then resume our traversal, once again descending until we hit a leaf before backtracking. In technical jargon, this is a <em>depth-first, pre-order traversal</em> (or DFPT).</p>
+<figure class="align-default" id="id4">
+<img alt="An animation of a depth-first, pre-order traversal on the example tree." src="../_images/IntroTreeDFPTAnim_ManimCE_v0.18.1.gif" />
+<figcaption>
+<p><span class="caption-number">Fig. 5 </span><span class="caption-text">The depth-first, pre-order traversal in action.</span><a class="headerlink" href="#id4" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>So the depth vector representation orders nodes exactly in a DFPT ordering. This presents a problem for manipulating trees in this format, as we are required to maintain this ordering exactly whenever we change the structure of the tree, which can be fairly inconvenient and costly. Especially, we would like to be able to append data to the end of the depth vector when adding nodes, as this is implemented more efficiently in the Dyalog interpreter than splicing into the middle of the vector, but the ordering requirements forbid us from doing this in most cases.</p>
+<p>Additionally, we often want to find parents or siblings of a node for various reasons. In the depth vector, sub-trees are stored contiguously.</p>
+<figure class="align-default" id="id5">
+<img alt="An animation of the tree with depth labels flattening into the depth vector. A sub-tree is highlighted." src="../_images/IntroTreeFlatten_ManimCE_v0.18.1.gif" />
+<figcaption>
+<p><span class="caption-number">Fig. 6 </span><span class="caption-text">The location of a sub-tree in the depth vector.</span><a class="headerlink" href="#id5" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>This structure means that, given a node <code class="docutils literal notranslate"><span class="pre">i</span></code>, finding the parent and siblings of <code class="docutils literal notranslate"><span class="pre">i</span></code> requires linearly scanning through the depth vector forwards and backwards from <code class="docutils literal notranslate"><span class="pre">i</span></code> to find places with the correct depth, which can become extremely costly on large vectors when sub-trees take up lots of space.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>               siblings of i
+                   ┌─┴─┐
+depth: 0 1 2 2 1 2 3 3 3 1
+                 ↑   ↑   ↑
+    parent of i ─┘   i   └─ start of next sub-tree
+</pre></div>
+</div>
+<p>The depth vector representation is therefore only useful in some situations. Indeed, we’ll find it very handy in the page on <a class="reference external" href="https://asherbhs.github.io/apl-book/trees/working-with-json.html">working with ⎕JSON</a>, but it is not the representation that we would like to settle on for most of our operations.</p>
+</section>
+<section id="the-path-matrix-representation">
+<h2>The Path Matrix Representation<a class="headerlink" href="#the-path-matrix-representation" title="Link to this heading">#</a></h2>
+<p>Take another look at that animation of the depth-first pre-order traversal, and notice that each node is visited on a unique path from the root. Let’s write out these paths, indicating nodes by their index into the depth vector.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="o">⍪</span><span class="nv">paths</span><span class="kd">←</span><span class="p">(</span><span class="o">,</span><span class="m">0</span><span class="p">)(</span><span class="m">0</span><span class="w"> </span><span class="m">1</span><span class="p">)(</span><span class="m">0</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">2</span><span class="p">)(</span><span class="m">0</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">3</span><span class="p">)(</span><span class="m">0</span><span class="w"> </span><span class="m">4</span><span class="p">)(</span><span class="m">0</span><span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="m">5</span><span class="p">)(</span><span class="m">0</span><span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="m">6</span><span class="p">)(</span><span class="m">0</span><span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="m">7</span><span class="p">)(</span><span class="m">0</span><span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="m">8</span><span class="p">)(</span><span class="m">0</span><span class="w"> </span><span class="m">9</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">┌───────┐
+│0      │
+├───────┤
+│0 1    │
+├───────┤
+│0 1 2  │
+├───────┤
+│0 1 3  │
+├───────┤
+│0 4    │
+├───────┤
+│0 4 5  │
+├───────┤
+│0 4 5 6│
+├───────┤
+│0 4 5 7│
+├───────┤
+│0 4 5 8│
+├───────┤
+│0 9    │
+└───────┘
+</pre></div></div>
+</div>
+<p>We can make this representation more compact by mixing the vectors and simply repeating node IDs to fill in the gaps.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="o">⊢</span><span class="nv">pathMatrix</span><span class="kd">←</span><span class="o">⌈</span><span class="na">\</span><span class="o">↑</span><span class="nv">paths</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">0 0 0 0
+0 1 1 1
+0 1 2 2
+0 1 3 3
+0 4 4 4
+0 4 5 5
+0 4 5 6
+0 4 5 7
+0 4 5 8
+0 9 9 9
+</pre></div></div>
+</div>
+<p>We call this format the <em>path matrix</em> representation of a tree. Each <code class="docutils literal notranslate"><span class="pre">i</span></code>th row of this matrix gives the path to node <code class="docutils literal notranslate"><span class="pre">i</span></code>, but notice that the ordering of the nodes are no longer constrained as they were in the depth vector representation - the ancestry of a node is stored directly, so we no longer need to implicitly encode it in the node ordering.</p>
+<p>This means that, as long as the indices in the matrix are adjusted accordingly, we can shuffle the rows arbitrarily and maintain the same tree structure.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="nv">perm</span><span class="kd">←</span><span class="m">3</span><span class="w"> </span><span class="m">6</span><span class="w"> </span><span class="m">8</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">7</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="m">9</span><span class="w"> </span><span class="m">4</span><span class="w">    </span><span class="c1">⍝ some arbitrary permutation of the nodes</span>
+<span class="nv">perm</span><span class="o">⍳</span><span class="nv">pathMatrix</span><span class="sr">[</span><span class="nv">perm</span><span class="sr">;]</span><span class="w">      </span><span class="c1">⍝ permute the matrix and update the indices</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">3 6 0 0
+3 9 7 1
+3 9 7 2
+3 3 3 3
+3 6 4 4
+3 9 7 5
+3 6 6 6
+3 9 7 7
+3 8 8 8
+3 9 9 9
+</pre></div></div>
+</div>
+<p>This path matrix represents exactly the same tree structure, with the node identifiers permuted:</p>
+<figure class="align-default" id="id6">
+<img alt="The same tree as previous examples, with labels permuted by the given permutation." src="../_images/IntroTreePerm_ManimCE_v0.18.1.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 7 </span><span class="caption-text">Our tree with labels permuted.</span><a class="headerlink" href="#id6" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>These nice properties and others would make the path matrix representation ideal to work with, if it were not for one major downside: the space usage. Given a tree with <span class="math notranslate nohighlight">\(n\)</span> nodes and a maximum depth of <span class="math notranslate nohighlight">\(d\)</span>, to fully encode the structure of this tree the depth vector representation only requires enough memory to store <span class="math notranslate nohighlight">\(n\)</span> depth numbers. The path matrix, on the other hand, requires <span class="math notranslate nohighlight">\(n×d\)</span> numbers, encoding the entire path for each node in the tree. For large trees, especially deep trees, this will use large amounts of memory and slow everything down.</p>
+<p>The depth vector and path matrix representations are both not quite what we want, so we need to find some kind of compromise between their benefits.</p>
+</section>
+<section id="the-parent-vector-representation">
+<h2>The Parent Vector Representation<a class="headerlink" href="#the-parent-vector-representation" title="Link to this heading">#</a></h2>
+<p>By focusing on the ancestry of nodes, the path matrix representation is more flexible than the depth vector representation, but by encoding more information implicitly, the depth vector representation is more space efficient. The compromise between these two approaches is the <em>parent vector</em> representation. For each node, instead of storing the entire path from the root as the path matrix does, the parent vector stores only the node’s immediate parent. For an example, take the same tree we’ve been examining throughout this section, identified once again with DFPT indices:</p>
+<figure class="align-default" id="id7">
+<img alt="The same tree, labelled in DFPT order." src="../_images/IntroTreeDFPT_ManimCE_v0.18.1.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 8 </span><span class="caption-text">Our favourite tree, back again.</span><a class="headerlink" href="#id7" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>The parent vector for this tree is:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-APL notranslate"><div class="highlight"><pre><span></span><span class="o">⊢</span><span class="nv">parent</span><span class="kd">←</span><span class="m">0</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="m">0</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre class="language-APL">0 0 1 1 0 4 5 5 5 0
+</pre></div></div>
+</div>
+<p>Node <span class="math notranslate nohighlight">\(2\)</span> is a child of node <span class="math notranslate nohighlight">\(1\)</span>, so <code class="docutils literal notranslate"><span class="pre">parent[2]←1</span></code>, <span class="math notranslate nohighlight">\(1\)</span> is a child of <span class="math notranslate nohighlight">\(0\)</span>, so <code class="docutils literal notranslate"><span class="pre">parent[1]←0</span></code>, and so on. Each node ‘points to’ its parent.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>        ┌─┐─────┐ ┌─┐─┐─┐
+        ↓ │     │ ↓ │ │ │
+parent: 0 0 1 1 0 4 5 5 5 0
+        ↑ ↑ │ │ ↑ │       │
+        │ └─┘─┘ └─┘       │
+        └─────────────────┘
+</pre></div>
+</div>
+<p>Following these pointers from any starting node will trace out the path to that node from the root, as found in the path matrix.</p>
+<p>Notice that node <span class="math notranslate nohighlight">\(0\)</span>, as the root, has no parent. We could use some kind of sentinel value like <span class="math notranslate nohighlight">\(-1\)</span> to indicate that a node has no parent. For reasons which will become clear as we work with this representation more, we instead have the root, node <span class="math notranslate nohighlight">\(0\)</span>, point to itself.</p>
+<p>Like the depth vector, the parent vector is extremely space efficient. Like the path matrix, it is not heavily constrained by ordering requirements. The nodes can be shuffled arbitrarily, so long as we update the parents in each place to reflect the shuffling.</p>
+<p>This representation is suitable for most of our purposes, and it is the one we will focus on for the rest of the tutorial.</p>
+</section>
+<section id="challenge">
+<h2>Challenge<a class="headerlink" href="#challenge" title="Link to this heading">#</a></h2>
+<p><strong>Challenge:</strong> To make sure you really understand each of these representations, draw yourself a small tree on paper, and then write out the depth vector, path matrix, and parent vector for that tree. As you figure these out, you will get an idea of what the APL interpreter is spending its time doing when working with these representations.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "dyalog_apl"
+        },
+        kernelOptions: {
+            name: "dyalog_apl",
+            path: "./trees"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'dyalog_apl'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="intro.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Introduction</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="parent-vectors.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Parent Vectors</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#preliminary-definitions">Preliminary Definitions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-nested-representation">The Nested Representation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-depth-vector-representation">The Depth Vector Representation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-path-matrix-representation">The Path Matrix Representation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-parent-vector-representation">The Parent Vector Representation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#challenge">Challenge</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Asher Harvey-Smith
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
