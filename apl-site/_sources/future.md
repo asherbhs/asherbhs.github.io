@@ -4,11 +4,17 @@
     - polyominos
 - graph algorithms
     - implement sparse matrices first
+    - also use adjacency lists?
 - analysis
     - draw from elementary analysis by iverson
 - algebra
-    - draw from algebra an algorithmic approach
-- linear algebra redux
+    - draw from algebra an algorithmic approach by iverson
+- applications of linear algebra
+    - assume reader already knows basic linear algebra
+    - QR factorisation
+    - linear regression
+    - vector databases
+    - SVD
     - draw from
         - the notebook I already made
         - that one apl linear algebra book
@@ -25,3 +31,6 @@
         - homomorphisms to matrices
         - character theory
         - examples examples examples
+- tidbits
+    - spiral matrices
+    - hamming codes and distances

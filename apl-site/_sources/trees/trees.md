@@ -50,6 +50,7 @@
     - mention that ⎕xml uses a similar format
 - [ ] small calculator as a larger example
     - point to co-dfns for more
+- [ ] quadtrees
 - [ ] tidbits
     - Mary
     - Collatz
@@ -57,4 +58,4 @@
     - [ ] [height balanced](https://leetcode.com/problems/balanced-binary-tree/)
     - [ ] [leaf similar](https://leetcode.com/problems/leaf-similar-trees/)
 - [ ] translations
-- [ ] leetcode problems
+

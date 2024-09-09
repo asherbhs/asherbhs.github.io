@@ -48,7 +48,9 @@ I can take no credit for discovering the techniques discussed in this tutorial. 
 
 Other useful resources on working with trees in array languages include:
 
+- Devon McCormick's [page](https://code.jsoftware.com/wiki/User:Devon_McCormick/Trees) on working with trees in J.
+- Doug Mennella's [page](https://code.jsoftware.com/wiki/User:Doug_Mennella/Trees) on drawing trees in J.
+- [This](https://github.com/JohnEarnest/ok/blob/gh-pages/docs/Trees.md) section of the oK documentation covering two different representations of trees.
 - Aaron Hsu's talks on [text processing](https://dyalog.tv/Dyalog22/?v=5I4YPkVU7mY) and [tree wrangling](https://dyalog.tv/Dyalog18/?v=hzPd3umu78g).
 - Brandon Wilson's [talk on parsing](https://www.youtube.com/watch?v=Ym2TIKgiRkM).
 - The [README](https://github.com/tlack/atree/blob/master/README.md) of a C++ implementation of Apter trees.
-- [This](https://github.com/JohnEarnest/ok/blob/gh-pages/docs/Trees.md) section of the oK documentation covering two different representations of trees.
