@@ -1,3 +1,4 @@
+- boolean tricks
 - more combinatorics
     - finish algorithms and catalan numbers
     - latin squares
@@ -32,5 +33,3 @@
         - character theory
         - examples examples examples
 - tidbits
-    - spiral matrices
-    - hamming codes and distances

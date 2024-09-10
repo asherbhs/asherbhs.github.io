@@ -145,7 +145,7 @@ The [`⎕JSON` documentation](https://help.dyalog.com/latest/Content/Language/Sy
 PPH p
 ```
 
-The other columns, which we have extracted as `k`, `v`, and `t`, store the key, value, and type for a node respectively. For example, the row corresponding to `"number": 12` has a key of `'number'`, a value of `12`, and a type of `3`, indicating the data is numeric. Labelling our tree with these vectors shows us exactly how parts of the tree correspond to the original JSON object.
+The other columns, which we have extracted as `keys`, `values`, and `types`, store (unsurprisingly) the key, value, and type for a node respectively. For example, the row corresponding to `"number": 12` has a key of `'number'`, a value of `12`, and a type of `3`, indicating the data is numeric. Labelling our tree with these vectors shows us exactly how parts of the tree correspond to the original JSON object.
 
 ```{code-cell}
 keys PPH p
