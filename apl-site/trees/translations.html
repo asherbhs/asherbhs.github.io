@@ -650,6 +650,25 @@ Delete←{
 </section>
 <section id="parenttonested">
 <h2>ParentToNested<a class="headerlink" href="#parenttonested" title="Link to this heading">#</a></h2>
+<p><strong>APL:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
+ParentToNested←{ ⍝ convert a parent vector to a nested representation
+    p←⍵    ⍝ input parent vector
+    ⍺←⊂⍤,¨⍳≢p
+    r←⍺    ⍝ values to place at nodes (by default, their indices in the parent vector)
+    d←Depths p
+    maxDepth←⌈/d
+    maxDepth=0: r
+    DoLayer←{
+        i←⍸d=⍵
+        _←p[i]{r[⍺],←⊂r[⍵]}⌸i
+        1    ⍝ the interpreter will complain if we don't provide a result
+    }
+    _←DoLayer¨⌽1+⍳maxDepth
+    (p=⍳≢p)/r
+}
+</pre></div>
+</div>
 </section>
 </section>
 
