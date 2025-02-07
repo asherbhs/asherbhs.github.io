@@ -638,6 +638,15 @@ Deforest←{0,(⍵≠⍳≢⍵)×1+⍵}
 </section>
 <section id="deleting">
 <h2>Deleting<a class="headerlink" href="#deleting" title="Link to this heading">#</a></h2>
+<p><strong>APL:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
+Delete←{
+     node←⍺
+     mask←node=p I@{⍵≠node}⍣≡⍳≢⍵
+     (⍸mask)(⊢-1+⍸)(~mask)/⍵
+}
+</pre></div>
+</div>
 </section>
 <section id="parenttonested">
 <h2>ParentToNested<a class="headerlink" href="#parenttonested" title="Link to this heading">#</a></h2>
