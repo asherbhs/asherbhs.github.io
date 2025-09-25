@@ -7433,131 +7433,7 @@ main {
 <body class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
 <main>
 <div class="reveal">
-<div class="slides"><section><section><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=20e3045d-42a7-4da8-8eaa-02162810121b">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [4]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-APL"><pre><span></span><span class="nf">⎕IO</span><span class="kd">←</span><span class="m">0</span>
-<span class="nf">⎕PW</span><span class="kd">←</span><span class="m">12345</span>
-<span class="sr">]</span><span class="nv">box</span><span class="w"> </span><span class="nv">on</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Was OFF
-</pre>
-</div>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=785c6bba-2db6-4fa5-94a1-363bde470c17">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [1]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-APL"><pre><span></span><span class="nv">Depths</span><span class="kd">←</span><span class="kt">{</span><span class="w"> </span><span class="c1">⍝ find the depths of each node in a parent vector</span>
-<span class="w">    </span><span class="c1">⍝ ←: a vector of the depths of each node in the input</span>
-<span class="w">    </span><span class="nv">p</span><span class="kd">←</span><span class="bp">⍵</span><span class="w">    </span><span class="c1">⍝ input parent vector</span>
-<span class="w">    </span><span class="nv">depths</span><span class="kd">←</span><span class="p">(</span><span class="o">≢</span><span class="nv">p</span><span class="p">)</span><span class="o">⍴</span><span class="m">0</span>
-<span class="w">    </span><span class="nv">StepUp</span><span class="kd">←</span><span class="kt">{</span><span class="w"> </span><span class="c1">⍝ step up the tree and increment depths</span>
-<span class="w">        </span><span class="nv">q</span><span class="kd">←</span><span class="nv">p</span><span class="sr">[</span><span class="bp">⍵</span><span class="sr">]</span>
-<span class="w">        </span><span class="nv">depths</span><span class="o">+</span><span class="kd">←</span><span class="bp">⍵</span><span class="o">≠</span><span class="nv">q</span>
-<span class="w">        </span><span class="nv">q</span>
-<span class="w">    </span><span class="kt">}</span>
-<span class="w">    </span><span class="nv">_</span><span class="kd">←</span><span class="nv">StepUp</span><span class="na">⍣</span><span class="o">≡⍳≢</span><span class="nv">p</span>
-<span class="w">    </span><span class="nv">depths</span>
-<span class="kt">}</span>
-
-<span class="nv">_PrettyPrint_</span><span class="kd">←</span><span class="kt">{</span><span class="w"> </span><span class="c1">⍝ renders a tree given labels, box drawing characters, and padding</span>
-<span class="w">    </span><span class="c1">⍝ ←: vector of character matrices, each a labelled rendering of a tree in the forest given by the input parent vector</span>
-<span class="w">    </span><span class="nv">labels</span><span class="w">    </span><span class="kd">←</span><span class="bp">⍺</span><span class="w">     </span><span class="c1">⍝ vector of character matrices giving the labels for each node</span>
-<span class="w">    </span><span class="nv">connectors</span><span class="kd">←</span><span class="bp">⍺⍺</span><span class="w">    </span><span class="c1">⍝ box drawing characters to render the tree, e.g: '─┌┬┐│┴├┼┤│' (normal, and upstruck)</span>
-<span class="w">    </span><span class="nv">spaces</span><span class="w">    </span><span class="kd">←</span><span class="bp">⍵⍵</span><span class="w">    </span><span class="c1">⍝ number of spaces to pad with between sub-trees</span>
-<span class="w">    </span><span class="nv">p</span><span class="w">         </span><span class="kd">←</span><span class="bp">⍵</span><span class="w">     </span><span class="c1">⍝ parent vector</span>
-<span class="w">    </span><span class="nv">d</span><span class="kd">←</span><span class="nv">Depths</span><span class="w"> </span><span class="nv">p</span>
-<span class="w">    </span><span class="nv">maxDepth</span><span class="kd">←</span><span class="o">⌈</span><span class="na">/</span><span class="nv">d</span>
-<span class="w">    </span><span class="nv">results</span><span class="kd">←</span><span class="nv">labels</span><span class="w">         </span><span class="c1">⍝ result of rendering each sub-tree, seeded with labels</span>
-<span class="w">    </span><span class="nv">maxDepth</span><span class="o">=</span><span class="m">0</span><span class="bp">:</span><span class="w"> </span><span class="nv">results</span><span class="w">    </span><span class="c1">⍝ avoid the each running on the prototype</span>
-<span class="w">    </span><span class="nv">DoFamily</span><span class="kd">←</span><span class="kt">{</span><span class="w"> </span><span class="c1">⍝ render and record a sub-tree</span>
-<span class="w">        </span><span class="c1">⍝ ⍺: parent node</span>
-<span class="w">        </span><span class="c1">⍝ ⍵: rendered results of children</span>
-<span class="w">        </span><span class="nv">widths</span><span class="kd">←</span><span class="p">(</span><span class="m">1</span><span class="o">⊃⍴</span><span class="p">)</span><span class="na">¨</span><span class="bp">⍵</span><span class="w">                                                                           </span><span class="c1">⍝ widths of each rendered child</span>
-<span class="w">        </span><span class="nv">width</span><span class="kd">←</span><span class="nv">spaces</span><span class="o">-</span><span class="na">⍨</span><span class="o">+</span><span class="na">/</span><span class="nv">spaces</span><span class="o">+</span><span class="nv">widths</span><span class="w">                                                            </span><span class="c1">⍝ eventual width of the rendered tree       wwwwwww</span>
-<span class="w">        </span><span class="nv">centres</span><span class="kd">←</span><span class="p">(</span><span class="o">+</span><span class="na">\</span><span class="m">0</span><span class="o">,</span><span class="m">¯1</span><span class="o">↓</span><span class="nv">spaces</span><span class="o">+</span><span class="nv">widths</span><span class="p">)</span><span class="o">+</span><span class="m">¯1</span><span class="o">+⌈</span><span class="m">2</span><span class="o">÷</span><span class="na">⍨</span><span class="nv">widths</span><span class="w">                                             </span><span class="c1">⍝ centres of each rendered sub-tree         ∘ss∘ss∘</span>
-<span class="w">        </span><span class="nv">result</span><span class="kd">←</span><span class="nv">width</span><span class="o">⍴</span><span class="s1">' '</span><span class="w">                                                                         </span><span class="c1">⍝ header to be decorated                   '       '</span>
-<span class="w">        </span><span class="nv">result</span><span class="sr">[</span><span class="p">(</span><span class="o">⊢⊢</span><span class="na">⍤/⍨</span><span class="p">((</span><span class="o">⊃⌽</span><span class="nv">centres</span><span class="p">)</span><span class="o">&gt;⊢</span><span class="p">)</span><span class="o">∧</span><span class="p">(</span><span class="o">⊃</span><span class="nv">centres</span><span class="p">)</span><span class="o">&lt;⊢</span><span class="p">)</span><span class="o">⍳</span><span class="nv">width</span><span class="sr">]</span><span class="kd">←</span><span class="nv">connectors</span><span class="sr">[</span><span class="m">0</span><span class="sr">]</span><span class="w">                          </span><span class="c1">⍝ add horizontal bar                       ' ───── '</span>
-<span class="w">        </span><span class="nv">result</span><span class="sr">[</span><span class="w">   </span><span class="o">⊃</span><span class="w"> </span><span class="nv">centres</span><span class="sr">]</span><span class="kd">←</span><span class="nv">connectors</span><span class="sr">[</span><span class="m">1</span><span class="sr">]</span><span class="w">                                                       </span><span class="c1">⍝ left end of bar                          '┌───── '</span>
-<span class="w">        </span><span class="nv">result</span><span class="sr">[</span><span class="w">   </span><span class="o">⊃⌽</span><span class="nv">centres</span><span class="sr">]</span><span class="kd">←</span><span class="nv">connectors</span><span class="sr">[</span><span class="m">3</span><span class="sr">]</span><span class="w">                                                       </span><span class="c1">⍝ right end of bar                         '┌─────┐'</span>
-<span class="w">        </span><span class="nv">result</span><span class="sr">[</span><span class="m">¯1</span><span class="o">↓</span><span class="m">1</span><span class="o">↓</span><span class="nv">centres</span><span class="sr">]</span><span class="kd">←</span><span class="nv">connectors</span><span class="sr">[</span><span class="m">2</span><span class="sr">]</span><span class="w">                                                       </span><span class="c1">⍝ connectors to intermediate children      '┌──┬──┐'</span>
-<span class="w">        </span><span class="nv">result</span><span class="sr">[</span><span class="p">(</span><span class="m">1</span><span class="o">=≢</span><span class="nv">centres</span><span class="p">)</span><span class="o">⍴⊃</span><span class="nv">centres</span><span class="sr">]</span><span class="kd">←</span><span class="nv">connectors</span><span class="sr">[</span><span class="m">4</span><span class="sr">]</span><span class="w">                                              </span><span class="c1">⍝ if there's only one child, just make it a lone upstrike</span>
-<span class="w">        </span><span class="nv">centre</span><span class="kd">←</span><span class="m">¯1</span><span class="o">+⌈</span><span class="m">2</span><span class="o">÷</span><span class="na">⍨</span><span class="nv">width</span><span class="w">                                                                      </span><span class="c1">⍝ index of the centre of the rendered tree     ∘</span>
-<span class="w">        </span><span class="nv">result</span><span class="sr">[</span><span class="nv">centre</span><span class="sr">]</span><span class="kd">←</span><span class="nv">connectors</span><span class="sr">[</span><span class="m">5</span><span class="w"> </span><span class="m">6</span><span class="w"> </span><span class="m">7</span><span class="w"> </span><span class="m">8</span><span class="w"> </span><span class="m">9</span><span class="sr">][</span><span class="nv">connectors</span><span class="sr">[</span><span class="m">0</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="m">4</span><span class="sr">]</span><span class="o">⍳</span><span class="nv">result</span><span class="sr">[</span><span class="nv">centre</span><span class="sr">]]</span><span class="w">               </span><span class="c1">⍝ connector to the parent                  '┌──┼──┐'</span>
-<span class="w">        </span><span class="nv">result</span><span class="o">⍪</span><span class="kd">←</span><span class="p">(</span><span class="o">-</span><span class="nv">spaces</span><span class="p">)</span><span class="o">↓</span><span class="na">⍤</span><span class="m">1</span><span class="o">⊃,</span><span class="na">/</span><span class="o">,</span><span class="na">∘</span><span class="p">(</span><span class="nv">spaces</span><span class="o">⍴</span><span class="s1">' '</span><span class="p">)</span><span class="na">⍤</span><span class="m">1</span><span class="na">¨</span><span class="bp">⍵</span><span class="o">↑</span><span class="na">¨⍨</span><span class="o">⌈</span><span class="na">/</span><span class="o">≢</span><span class="na">¨</span><span class="bp">⍵</span><span class="w">                                        </span><span class="c1">⍝ pad labels, join under header</span>
-<span class="w">        </span><span class="nv">parentResult</span><span class="kd">←</span><span class="bp">⍺</span><span class="o">⊃</span><span class="nv">results</span><span class="w">                                                                   </span><span class="c1">⍝ label of the parent</span>
-<span class="w">        </span><span class="nv">parentWidth</span><span class="kd">←</span><span class="m">1</span><span class="o">⊃⍴</span><span class="nv">parentResult</span><span class="w">                                                              </span><span class="c1">⍝ width of label of parent</span>
-<span class="w">        </span><span class="nv">parentCentre</span><span class="kd">←</span><span class="m">¯1</span><span class="o">+⌈</span><span class="m">2</span><span class="o">÷</span><span class="na">⍨</span><span class="nv">parentWidth</span><span class="w">                                                          </span><span class="c1">⍝ centre of label of parent</span>
-<span class="w">        </span><span class="nv">result</span><span class="w">      </span><span class="kd">←</span><span class="p">((</span><span class="nv">centre</span><span class="o">-</span><span class="nv">parentCentre</span><span class="p">)</span><span class="o">⌽</span><span class="nv">parentWidth</span><span class="o">↑</span><span class="na">⍤</span><span class="m">1</span><span class="o">⊢</span><span class="p">)</span><span class="na">⍣</span><span class="p">(</span><span class="nv">width</span><span class="o">&lt;</span><span class="nv">parentWidth</span><span class="p">)</span><span class="o">⊢</span><span class="nv">result</span><span class="w">          </span><span class="c1">⍝ pad and recentre text so far if it's less wide</span>
-<span class="w">        </span><span class="nv">parentResult</span><span class="kd">←</span><span class="p">((</span><span class="nv">parentCentre</span><span class="o">-</span><span class="nv">centre</span><span class="p">)</span><span class="o">⌽</span><span class="w">      </span><span class="nv">width</span><span class="o">↑</span><span class="na">⍤</span><span class="m">1</span><span class="o">⊢</span><span class="p">)</span><span class="na">⍣</span><span class="p">(</span><span class="nv">width</span><span class="o">&gt;</span><span class="nv">parentWidth</span><span class="p">)</span><span class="o">⊢</span><span class="nv">parentResult</span><span class="w">    </span><span class="c1">⍝ pad and recentre parent label if it's less wide</span>
-<span class="w">        </span><span class="nv">result</span><span class="o">⍪</span><span class="na">⍨</span><span class="kd">←</span><span class="nv">parentResult</span><span class="w">                                                                    </span><span class="c1">⍝ add parent label</span>
-<span class="w">        </span><span class="nv">results</span><span class="sr">[</span><span class="bp">⍺</span><span class="sr">]</span><span class="kd">←</span><span class="o">⊂</span><span class="nv">result</span><span class="w">                                                                       </span><span class="c1">⍝ record result</span>
-<span class="w">        </span><span class="m">1</span>
-<span class="w">    </span><span class="kt">}</span>
-<span class="w">    </span><span class="nv">DoLayer</span><span class="kd">←</span><span class="kt">{</span><span class="w"> </span><span class="c1">⍝ render and record all nodes whose children have depth ⍵</span>
-<span class="w">        </span><span class="c1">⍝ ⍵: depth to handle nodes at</span>
-<span class="w">        </span><span class="nv">i</span><span class="kd">←</span><span class="o">⍸</span><span class="nv">d</span><span class="o">=</span><span class="bp">⍵</span><span class="w">    </span><span class="c1">⍝ nodes at this depth</span>
-<span class="w">        </span><span class="nv">_</span><span class="kd">←</span><span class="nv">p</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]</span><span class="nv">DoFamily</span><span class="na">⌸</span><span class="nv">results</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]</span>
-<span class="w">        </span><span class="m">1</span>
-<span class="w">    </span><span class="kt">}</span>
-<span class="w">    </span><span class="nv">_</span><span class="kd">←</span><span class="nv">DoLayer</span><span class="na">¨</span><span class="o">⌽</span><span class="m">1</span><span class="o">+⍳</span><span class="nv">maxDepth</span><span class="w">    </span><span class="c1">⍝ bottom up accumulation</span>
-<span class="w">    </span><span class="nv">results</span><span class="na">/⍨</span><span class="nv">p</span><span class="o">=⍳≢</span><span class="nv">p</span><span class="w">            </span><span class="c1">⍝ return results at roots only</span>
-<span class="kt">}</span>
-
-<span class="nv">PPV</span><span class="kd">←</span><span class="kt">{</span><span class="bp">⍺</span><span class="kd">←</span><span class="s1">'∘'</span><span class="w"> </span><span class="p">⋄</span><span class="w">   </span><span class="p">((</span><span class="o">≢</span><span class="bp">⍵</span><span class="p">)</span><span class="o">⍴⍉</span><span class="na">⍤</span><span class="o">⍪</span><span class="na">⍤</span><span class="o">⍕</span><span class="na">¨</span><span class="s1">'∘'</span><span class="na">@</span><span class="p">(</span><span class="m">0</span><span class="o">=≢</span><span class="na">¨</span><span class="p">)</span><span class="bp">⍺</span><span class="p">)(</span><span class="s1">'─┌┬┐│┴├┼┤│'</span><span class="nv">_PrettyPrint_</span><span class="w"> </span><span class="m">1</span><span class="p">)</span><span class="bp">⍵</span><span class="kt">}</span><span class="w">    </span><span class="c1">⍝ vertical</span>
-<span class="nv">PPH</span><span class="kd">←</span><span class="kt">{</span><span class="bp">⍺</span><span class="kd">←</span><span class="s1">'∘'</span><span class="w"> </span><span class="p">⋄</span><span class="w"> </span><span class="o">⍉</span><span class="na">¨</span><span class="p">((</span><span class="o">≢</span><span class="bp">⍵</span><span class="p">)</span><span class="o">⍴</span><span class="w">  </span><span class="o">⍪</span><span class="na">⍤</span><span class="o">⍕</span><span class="na">¨</span><span class="s1">'∘'</span><span class="na">@</span><span class="p">(</span><span class="m">0</span><span class="o">=≢</span><span class="na">¨</span><span class="p">)</span><span class="bp">⍺</span><span class="p">)(</span><span class="s1">'│┌├└─┤┬┼┴─'</span><span class="nv">_PrettyPrint_</span><span class="w"> </span><span class="m">0</span><span class="p">)</span><span class="bp">⍵</span><span class="kt">}</span><span class="w">    </span><span class="c1">⍝ horizontal</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=100363cf-397d-4fbb-b90d-80c275a7bc66">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<hr/>
-<pre><code>
-
-
-
-
-
-
-
-
-
-</code></pre>
-<hr/>
-</div>
-</div>
-</div>
-</div>
+<div class="slides"><section><section>
 <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=f3104cbf-0395-4c32-b5e5-2c6dd1a1f446">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
@@ -7568,12 +7444,12 @@ main {
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=9a9e1ff5-0bed-41a2-b730-f21311fc1f62">
+</div></section></section><section><section><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=9a9e1ff5-0bed-41a2-b730-f21311fc1f62">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [5]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-APL"><pre><span></span><span class="c1">⍝      ┌─┐─────┐ ┌─┐─┐─┐</span>
@@ -7589,56 +7465,12 @@ main {
 </div>
 </div>
 </div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>┌───────────┐
-│     a     │
-│ ┌───┴┬───┐│
-│ b    c   d│
-│┌┴┐   │    │
-│e f   g    │
-│    ┌─┼─┐  │
-│    h i j  │
-└───────────┘
-</pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=4734f17a-45a4-4231-8831-ccded6be748b">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<hr/>
-<pre><code>
-
-
-
-
-
-
-
-
-
-</code></pre>
-<hr/>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=fb8fcc26-491d-447f-a892-d5bf2f979e99">
+</div></section></section><section><section><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=fb8fcc26-491d-447f-a892-d5bf2f979e99">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [9]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-APL"><pre><span></span><span class="c1">⍝ finding children of particular nodes</span>
@@ -7650,63 +7482,12 @@ main {
 </div>
 </div>
 </div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>┌───────────┐
-│     0     │
-│ ┌───┴┬───┐│
-│ 0    0   0│
-│┌┴┐   │    │
-│1 1   1    │
-│    ┌─┼─┐  │
-│    0 0 0  │
-└───────────┘
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>efg
-</pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=3c341912-7117-4966-a473-1be43c2377f1">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<hr/>
-<pre><code>
-
-
-
-
-
-
-
-
-
-</code></pre>
-<hr/>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=4b4bd3d2-d896-4e01-a9a5-cb1f49c3768b">
+</div></section></section><section><section><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=4b4bd3d2-d896-4e01-a9a5-cb1f49c3768b">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [10]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-APL"><pre><span></span><span class="c1">⍝ finding the leaves</span>
@@ -7718,63 +7499,12 @@ main {
 </div>
 </div>
 </div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>┌───────────┐
-│     0     │
-│ ┌───┴┬───┐│
-│ 0    0   1│
-│┌┴┐   │    │
-│1 1   0    │
-│    ┌─┼─┐  │
-│    1 1 1  │
-└───────────┘
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>efhijd
-</pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=0e0192ce-f00d-49e9-a154-f20950a7b9bc">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<hr/>
-<pre><code>
-
-
-
-
-
-
-
-
-
-</code></pre>
-<hr/>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=4fa92a8a-501c-40f7-87a3-689e236a5fd7">
+</div></section></section><section><section><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=4fa92a8a-501c-40f7-87a3-689e236a5fd7">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [11]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-APL"><pre><span></span><span class="c1">⍝ trim nodes</span>
@@ -7786,54 +7516,12 @@ main {
 </div>
 </div>
 </div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>┌─────┬─────┐
-│  a  │  c  │
-│ ┌┴─┐│  │  │
-│ b  d│  g  │
-│┌┴┐  │┌─┼─┐│
-│e f  │h i j│
-└─────┴─────┘
-</pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=89fc6577-7cea-47b6-8431-d147980cf94c">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<hr/>
-<pre><code>
-
-
-
-
-
-
-
-
-
-</code></pre>
-<hr/>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=7fac291d-b9de-4d17-92b7-6d633819d0d8">
+</div></section></section><section><section><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=7fac291d-b9de-4d17-92b7-6d633819d0d8">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [15]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-APL"><pre><span></span><span class="c1">⍝ you can have any kind of data associated</span>
@@ -7847,67 +7535,12 @@ main {
 </div>
 </div>
 </div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>┌─────┬─────┐
-│  3  │  5  │
-│ ┌┴─┐│  │  │
-│ 1  4│  9  │
-│┌┴┐  │┌─┼─┐│
-│4 1  │2 6 5│
-└─────┴─────┘
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>┌─────┬─────┐
-│  0  │  0  │
-│ ┌┴─┐│  │  │
-│ 1  1│  1  │
-│┌┴┐  │┌─┼─┐│
-│2 2  │2 2 2│
-└─────┴─────┘
-</pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=c750740a-0805-4425-983b-30634e3646c3">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<hr/>
-<pre><code>
-
-
-
-
-
-
-
-
-
-</code></pre>
-<hr/>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=fe94b297-a61b-4f5b-a297-7a2515907993">
+</div></section></section><section><section><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=fe94b297-a61b-4f5b-a297-7a2515907993">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [17]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-APL"><pre><span></span><span class="c1">⍝ bottom up traversal</span>
@@ -7917,103 +7550,6 @@ main {
 <span class="w">    </span><span class="nv">total</span><span class="sr">[</span><span class="nv">parent</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]]</span><span class="o">+</span><span class="kd">←</span><span class="nv">total</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]</span><span class="w"> </span><span class="c1">⍝ the important line</span>
 <span class="kt">}</span><span class="na">¨</span><span class="o">⌽⍳</span><span class="m">1</span><span class="o">+⌈</span><span class="na">/</span><span class="nv">depth</span>
 <span class="nv">total</span><span class="w"> </span><span class="nv">PPV</span><span class="w"> </span><span class="nv">parent</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>┌─────┬─────┐
-│  26 │  54 │
-│ ┌┴─┐│  │  │
-│ 6  4│  22 │
-│┌┴┐  │┌─┼─┐│
-│4 1  │2 6 5│
-└─────┴─────┘
-</pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=7f2ca9ad-6277-4747-8f8f-0e446d79f630">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<hr/>
-<pre><code>
-
-
-
-
-
-
-
-
-
-</code></pre>
-<hr/>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=153e914e-1ad6-479e-9b65-07361dec4a13">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [21]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-APL"><pre><span></span><span class="nv">json</span><span class="kd">←</span><span class="nf">⎕SH</span><span class="w"> </span><span class="s1">'tree -J -s -a desktop'</span>
-<span class="p">(</span><span class="nv">depth</span><span class="w"> </span><span class="nv">key</span><span class="w"> </span><span class="nv">value</span><span class="w"> </span><span class="nv">_</span><span class="p">)</span><span class="kd">←</span><span class="o">↓⍉</span><span class="nf">⎕JSON⎕OPT</span><span class="s1">'Format'</span><span class="w"> </span><span class="s1">'M'</span><span class="o">⊢∊</span><span class="nv">json</span>
-
-<span class="c1">⍝ get parent vector</span>
-<span class="nv">parent</span><span class="kd">←</span><span class="o">⍳≢</span><span class="nv">depth</span>
-<span class="m">2</span><span class="kt">{</span><span class="nv">parent</span><span class="sr">[</span><span class="bp">⍵</span><span class="sr">]</span><span class="kd">←</span><span class="bp">⍺</span><span class="sr">[</span><span class="bp">⍺</span><span class="o">⍸</span><span class="bp">⍵</span><span class="sr">]</span><span class="kt">}</span><span class="na">/</span><span class="o">⊂</span><span class="na">⍤</span><span class="o">⊢</span><span class="na">⌸</span><span class="nv">depth</span>
-
-<span class="c1">⍝ discard report (the second element of the two-element array)</span>
-<span class="nv">mask</span><span class="kd">←</span><span class="m">1</span><span class="na">@</span><span class="m">1</span><span class="kt">{</span><span class="nv">parent</span><span class="sr">[</span><span class="bp">⍵</span><span class="sr">]</span><span class="kt">}</span><span class="na">@</span><span class="p">(</span><span class="o">≠</span><span class="na">∘</span><span class="m">1</span><span class="p">)</span><span class="na">⍣</span><span class="o">≡</span><span class="nv">parent</span>
-<span class="nv">parent</span><span class="kd">←</span><span class="m">0</span><span class="na">@</span><span class="m">0</span><span class="o">⊢</span><span class="m">¯1</span><span class="o">+</span><span class="nv">mask</span><span class="na">/</span><span class="nv">parent</span>
-<span class="nv">key</span><span class="w">  </span><span class="na">/⍨</span><span class="kd">←</span><span class="nv">mask</span>
-<span class="nv">value</span><span class="na">/⍨</span><span class="kd">←</span><span class="nv">mask</span>
-<span class="nv">depth</span><span class="na">/⍨</span><span class="kd">←</span><span class="nv">mask</span>
-<span class="nv">depth</span><span class="o">-</span><span class="kd">←</span><span class="m">1</span>
-
-<span class="c1">⍝ bring fields out to their own columns</span>
-<span class="nv">n</span><span class="kd">←</span><span class="o">≢</span><span class="nv">parent</span>
-<span class="nv">keep</span><span class="w">  </span><span class="kd">←</span><span class="nv">n</span><span class="o">⍴</span><span class="m">0</span>
-<span class="nv">name</span><span class="w">  </span><span class="kd">←</span><span class="nv">n</span><span class="o">⍴⊂</span><span class="s1">''</span>
-<span class="nv">size</span><span class="w">  </span><span class="kd">←</span><span class="nv">n</span><span class="o">⍴</span><span class="m">0</span>
-<span class="nv">isDir</span><span class="w"> </span><span class="kd">←</span><span class="nv">n</span><span class="o">⍴</span><span class="m">0</span>
-<span class="nv">isFile</span><span class="kd">←</span><span class="nv">n</span><span class="o">⍴</span><span class="m">0</span>
-
-<span class="nv">i</span><span class="kd">←</span><span class="o">⍸</span><span class="s1">'name'</span><span class="na">∘</span><span class="o">≡</span><span class="na">¨</span><span class="nv">key</span><span class="w"> </span><span class="p">⋄</span><span class="w"> </span><span class="nv">name</span><span class="w">  </span><span class="sr">[</span><span class="nv">parent</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]]</span><span class="kd">←</span><span class="w">              </span><span class="nv">value</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]</span>
-<span class="nv">i</span><span class="kd">←</span><span class="o">⍸</span><span class="s1">'size'</span><span class="na">∘</span><span class="o">≡</span><span class="na">¨</span><span class="nv">key</span><span class="w"> </span><span class="p">⋄</span><span class="w"> </span><span class="nv">size</span><span class="w">  </span><span class="sr">[</span><span class="nv">parent</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]]</span><span class="kd">←</span><span class="w">              </span><span class="nv">value</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]</span>
-<span class="nv">i</span><span class="kd">←</span><span class="o">⍸</span><span class="s1">'type'</span><span class="na">∘</span><span class="o">≡</span><span class="na">¨</span><span class="nv">key</span><span class="w"> </span><span class="p">⋄</span><span class="w"> </span><span class="nv">isDir</span><span class="w"> </span><span class="sr">[</span><span class="nv">parent</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]]</span><span class="kd">←</span><span class="s1">'directory'</span><span class="na">∘</span><span class="o">≡</span><span class="na">¨</span><span class="nv">value</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]</span>
-<span class="w">                  </span><span class="nv">isFile</span><span class="sr">[</span><span class="nv">parent</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]]</span><span class="kd">←</span><span class="w">     </span><span class="s1">'file'</span><span class="na">∘</span><span class="o">≡</span><span class="na">¨</span><span class="nv">value</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]</span>
-
-<span class="c1">⍝ we don't use key, value or isDir after this point</span>
-<span class="c1">⍝ (isDir ←→ ~isFile after this next bit)</span>
-
-<span class="c1">⍝ delete superfluous field nodes and simplify the tree</span>
-<span class="nv">mask</span><span class="kd">←</span><span class="nv">isDir</span><span class="o">∨</span><span class="nv">isFile</span>
-<span class="nv">i</span><span class="kd">←</span><span class="o">⍸</span><span class="nv">mask</span>
-<span class="nv">parent</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]</span><span class="kd">←</span><span class="nv">parent</span><span class="sr">[</span><span class="nv">parent</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]]</span>
-<span class="nv">parent</span><span class="na">/⍨</span><span class="kd">←</span><span class="nv">mask</span>
-<span class="nv">parent</span><span class="o">-</span><span class="kd">←</span><span class="p">(</span><span class="o">+</span><span class="na">\</span><span class="o">~</span><span class="nv">mask</span><span class="p">)</span><span class="sr">[</span><span class="nv">parent</span><span class="sr">]</span>
-<span class="nv">name</span><span class="w">  </span><span class="na">/⍨</span><span class="kd">←</span><span class="nv">mask</span>
-<span class="nv">size</span><span class="w">  </span><span class="na">/⍨</span><span class="kd">←</span><span class="nv">mask</span>
-<span class="nv">isFile</span><span class="na">/⍨</span><span class="kd">←</span><span class="nv">mask</span>
-<span class="nv">depth</span><span class="w"> </span><span class="na">/⍨</span><span class="kd">←</span><span class="nv">mask</span>
-<span class="nv">depth</span><span class="w">  </span><span class="o">÷</span><span class="kd">←</span><span class="m">2</span>
 </pre></div>
 </div>
 </div>
@@ -8049,32 +7585,17 @@ main {
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=f388a946-ca29-47b4-95d9-20f5f96a8434">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=f388a946-ca29-47b4-95d9-20f5f96a8434">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [22]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-APL"><pre><span></span><span class="c1">⍝ names of files larger than ⍵</span>
 <span class="nv">name</span><span class="na">/⍨</span><span class="nv">isFile</span><span class="o">∧</span><span class="nv">size</span><span class="o">&gt;</span><span class="m">100</span>
 </pre></div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>┌───────────┬──────────────┬─────────┬─────────────┐
-│document.md│notebook.ipynb│aloe.vera│chocolate.bar│
-└───────────┴──────────────┴─────────┴─────────────┘
-</pre>
 </div>
 </div>
 </div>
@@ -8102,12 +7623,12 @@ main {
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=bbaef5dc-3add-499b-ad3f-5765e6cd122e">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=bbaef5dc-3add-499b-ad3f-5765e6cd122e">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [26]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-APL"><pre><span></span><span class="c1">⍝ usage of immediate subdirectories</span>
@@ -8121,25 +7642,6 @@ main {
 <span class="nv">names</span><span class="kd">←</span><span class="nv">name</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]</span>
 <span class="p">((</span><span class="o">⍕⌈</span><span class="na">/</span><span class="o">≢</span><span class="na">¨</span><span class="nv">names</span><span class="p">)</span><span class="o">,</span><span class="s1">'A1,X2,I3,X2,F5.2,⊂%⊃'</span><span class="p">)</span><span class="w"> </span><span class="nf">⎕FMT</span><span class="w"> </span><span class="p">(</span><span class="o">↑</span><span class="nv">names</span><span class="p">)</span><span class="w"> </span><span class="nv">n</span><span class="w"> </span><span class="p">(</span><span class="m">100</span><span class="o">×</span><span class="nv">n</span><span class="o">÷+</span><span class="na">/</span><span class="nv">n</span><span class="p">)</span>
 </pre></div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>drawer               314  17.27%
-empty-mug              0   0.00%
-my-wallet            145   7.98%
-pen.cil               77   4.24%
-plant-pot            792  43.56%
-.secret-compartment  395  21.73%
-todo.txt              95   5.23%
-</pre>
 </div>
 </div>
 </div>
@@ -8167,12 +7669,12 @@ todo.txt              95   5.23%
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=f09d14a6-5d42-448b-a519-385b139febf7">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=f09d14a6-5d42-448b-a519-385b139febf7">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [28]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-APL"><pre><span></span><span class="nv">hidden</span><span class="kd">←</span><span class="o">⍸</span><span class="s1">'.'</span><span class="o">=⊃</span><span class="na">¨</span><span class="nv">name</span>
@@ -8183,31 +7685,6 @@ todo.txt              95   5.23%
 <span class="nv">name</span><span class="na">/⍨</span><span class="kd">←</span><span class="nv">mask</span>
 <span class="nv">name</span><span class="w"> </span><span class="nv">PPH</span><span class="w"> </span><span class="nv">parent</span>
 </pre></div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>┌────────────────────────────────────┐
-│       ┌drawer┬document.md          │
-│       │      └notebook.ipynb       │
-│       ├empty-mug                   │
-│       │         ┌card-slot─id      │
-│       │         │          ┌cent   │
-│desktop┼my-wallet┴coin-pouch┼dime   │
-│       │                    ├nickel │
-│       │                    └quarter│
-│       ├pen.cil                     │
-│       ├plant-pot─aloe.vera         │
-│       └todo.txt                    │
-└────────────────────────────────────┘
-</pre>
 </div>
 </div>
 </div>
