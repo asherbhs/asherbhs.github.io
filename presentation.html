@@ -7818,7 +7818,7 @@ a.anchor-link {
 <span class="nv">total</span><span class="kd">←</span><span class="nv">numbers</span>
 <span class="kt">{</span>
 <span class="w">    </span><span class="nv">i</span><span class="kd">←</span><span class="o">⍸</span><span class="nv">depth</span><span class="o">=</span><span class="bp">⍵</span>
-<span class="w">    </span><span class="nv">total</span><span class="sr">[</span><span class="nv">parent</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]]</span><span class="o">+</span><span class="kd">←</span><span class="nv">total</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]</span>
+<span class="w">    </span><span class="nv">total</span><span class="sr">[</span><span class="nv">parent</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]]</span><span class="o">+</span><span class="kd">←</span><span class="nv">total</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]</span><span class="w"> </span><span class="c1">⍝ the important line</span>
 <span class="kt">}</span><span class="na">¨</span><span class="o">⌽⍳</span><span class="m">1</span><span class="o">+⌈</span><span class="na">/</span><span class="nv">depth</span>
 <span class="nv">total</span><span class="w"> </span><span class="nv">PPV</span><span class="w"> </span><span class="nv">parent</span>
 </pre></div>
@@ -7840,6 +7840,208 @@ a.anchor-link {
 │┌┴┐  │┌─┼─┐│
 │4 1  │2 6 5│
 └─────┴─────┘
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=153e914e-1ad6-479e-9b65-07361dec4a13">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [21]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-APL"><pre><span></span><span class="nv">json</span><span class="kd">←</span><span class="nf">⎕SH</span><span class="w"> </span><span class="s1">'tree -J -s -a desktop'</span>
+<span class="p">(</span><span class="nv">depth</span><span class="w"> </span><span class="nv">key</span><span class="w"> </span><span class="nv">value</span><span class="w"> </span><span class="nv">_</span><span class="p">)</span><span class="kd">←</span><span class="o">↓⍉</span><span class="nf">⎕JSON⎕OPT</span><span class="s1">'Format'</span><span class="w"> </span><span class="s1">'M'</span><span class="o">⊢∊</span><span class="nv">json</span>
+
+<span class="c1">⍝ get parent vector</span>
+<span class="nv">parent</span><span class="kd">←</span><span class="o">⍳≢</span><span class="nv">depth</span>
+<span class="m">2</span><span class="kt">{</span><span class="nv">parent</span><span class="sr">[</span><span class="bp">⍵</span><span class="sr">]</span><span class="kd">←</span><span class="bp">⍺</span><span class="sr">[</span><span class="bp">⍺</span><span class="o">⍸</span><span class="bp">⍵</span><span class="sr">]</span><span class="kt">}</span><span class="na">/</span><span class="o">⊂</span><span class="na">⍤</span><span class="o">⊢</span><span class="na">⌸</span><span class="nv">depth</span>
+
+<span class="c1">⍝ discard report (the second element of the two-element array)</span>
+<span class="nv">mask</span><span class="kd">←</span><span class="m">1</span><span class="na">@</span><span class="m">1</span><span class="kt">{</span><span class="nv">parent</span><span class="sr">[</span><span class="bp">⍵</span><span class="sr">]</span><span class="kt">}</span><span class="na">@</span><span class="p">(</span><span class="o">≠</span><span class="na">∘</span><span class="m">1</span><span class="p">)</span><span class="na">⍣</span><span class="o">≡</span><span class="nv">parent</span>
+<span class="nv">parent</span><span class="kd">←</span><span class="m">0</span><span class="na">@</span><span class="m">0</span><span class="o">⊢</span><span class="m">¯1</span><span class="o">+</span><span class="nv">mask</span><span class="na">/</span><span class="nv">parent</span>
+<span class="nv">key</span><span class="w">  </span><span class="na">/⍨</span><span class="kd">←</span><span class="nv">mask</span>
+<span class="nv">value</span><span class="na">/⍨</span><span class="kd">←</span><span class="nv">mask</span>
+<span class="nv">depth</span><span class="na">/⍨</span><span class="kd">←</span><span class="nv">mask</span>
+<span class="nv">depth</span><span class="o">-</span><span class="kd">←</span><span class="m">1</span>
+
+<span class="c1">⍝ bring fields out to their own columns</span>
+<span class="nv">n</span><span class="kd">←</span><span class="o">≢</span><span class="nv">parent</span>
+<span class="nv">keep</span><span class="w">  </span><span class="kd">←</span><span class="nv">n</span><span class="o">⍴</span><span class="m">0</span>
+<span class="nv">name</span><span class="w">  </span><span class="kd">←</span><span class="nv">n</span><span class="o">⍴⊂</span><span class="s1">''</span>
+<span class="nv">size</span><span class="w">  </span><span class="kd">←</span><span class="nv">n</span><span class="o">⍴</span><span class="m">0</span>
+<span class="nv">isDir</span><span class="w"> </span><span class="kd">←</span><span class="nv">n</span><span class="o">⍴</span><span class="m">0</span>
+<span class="nv">isFile</span><span class="kd">←</span><span class="nv">n</span><span class="o">⍴</span><span class="m">0</span>
+
+<span class="nv">i</span><span class="kd">←</span><span class="o">⍸</span><span class="s1">'name'</span><span class="na">∘</span><span class="o">≡</span><span class="na">¨</span><span class="nv">key</span><span class="w"> </span><span class="p">⋄</span><span class="w"> </span><span class="nv">name</span><span class="w">  </span><span class="sr">[</span><span class="nv">parent</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]]</span><span class="kd">←</span><span class="w">              </span><span class="nv">value</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]</span>
+<span class="nv">i</span><span class="kd">←</span><span class="o">⍸</span><span class="s1">'size'</span><span class="na">∘</span><span class="o">≡</span><span class="na">¨</span><span class="nv">key</span><span class="w"> </span><span class="p">⋄</span><span class="w"> </span><span class="nv">size</span><span class="w">  </span><span class="sr">[</span><span class="nv">parent</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]]</span><span class="kd">←</span><span class="w">              </span><span class="nv">value</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]</span>
+<span class="nv">i</span><span class="kd">←</span><span class="o">⍸</span><span class="s1">'type'</span><span class="na">∘</span><span class="o">≡</span><span class="na">¨</span><span class="nv">key</span><span class="w"> </span><span class="p">⋄</span><span class="w"> </span><span class="nv">isDir</span><span class="w"> </span><span class="sr">[</span><span class="nv">parent</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]]</span><span class="kd">←</span><span class="s1">'directory'</span><span class="na">∘</span><span class="o">≡</span><span class="na">¨</span><span class="nv">value</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]</span>
+<span class="w">                  </span><span class="nv">isFile</span><span class="sr">[</span><span class="nv">parent</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]]</span><span class="kd">←</span><span class="w">     </span><span class="s1">'file'</span><span class="na">∘</span><span class="o">≡</span><span class="na">¨</span><span class="nv">value</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]</span>
+
+<span class="c1">⍝ we don't use key, value or isDir after this point</span>
+<span class="c1">⍝ (isDir ←→ ~isFile after this next bit)</span>
+
+<span class="c1">⍝ delete superfluous field nodes and simplify the tree</span>
+<span class="nv">mask</span><span class="kd">←</span><span class="nv">isDir</span><span class="o">∨</span><span class="nv">isFile</span>
+<span class="nv">i</span><span class="kd">←</span><span class="o">⍸</span><span class="nv">mask</span>
+<span class="nv">parent</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]</span><span class="kd">←</span><span class="nv">parent</span><span class="sr">[</span><span class="nv">parent</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]]</span>
+<span class="nv">parent</span><span class="na">/⍨</span><span class="kd">←</span><span class="nv">mask</span>
+<span class="nv">parent</span><span class="o">-</span><span class="kd">←</span><span class="p">(</span><span class="o">+</span><span class="na">\</span><span class="o">~</span><span class="nv">mask</span><span class="p">)</span><span class="sr">[</span><span class="nv">parent</span><span class="sr">]</span>
+<span class="nv">name</span><span class="w">  </span><span class="na">/⍨</span><span class="kd">←</span><span class="nv">mask</span>
+<span class="nv">size</span><span class="w">  </span><span class="na">/⍨</span><span class="kd">←</span><span class="nv">mask</span>
+<span class="nv">isFile</span><span class="na">/⍨</span><span class="kd">←</span><span class="nv">mask</span>
+<span class="nv">depth</span><span class="w"> </span><span class="na">/⍨</span><span class="kd">←</span><span class="nv">mask</span>
+<span class="nv">depth</span><span class="w">  </span><span class="o">÷</span><span class="kd">←</span><span class="m">2</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=5c40f6b2-4b0b-4082-aa30-7e5744d09aa2">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<pre><code>desktop/
+├── drawer
+│   ├── document.md
+│   └── notebook.ipynb
+├── empty-mug
+├── my-wallet
+│   ├── card-slot
+│   │   └── id
+│   └── coin-pouch
+│       ├── cent
+│       ├── dime
+│       ├── nickel
+│       └── quarter
+├── pen.cil
+├── plant-pot
+│   └── aloe.vera
+├── .secret-compartment
+│   ├── chocolate.bar
+│   └── ufo.evidence
+└── todo.txt</code></pre>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=f388a946-ca29-47b4-95d9-20f5f96a8434">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [22]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-APL"><pre><span></span><span class="c1">⍝ names of files larger than ⍵</span>
+<span class="nv">name</span><span class="na">/⍨</span><span class="nv">isFile</span><span class="o">∧</span><span class="nv">size</span><span class="o">&gt;</span><span class="m">100</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>┌───────────┬──────────────┬─────────┬─────────────┐
+│document.md│notebook.ipynb│aloe.vera│chocolate.bar│
+└───────────┴──────────────┴─────────┴─────────────┘
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=bbaef5dc-3add-499b-ad3f-5765e6cd122e">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [26]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-APL"><pre><span></span><span class="c1">⍝ usage of immediate subdirectories</span>
+<span class="nv">usage</span><span class="kd">←</span><span class="nv">size</span>
+<span class="kt">{</span>
+<span class="w">    </span><span class="nv">i</span><span class="kd">←</span><span class="o">⍸</span><span class="nv">depth</span><span class="o">=</span><span class="bp">⍵</span>
+<span class="w">    </span><span class="nv">usage</span><span class="sr">[</span><span class="nv">parent</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]]</span><span class="o">+</span><span class="kd">←</span><span class="nv">usage</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]</span>
+<span class="kt">}</span><span class="na">¨</span><span class="o">⌽</span><span class="m">1</span><span class="o">+⍳⌈</span><span class="na">/</span><span class="nv">depth</span>
+<span class="nv">i</span><span class="kd">←</span><span class="m">1</span><span class="o">↓⍸</span><span class="nv">parent</span><span class="o">=</span><span class="m">0</span>
+<span class="nv">n</span><span class="kd">←</span><span class="nv">usage</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]</span>
+<span class="nv">names</span><span class="kd">←</span><span class="nv">name</span><span class="sr">[</span><span class="nv">i</span><span class="sr">]</span>
+<span class="p">((</span><span class="o">⍕⌈</span><span class="na">/</span><span class="o">≢</span><span class="na">¨</span><span class="nv">names</span><span class="p">)</span><span class="o">,</span><span class="s1">'A1,X2,I3,X2,F5.2,⊂%⊃'</span><span class="p">)</span><span class="w"> </span><span class="nf">⎕FMT</span><span class="w"> </span><span class="p">(</span><span class="o">↑</span><span class="nv">names</span><span class="p">)</span><span class="w"> </span><span class="nv">n</span><span class="w"> </span><span class="p">(</span><span class="m">100</span><span class="o">×</span><span class="nv">n</span><span class="o">÷+</span><span class="na">/</span><span class="nv">n</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>drawer               314  17.27%
+empty-mug              0   0.00%
+my-wallet            145   7.98%
+pen.cil               77   4.24%
+plant-pot            792  43.56%
+.secret-compartment  395  21.73%
+todo.txt              95   5.23%
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=f09d14a6-5d42-448b-a519-385b139febf7">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [28]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-APL"><pre><span></span><span class="nv">hidden</span><span class="kd">←</span><span class="o">⍸</span><span class="s1">'.'</span><span class="o">=⊃</span><span class="na">¨</span><span class="nv">name</span>
+<span class="nv">hidden</span><span class="kd">←</span><span class="m">0</span><span class="o">≠</span><span class="kt">{</span><span class="nv">parent</span><span class="sr">[</span><span class="bp">⍵</span><span class="sr">]</span><span class="kt">}</span><span class="na">@</span><span class="kt">{</span><span class="o">~</span><span class="bp">⍵</span><span class="o">∊</span><span class="nv">hidden</span><span class="kt">}</span><span class="na">⍣</span><span class="o">≡⍳≢</span><span class="nv">parent</span>
+<span class="nv">mask</span><span class="kd">←</span><span class="o">~</span><span class="nv">hidden</span>
+<span class="nv">parent</span><span class="na">/⍨</span><span class="kd">←</span><span class="nv">mask</span>
+<span class="nv">parent</span><span class="o">-</span><span class="kd">←</span><span class="p">(</span><span class="o">+</span><span class="na">\</span><span class="nv">hidden</span><span class="p">)</span><span class="sr">[</span><span class="nv">parent</span><span class="sr">]</span>
+<span class="nv">name</span><span class="na">/⍨</span><span class="kd">←</span><span class="nv">mask</span>
+<span class="nv">name</span><span class="w"> </span><span class="nv">PPH</span><span class="w"> </span><span class="nv">parent</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>┌────────────────────────────────────┐
+│       ┌drawer┬document.md          │
+│       │      └notebook.ipynb       │
+│       ├empty-mug                   │
+│       │         ┌card-slot─id      │
+│       │         │          ┌cent   │
+│desktop┼my-wallet┴coin-pouch┼dime   │
+│       │                    ├nickel │
+│       │                    └quarter│
+│       ├pen.cil                     │
+│       ├plant-pot─aloe.vera         │
+│       └todo.txt                    │
+└────────────────────────────────────┘
 </pre>
 </div>
 </div>
