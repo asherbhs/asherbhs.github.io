@@ -7511,49 +7511,6 @@ main {
 </div>
 </div>
 </div>
-</div></section></section><section><section><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=4b4bd3d2-d896-4e01-a9a5-cb1f49c3768b">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [5]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-APL"><pre><span></span><span class="c1">⍝ finding the leaves</span>
-<span class="nv">leaves</span><span class="kd">←</span><span class="o">~</span><span class="p">(</span><span class="o">⍳≢</span><span class="nv">parent</span><span class="p">)</span><span class="o">∊</span><span class="nv">parent</span>
-<span class="nv">leaves</span><span class="w"> </span><span class="nv">PPV</span><span class="w"> </span><span class="nv">parent</span>
-<span class="nv">labels</span><span class="sr">[</span><span class="o">⍸</span><span class="nv">leaves</span><span class="sr">]</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[5]:</div>
-<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
-<pre class="language-APL">      0      
-  ┌───┴┬───┐ 
-  0    0   1 
- ┌┴┐   │     
- 1 1   0     
-     ┌─┼─┐   
-     1 1 1   
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[5]:</div>
-<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
-<pre class="language-APL">efhijd
-</pre>
-</div>
-</div>
-</div>
-</div>
 </div></section></section><section><section><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=4fa92a8a-501c-40f7-87a3-689e236a5fd7">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
@@ -7588,12 +7545,44 @@ main {
 </div>
 </div>
 </div>
+</div></section></section><section><section><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=3969ed91-c453-4249-97b0-06a6921a0b79">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [7]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-APL"><pre><span></span><span class="nv">roots</span><span class="kd">←</span><span class="kt">{</span><span class="nv">parent</span><span class="sr">[</span><span class="bp">⍵</span><span class="sr">]</span><span class="kt">}</span><span class="na">⍣</span><span class="o">≡</span><span class="nv">parent</span>
+<span class="nv">labels</span><span class="sr">[</span><span class="nv">roots</span><span class="sr">]</span><span class="w"> </span><span class="nv">PPV</span><span class="w"> </span><span class="nv">parent</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[7]:</div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
+<pre class="language-APL">   a      c   
+  ┌┴─┐    │   
+  a  a    c   
+ ┌┴┐    ┌─┼─┐ 
+ a a    c c c 
+</pre>
+</div>
+</div>
+</div>
+</div>
 </div></section></section><section><section><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=f388a946-ca29-47b4-95d9-20f5f96a8434">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [10]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [11]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-APL"><pre><span></span><span class="c1">⍝ names of files larger than ⍵</span>
@@ -7608,7 +7597,7 @@ main {
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[10]:</div>
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[11]:</div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
 <pre class="language-APL">document.md   
 notebook.ipynb
@@ -7624,7 +7613,7 @@ chocolate.bar
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [11]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [12]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-APL"><pre><span></span><span class="c1">⍝ usage of immediate subdirectories</span>
@@ -7647,7 +7636,7 @@ chocolate.bar
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[11]:</div>
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[12]:</div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
 <pre class="language-APL">drawer               314  17.27%
 empty-mug              0   0.00%
