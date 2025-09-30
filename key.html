@@ -7999,7 +7999,7 @@ a.anchor-link {
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
 <pre>                                                                  
   Slow ⍬ → 1.3E¯1 |   0% ⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕ 
-  Fast ⍬ → 5.6E¯3 | -96% ⎕⎕                                       
+  Fast ⍬ → 4.7E¯3 | -97% ⎕                                        
 </pre>
 </div>
 </div>
@@ -8274,7 +8274,7 @@ a.anchor-link {
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-APL"><pre><span></span><span class="nv">numbers</span><span class="kd">←</span><span class="m">10000</span><span class="o">?</span><span class="m">10000</span>
-<span class="sr">]</span><span class="nv">runtime</span><span class="w"> </span><span class="o">-</span><span class="nv">c</span><span class="w"> </span><span class="s1">'(2|numbers){⊂⍵}⌸numbers'</span><span class="w"> </span><span class="s1">'(2|numbers){⊂⊢⍵}⌸numbers'</span>
+<span class="sr">]</span><span class="nv">runtime</span><span class="w"> </span><span class="o">-</span><span class="nv">c</span><span class="w"> </span><span class="s1">'(2|numbers){+/⍵}⌸numbers'</span><span class="w"> </span><span class="s1">'(2|numbers){⊢+/⍵}⌸numbers'</span>
 </pre></div>
 </div>
 </div>
@@ -8287,9 +8287,9 @@ a.anchor-link {
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>                                                                                   
-  (2|numbers){⊂⍵}⌸numbers  → 6.7E¯5 |  0% ⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕    
-  (2|numbers){⊂⊢⍵}⌸numbers → 7.1E¯5 | +7% ⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕ 
+<pre>                                                                                      
+  (2|numbers){+/⍵}⌸numbers  → 1.6E¯5 |    0% ⎕⎕⎕⎕⎕⎕⎕⎕⎕                                
+  (2|numbers){⊢+/⍵}⌸numbers → 7.1E¯5 | +334% ⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕ 
 </pre>
 </div>
 </div>
