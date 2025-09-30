@@ -7897,7 +7897,7 @@ a.anchor-link {
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="Preprocessing">Preprocessing<a class="anchor-link" href="#Preprocessing">¶</a></h2><p>Right now, our <code>orders</code> namespace has a <code>timestamp</code> variable, with the character data for the timestamps of each purchase. To work with this more easily, we're going to need to parse this into numeric columns.</p>
-<p><strong>Exercise:</strong> Parse <code>timestamp</code> into separate <code>year</code>, <code>month</code>, <code>day</code>, <code>hour</code>, <code>minute</code>, and <code>second</code> columns.</p>
+<p><strong>Exercise:</strong> Parse <code>timestamp</code> into separate <code>year</code>, <code>month</code>, <code>day</code>, <code>hour</code>, <code>minute</code>, and <code>second</code> columns. You may want to use <code>⎕VFI</code> (<a href="https://help.dyalog.com/19.0/index.htm#Language/System%20Functions/vfi.htm">documentation here</a>).</p>
 </div>
 </div>
 </div>
@@ -7946,7 +7946,8 @@ a.anchor-link {
 
 <span class="c1">⍝ fast solution - only possible with the inverted table format</span>
 <span class="nv">zero</span><span class="kd">←</span><span class="nf">⎕UCS</span><span class="w"> </span><span class="s1">'0'</span>
-<span class="nv">Extract</span><span class="kd">←</span><span class="p">(</span><span class="o">⍉</span><span class="nv">orders</span><span class="na">.</span><span class="nv">timestamp</span><span class="p">)</span><span class="na">∘</span><span class="kt">{</span><span class="m">10</span><span class="o">⊥</span><span class="nv">zero</span><span class="o">-</span><span class="na">⍨</span><span class="nf">⎕UCS</span><span class="w"> </span><span class="bp">⍺</span><span class="sr">[</span><span class="bp">⍵</span><span class="sr">;]</span><span class="kt">}</span>
+<span class="nv">timestamp_numeric</span><span class="kd">←</span><span class="o">⍉</span><span class="nf">⎕UCS</span><span class="w"> </span><span class="nv">orders</span><span class="na">.</span><span class="nv">timestamp</span>
+<span class="nv">Extract</span><span class="kd">←</span><span class="kt">{</span><span class="m">10</span><span class="o">⊥</span><span class="nv">timestamp_numeric</span><span class="sr">[</span><span class="bp">⍵</span><span class="sr">;]</span><span class="o">-</span><span class="nv">zero</span><span class="kt">}</span>
 <span class="nv">orders</span><span class="na">.</span><span class="nv">year</span><span class="w">  </span><span class="kd">←</span><span class="nv">Extract</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">3</span>
 <span class="nv">orders</span><span class="na">.</span><span class="nv">month</span><span class="w"> </span><span class="kd">←</span><span class="nv">Extract</span><span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="m">6</span>
 <span class="nv">orders</span><span class="na">.</span><span class="nv">day</span><span class="w">   </span><span class="kd">←</span><span class="nv">Extract</span><span class="w"> </span><span class="m">8</span><span class="w"> </span><span class="m">9</span>
@@ -7972,7 +7973,8 @@ a.anchor-link {
 <span class="kt">}</span>
 <span class="nv">Fast</span><span class="kd">←</span><span class="kt">{</span>
 <span class="w">    </span><span class="nv">zero</span><span class="kd">←</span><span class="nf">⎕UCS</span><span class="w"> </span><span class="s1">'0'</span>
-<span class="w">    </span><span class="nv">Extract</span><span class="kd">←</span><span class="p">(</span><span class="o">⍉</span><span class="nv">orders</span><span class="na">.</span><span class="nv">timestamp</span><span class="p">)</span><span class="na">∘</span><span class="kt">{</span><span class="m">10</span><span class="o">⊥</span><span class="nv">zero</span><span class="o">-</span><span class="na">⍨</span><span class="nf">⎕UCS</span><span class="w"> </span><span class="bp">⍺</span><span class="sr">[</span><span class="bp">⍵</span><span class="sr">;]</span><span class="kt">}</span>
+<span class="w">    </span><span class="nv">timestamp_numeric</span><span class="kd">←</span><span class="o">⍉</span><span class="nf">⎕UCS</span><span class="w"> </span><span class="nv">orders</span><span class="na">.</span><span class="nv">timestamp</span>
+<span class="w">    </span><span class="nv">Extract</span><span class="kd">←</span><span class="kt">{</span><span class="m">10</span><span class="o">⊥</span><span class="nv">timestamp_numeric</span><span class="sr">[</span><span class="bp">⍵</span><span class="sr">;]</span><span class="o">-</span><span class="nv">zero</span><span class="kt">}</span>
 <span class="w">    </span><span class="nv">orders</span><span class="na">.</span><span class="nv">year</span><span class="w">  </span><span class="kd">←</span><span class="nv">Extract</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">3</span>
 <span class="w">    </span><span class="nv">orders</span><span class="na">.</span><span class="nv">month</span><span class="w"> </span><span class="kd">←</span><span class="nv">Extract</span><span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="m">6</span>
 <span class="w">    </span><span class="nv">orders</span><span class="na">.</span><span class="nv">day</span><span class="w">   </span><span class="kd">←</span><span class="nv">Extract</span><span class="w"> </span><span class="m">8</span><span class="w"> </span><span class="m">9</span>
@@ -7996,8 +7998,8 @@ a.anchor-link {
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
 <pre>                                                                  
-  Slow ⍬ → 1.5E¯1 |   0% ⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕ 
-  Fast ⍬ → 5.6E¯3 | -97% ⎕                                        
+  Slow ⍬ → 1.3E¯1 |   0% ⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕ 
+  Fast ⍬ → 5.6E¯3 | -96% ⎕⎕                                       
 </pre>
 </div>
 </div>
@@ -8285,9 +8287,9 @@ a.anchor-link {
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>                                                                                    
-  (2|numbers){⊂⍵}⌸numbers  → 1.1E¯5 |   0% ⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕             
-  (2|numbers){⊂⊢⍵}⌸numbers → 1.6E¯5 | +43% ⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕ 
+<pre>                                                                                   
+  (2|numbers){⊂⍵}⌸numbers  → 6.7E¯5 |  0% ⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕    
+  (2|numbers){⊂⊢⍵}⌸numbers → 7.1E¯5 | +7% ⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕⎕ 
 </pre>
 </div>
 </div>
