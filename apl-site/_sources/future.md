@@ -1,4 +1,7 @@
-- boolean tricks
+- boolean operations, scans and folds
+- flat techniques
+    - grading and permutation vectors
+    - flat partitions: https://saltysylvi.github.io/blog/flat1.html
 - more combinatorics
     - finish algorithms and catalan numbers
     - latin squares
@@ -6,16 +9,14 @@
 - graph algorithms
     - implement sparse matrices first
     - also use adjacency lists?
-- analysis
-    - draw from elementary analysis by iverson
-- algebra
-    - draw from algebra an algorithmic approach by iverson
 - applications of linear algebra
     - assume reader already knows basic linear algebra
+    - automating gaussian reduction
+    - automating orthonormalisation
     - QR factorisation
     - linear regression
-    - vector databases
     - SVD
+    - linear programming
     - draw from
         - the notebook I already made
         - that one apl linear algebra book
@@ -32,4 +33,9 @@
         - homomorphisms to matrices
         - character theory
         - examples examples examples
+- selected finnapl idioms
+    - progressive index of
+        - www.sudleyplace.com/APL/AnatomyOfAnIdiom.ahtml
+        - https://mlochbaum.github.io/BQN/doc/search.html
 - tidbits
+
